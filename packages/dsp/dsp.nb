@@ -1,0 +1,2960 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    121894,       2952]
+NotebookOptionsPosition[    119434,       2884]
+NotebookOutlinePosition[    120367,       2913]
+CellTagsIndexPosition[    120324,       2910]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["dsp.m package", "Title",
+ CellChangeTimes->{{3.710989530553841*^9, 3.710989530810143*^9}},
+ TextAlignment->Center,ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \
+\[OpenCurlyDoubleQuote]Software\[CloseCurlyDoubleQuote]), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \[OpenCurlyDoubleQuote]AS \
+IS\[CloseCurlyDoubleQuote], WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{
+  3.741092154980876*^9},ExpressionUUID->"dca19e92-ab53-460e-aff2-\
+921c62d34d07"],
+
+Cell[CellGroupData[{
+
+Cell["Begin the package", "Section"],
+
+Cell[BoxData[
+ RowBox[{"BeginPackage", "[", 
+  RowBox[{"\"\<dsp`\>\"", ",", 
+   RowBox[{"{", "\"\<general`\>\"", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6964764554807577`*^9, 3.6964764599256163`*^9}, {
+  3.710989528225996*^9, 
+  3.710989528435109*^9}},ExpressionUUID->"71729209-1ef9-4b73-8904-\
+8ce8c08cb755"],
+
+Cell[CellGroupData[{
+
+Cell["Usage messages for the public functions", "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"applyButterHPF", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<applyButterHPF[x,filterOrder,Wn] applies a Butterworth high-pass \
+filter of order filterOrder and cut-off frequency Wn to the input signal x. \
+The output is the filtered signal.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"applyButterLPF", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<applyButterLPF[x,filterOrder,Wn] applies a Butterworth low-pass \
+filter of order filterOrder and cut-off frequency Wn to the input signal x. \
+The output is the filtered signal.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"autoCorrFunc", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<autoCorrFunc[signal] computes the autocorrelation function of signal.\
+\n\nOPTIONAL INPUTS:\n\t1. rectWinLen \[RightArrow] Sample length of the \
+rectangular window to apply to signal.\n\tDefault - Length[signal].\nEXAMPLE: \
+\n\toutput = autoCorrFunc[signal,100];\nREF:\n\tMakhoul (1975) - Linear \
+Prediction: A Tutorial Review.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"avgGroupDelay", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<avgGroupDelay[inputIR,fS] computes the DC group delay, in samples, of \
+inputIR sampled at a rate fS.\n\nOPTIONAL INPUTS:\n\t1. avgRange \
+\[RightArrow] Frequencies over which group delay is averaged; {0,0} - \
+default.\nEXAMPLE: \n\tgrpDel = avgGroupDelay[inputIR,44100,{0, 500}];\>\""}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"conv", "::", 
+    StyleBox["usage", "MessageName"]}], "=", 
+   "\"\<conv[x,y] convolves x with y.\n\nOPTIONAL INPUTS:\n\t1. type \
+\[RightArrow] specifies the type of convolution to perform.\n\t\\\"circ\\\" \
+(default) - circular convolution; input sequences must be of same length.\n\t\
+\\\"lin\\\" - linear convolution; output length = Length[x+y-1].\nEXAMPLE:\n\t\
+output = conv[x,y,\\\"circ\\\"];\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"deconv", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<deconv[y,x] deconvolves y by x and outputs a signal with the same \
+length as y.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"groupDelaySpec", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<groupDelaySpec[inputIR] returns the group delay spectrum of \
+inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"IRtoTF", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<IRtoTF[IR] outputs the transfer function corresponding to the input \
+impulse response (IR).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"KaiserLPFIR", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<KaiserLPFIR[irLen,pbCutoff,sbCutoff] generates a Kaiser window \
+low-pass filter IR of length irLen and with passband and stopband normalized \
+cutoff frequencies pbCutoff and sbCutoff specified in rad, respectively.\n\n\
+OPTIONAL INPUTS:\n\t1. \\\"PB Gain\\\" \[RightArrow] minimum passband gain in \
+dB (default -1).\n\t2. \\\"SB Gain\\\" \[RightArrow] maximum stopband gain in \
+dB (default -30).\nEXAMPLE:\n\tlpfIR = \
+KaiserLPFIR[1024,0.5\[Pi],0.6\[Pi],\\\"SB Gain\\\" \[RightArrow] -40];\>\""}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"lpResidual", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<lpResidual[signal,p] computes the linear prediction residual of \
+signal. The order of the predictor is specified by p.\n\nREF:\n\tMakhoul \
+(1975) - Linear Prediction: A Tutorial Review.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"minPhaseIR", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<minPhaseIR[inputIR] computes the minimum-phase component of \
+inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"raisedCosWin", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<raisedCosWin[winLen] generates a raised-cosine window of length \
+winLen.\n\nOPTIONAL INPUTS:\n\t1. r \[RightArrow] Ordered pair of fractions \
+of samples equal to parts of an attack and decay cosine;\n\t0 \[LessEqual] \
+r(i) \[LessEqual] 1, i = 1,2; r = {0,0} - rect.; r = {0.5,0.5} - hann.; r = \
+{0.25,0.25} - default.\nEXAMPLE: \n\twinList = raisedCosWin[100,{0.2,0.3}];\>\
+\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resample", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   StyleBox[
+    "\"\<resample[inputSignal,inputSR,outputSR] uses bandlimited \
+interpolation to generate an output signal with outputSR/inputSR times the \
+number of samples as inputSignal. A Kaiser window low-pass anti-aliasing \
+filter is applied.\>\"", "MessageName"]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"signalOnset", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<signalOnset[inputSignal] computes the onset sample of inputSignal as \
+the first sample value at which inputSignal is at least 20% of its absolute \
+maximum.\n\nOPTIONAL INPUTS:\n\t1. \\\"Threshold\\\" \[RightArrow] specifies \
+the threshold percentage to use instead of the default 20%.\n\t2. \
+\\\"Resampling\\\" \[RightArrow] resampling factor by which inputSignal is \
+first resampled.\nEXAMPLE:\n\tonsetSample = \
+signalOnset[inputSignal,\\\"Threshold\\\" \[RightArrow] 10,\\\"Resampling\\\" \
+\[RightArrow] 4];\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"TFtoIR", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<TFtoIR[TF] outputs the impulse response corresponding to the input \
+transfer function (TF).\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"tukeyWin", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<tukeyWin[winLen] generates a Tukey window of length winLen.\n\n\
+OPTIONAL INPUTS:\n\t1. r \[RightArrow] Fraction of samples equal to parts of \
+a cosine.\n\t0 \[LessEqual] r \[LessEqual] 1; r = 0 (rect.); r = 1 (hann.); r \
+= 0.5 (default)\nEXAMPLE:\n\twinList = tukeyWin[100,1];\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"unwrapPhase", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<unwrapPhase[inputPhase] unwraps inputPhase.\n\nOPTIONAL INPUTS:\n\t1. \
+tol \[RightArrow] phase wrapping tolerance; default - \[Pi].\nEXAMPLE: \n\t\
+unwrappedPhase = unwrapPhase[inputPhase,2\[Pi]];\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"inverseFilter", "::", 
+    StyleBox["usage", "MessageName"]}], 
+   StyleBox["=", "MessageName"], 
+   "\"\<inverseFilter[h] computes the impulse response of the inverse filter \
+corresponding to the input impulse response, h.\n\nOPTIONAL INPUTS:\n\t1. \
+\\\"Regularization\\\" \[RightArrow] specifies the type of regularization to \
+apply with \\\"None\\\" (default) and \\\"Piecewise\\\" being the two \
+options.\n\t2. \\\"Regularization Ranges\\\" \[RightArrow] list of triples \
+{W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] \
+in the range {W1, W2}.\nEXAMPLE:\n\tinvFilt = \
+inverseFilter[filt,\\\"Regularization\\\"\[Rule]\\\"Piecewise\\\",\\\"\
+Regularization Ranges\\\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"piecewiseRegularization", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<piecewiseRegularization[N,\[Epsilon]List] returns a piecewise \
+regularization profile of length N and regularization ranges specifed by \
+\[Epsilon]List. For more about \[Epsilon]List, see the function description \
+for inverseFilter[].\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HatzOctaveSmoothPS", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<HatzOctaveSmoothPS[inputPowerSpectrum] returns a one-third octave \
+smoothed version of the input power spectrum using a Hanning window for \
+smoothing. The input must be a power spectrum. The algorithm used is \
+described in Hatziantoniou, Panagiotis D., and John N. Mourjopoulos. \
+\\\"Generalized fractional-octave smoothing of audio and acoustic \
+responses.\\\" Journal of the Audio Engineering Society 48.4 (2000): 259-280.\
+\n\nOPTIONAL INPUTS:\n\t1. \\\"Smoothing Factor\\\" \[RightArrow] specifies \
+the denominator of the fraction used to specify the amount of smoothing to \
+apply. For example, specifying 3 performs one-third octave smoothing.\n\t2. \
+\\\"Window\\\" \[RightArrow] specifies the type of smoothing window to use. \
+The options are \\\"Rectangular\\\", \\\"Hanning\\\", and \
+\\\"Hamming\\\".\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"discreteAnalyticSignal", "::", "usage"}], "=", 
+   "\[IndentingNewLine]", 
+   "\"\<discreteAnalyticSignal[inputSignal] returns the discrete analytic \
+version of inputSignal.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"envelopeSignal", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<envelopeSignal[inputSignal] returns the positive and negative \
+envelopes of inputSignal as a two-dimensional list with the first dimension \
+containing the positive envelope.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HilbertTransform", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<HilbertTransform[inputSignal] computes the Hilbert transform of \
+inputSignal.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getAllPassIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<getAllPassIR[inputIR] accepts a one-dimensional list corresponding to \
+the causal FIR of a linear system with arbitrary phase and computes its \
+corresponding excess-phase version. The output is a one-dimensional list of \
+length equal to that of the input list.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getMinimumPhaseIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<getMinimumPhaseIR[inputIR] accepts a one-dimensional list \
+corresponding to the causal FIR of a linear system with arbitrary phase and \
+computes its corresponding minimum-phase version. The output is a \
+one-dimensional list of length equal to that of the input list.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"realCepstrum", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<realCepstrum[inputSignal] accepts a one-dimensional list and computes \
+its real cepstrum. The output is a one-dimensional list of real numbers of \
+the same length as the input.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getBalancedIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<getBalancedIR[inputIR] returns the balanced realization of inputIR.\n\
+\nOPTIONAL INPUTS:\n\t1. \\\"Order\\\" \[RightArrow] specifies the order of \
+the balanced IR. This must be between 1 and the length of inputIR in samples. \
+(default = length of inputIR)\n\t2. \\\"Sampling Rate\\\" \[RightArrow] \
+specifies the sampling rate in Hz. (default = 44100)\n\nREF:\n\t1. \
+Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An \
+Algorithm Based on Balanced Model Reduction.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logCompensatedWeightsMatrix", "::", "usage"}], "=", 
+   "\[IndentingNewLine]", 
+   "\"\<logCompensatedWeightsMatrix[FullLen,Frac,WinType] returns the \
+log-compensated weights matrix required to perform fractional-octave \
+smoothing of transfer functions that preserves log-frequency symmetry.\n\n\
+REF:\n\t1. Tylka et al. (2017) - A Generalized Method for Fractional-Octave \
+Smoothing of Transfer Functions that Preserves Log-Frequency Symmetry.\>\""}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"centerAlignedWindowMatrix", "::", "usage"}], "=", 
+   "\[IndentingNewLine]", 
+   "\"\<centerAlignedWindowMatrix[FullLen,Frac,WinType] returns the window \
+matrix required to perform generalized fractional-octave smoothing that may \
+not preserve log-frequency symmetry.\n\nREF:\n\t1. Hatziantoniou and \
+Mourjopoulos (2000) - Generalized Fractional-Octave Smoothing of Audio and \
+Acoustic Responses.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSmoothedTF", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<getSmoothedTF[IR,SmoothingMatrix,SmoothingScale] returns a transfer \
+function that has been smoothed using the smoothing matrix provided. The \
+input must be an impulse response. A smoothing scale must also be specified. \
+The options for smoothing scale are: \\\"Power\\\" and \\\"dB\\\".\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getSPLNorm", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<getSPLNorm[refSPL] returns the normalization factor required to \
+normalize transfer functions to represent magnitude responses in dB SPL. The \
+required input to the function, refSPL, must specify the SPL corresponding to \
+0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration \
+results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 \
+dB. If refSPL is not specified, 105 dB is assumed.\>\""}]}], "Input",
+ CellChangeTimes->{
+  3.6964253886805487`*^9, {3.696426294808119*^9, 3.6964262995631742`*^9}, {
+   3.696429001491379*^9, 3.696429074348794*^9}, {3.6964291114561996`*^9, 
+   3.696429338547283*^9}, {3.696429373966357*^9, 3.696429400591421*^9}, {
+   3.6964295510656023`*^9, 3.6964296254806147`*^9}, {3.696431176899065*^9, 
+   3.696431520539503*^9}, {3.696435310225307*^9, 3.696435332969208*^9}, {
+   3.6964355422988157`*^9, 3.696435704384893*^9}, 3.696435798335586*^9, {
+   3.696435831806366*^9, 3.696435837150316*^9}, {3.696437568604919*^9, 
+   3.6964376315796223`*^9}, {3.696874848602005*^9, 3.696874888660552*^9}, {
+   3.696879906135623*^9, 3.696879947419365*^9}, {3.697234263085574*^9, 
+   3.697234304791492*^9}, {3.697234348262232*^9, 3.697234409377549*^9}, {
+   3.697301954957119*^9, 3.697302041258378*^9}, {3.697302072496463*^9, 
+   3.697302096802705*^9}, {3.6973021400973797`*^9, 3.69730230365635*^9}, {
+   3.697302391000149*^9, 3.6973024256102943`*^9}, {3.697302474544812*^9, 
+   3.6973028418324623`*^9}, {3.697302887243559*^9, 3.697302904158752*^9}, {
+   3.6973029841170273`*^9, 3.69730300290808*^9}, {3.6973044059968576`*^9, 
+   3.6973044148530893`*^9}, {3.697304463952818*^9, 3.697304797157672*^9}, {
+   3.6973048278377666`*^9, 3.69730482899338*^9}, {3.697305910874877*^9, 
+   3.697305955124257*^9}, {3.6973103817049417`*^9, 3.6973103825644703`*^9}, {
+   3.6973107951108923`*^9, 3.697310800873816*^9}, {3.69731083246634*^9, 
+   3.697310874736945*^9}, {3.697311295236581*^9, 3.697311384157991*^9}, {
+   3.6973231951034737`*^9, 3.697323329812594*^9}, {3.697323408015822*^9, 
+   3.6973234080226088`*^9}, {3.697323450197741*^9, 3.697323461833709*^9}, {
+   3.697324023632036*^9, 3.6973241183608847`*^9}, {3.6973242393101883`*^9, 
+   3.697324248188498*^9}, {3.697324427686599*^9, 3.697324458999237*^9}, {
+   3.697324870517679*^9, 3.697324915806178*^9}, 3.697324971775447*^9, {
+   3.697326350044251*^9, 3.6973265933993073`*^9}, {3.697326804329473*^9, 
+   3.697326832847131*^9}, {3.6973270130674953`*^9, 3.69732712711615*^9}, {
+   3.697327188388651*^9, 3.697327211116412*^9}, {3.697327620782864*^9, 
+   3.6973276888292513`*^9}, {3.697327815771402*^9, 3.6973280554570093`*^9}, 
+   3.6973284521858597`*^9, {3.6973319040707912`*^9, 3.697331904706645*^9}, {
+   3.697563019245335*^9, 3.697563026320546*^9}, {3.697563059141955*^9, 
+   3.6975630601144133`*^9}, {3.700802881648094*^9, 3.700803017418497*^9}, {
+   3.700862581884243*^9, 3.7008625950023518`*^9}, {3.700862636949485*^9, 
+   3.7008627240173597`*^9}, {3.7008627732857733`*^9, 3.700862817872313*^9}, {
+   3.7008628537796907`*^9, 3.7008629834223347`*^9}, {3.7008630180497427`*^9, 
+   3.7008631292643003`*^9}, {3.700863249750937*^9, 3.700863260657749*^9}, {
+   3.7010224862273493`*^9, 3.7010224863064938`*^9}, {3.7108807395509453`*^9, 
+   3.710880958334106*^9}, {3.710881003325993*^9, 3.71088103386026*^9}, {
+   3.710881081849526*^9, 3.7108811657114964`*^9}, {3.710979659890513*^9, 
+   3.710979709614993*^9}, {3.710979748911853*^9, 3.710979834789258*^9}, {
+   3.710980363147476*^9, 3.710980384001679*^9}, {3.710982171656384*^9, 
+   3.710982210127349*^9}, {3.710982308665003*^9, 3.71098234461619*^9}, {
+   3.710982385956046*^9, 3.710982414162877*^9}, {3.7112817779315033`*^9, 
+   3.711281793282496*^9}, {3.7112826279186563`*^9, 3.711282687381146*^9}, {
+   3.711282717427253*^9, 3.711282832395198*^9}, {3.711283678541214*^9, 
+   3.711283759551218*^9}, {3.711283790285316*^9, 3.711283824007059*^9}, {
+   3.711283855782969*^9, 3.711283857767741*^9}, {3.71128392700625*^9, 
+   3.711283927549426*^9}, {3.7306431769747257`*^9, 3.730643297980668*^9}, {
+   3.730643330840046*^9, 3.730643345022758*^9}, {3.730643379030058*^9, 
+   3.730643398892078*^9}, {3.730643455221135*^9, 3.730643458946374*^9}, {
+   3.7306435766050177`*^9, 3.730643687696537*^9}, {3.730665343812908*^9, 
+   3.7306655112616158`*^9}, {3.7306665585689993`*^9, 3.730666650101592*^9}, {
+   3.730666681477236*^9, 3.730666845265204*^9}, {3.730666947230304*^9, 
+   3.73066695682969*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+4fed5cf9a742"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Begin the `Private context", "Section"],
+
+Cell[BoxData[
+ RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.696425423841115*^9, 3.6964254312154617`*^9}, {
+  3.6964764641976767`*^9, 
+  3.696476464485498*^9}},ExpressionUUID->"713d542c-4ab3-4ce7-b436-\
+007adbaf716e"],
+
+Cell[CellGroupData[{
+
+Cell["Function definitions", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"applyButterHPF", "[", 
+    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"IRLen", ",", "xp", ",", "W", ",", "HPF", ",", "y"}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"IRLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xp", " ", "=", " ", 
+       RowBox[{"RotateRight", "[", 
+        RowBox[{
+         RowBox[{"PadRight", "[", 
+          RowBox[{"x", ",", 
+           RowBox[{"2", "IRLen"}]}], "]"}], ",", 
+         RowBox[{"IRLen", "/", "2"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"W", " ", "=", " ", 
+       RowBox[{"N", "[", 
+        FractionBox[
+         RowBox[{"Join", "[", 
+          RowBox[{
+           RowBox[{"Range", "[", 
+            RowBox[{"0", ",", "IRLen"}], "]"}], ",", 
+           RowBox[{"Reverse", "[", 
+            RowBox[{"Range", "[", 
+             RowBox[{"1", ",", 
+              RowBox[{"IRLen", "-", "1"}]}], "]"}], "]"}]}], "]"}], "IRLen"], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"HPF", " ", "=", " ", 
+       RowBox[{"1", "-", 
+        FractionBox["1", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{"1", "+", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             FractionBox["W", "Wn"], ")"}], 
+            RowBox[{"2", "filterOrder"}]]}], "]"}]]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"y", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"RotateLeft", "[", 
+         RowBox[{
+          RowBox[{"TFtoIR", "[", 
+           RowBox[{
+            RowBox[{"IRtoTF", "[", "xp", "]"}], "HPF"}], "]"}], ",", 
+          RowBox[{"IRLen", "/", "2"}]}], "]"}], "[", 
+        RowBox[{"[", 
+         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"applyButterLPF", "[", 
+    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"IRLen", ",", "xp", ",", "W", ",", "LPF", ",", "y"}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"IRLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xp", " ", "=", " ", 
+       RowBox[{"RotateRight", "[", 
+        RowBox[{
+         RowBox[{"PadRight", "[", 
+          RowBox[{"x", ",", 
+           RowBox[{"2", "IRLen"}]}], "]"}], ",", 
+         RowBox[{"IRLen", "/", "2"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"W", " ", "=", " ", 
+       RowBox[{"N", "[", 
+        FractionBox[
+         RowBox[{"Join", "[", 
+          RowBox[{
+           RowBox[{"Range", "[", 
+            RowBox[{"0", ",", "IRLen"}], "]"}], ",", 
+           RowBox[{"Reverse", "[", 
+            RowBox[{"Range", "[", 
+             RowBox[{"1", ",", 
+              RowBox[{"IRLen", "-", "1"}]}], "]"}], "]"}]}], "]"}], "IRLen"], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"LPF", " ", "=", " ", 
+       FractionBox["1", 
+        RowBox[{"Sqrt", "[", 
+         RowBox[{"1", "+", 
+          SuperscriptBox[
+           RowBox[{"(", 
+            FractionBox["W", "Wn"], ")"}], 
+           RowBox[{"2", "filterOrder"}]]}], "]"}]]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"y", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"RotateLeft", "[", 
+         RowBox[{
+          RowBox[{"TFtoIR", "[", 
+           RowBox[{
+            RowBox[{"IRtoTF", "[", "xp", "]"}], "LPF"}], "]"}], ",", 
+          RowBox[{"IRLen", "/", "2"}]}], "]"}], "[", 
+        RowBox[{"[", 
+         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"autoCorrFunc", "[", 
+    RowBox[{"signal_", ",", 
+     RowBox[{"rectWinLen_:", " ", "0"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"signalLen", ",", "acf"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"rectWinLen", "\[Equal]", "0"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"signalLen", "=", 
+          RowBox[{"Length", "[", "signal", "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"signalLen", "=", 
+          RowBox[{"Clip", "[", 
+           RowBox[{"rectWinLen", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", " ", 
+              RowBox[{"Length", "[", "signal", "]"}]}], "}"}]}], "]"}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"acf", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "signalLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"acf", "[", 
+           RowBox[{"[", "ii", "]"}], "]"}], "=", 
+          RowBox[{"Total", "[", 
+           RowBox[{"Drop", "[", 
+            RowBox[{
+             RowBox[{"signal", " ", 
+              RowBox[{"RotateLeft", "[", 
+               RowBox[{"signal", ",", 
+                RowBox[{"ii", "-", "1"}]}], "]"}]}], ",", 
+             RowBox[{"-", 
+              RowBox[{"(", 
+               RowBox[{"ii", "-", "1"}], ")"}]}]}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ii", ",", "1", ",", "signalLen"}], "}"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", "acf"}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"avgGroupDelay", "[", 
+    RowBox[{"inputIR_", ",", "fS_", ",", 
+     RowBox[{"avgRange_:", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}]}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "inputIRLen", ",", "fVec", ",", "avgR", ",", "avgRL", ",", "avgRR", ",",
+        "fIndices", ",", "grpDSpec", ",", "avgGrpDel"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputIRLen", "=", 
+       RowBox[{"Length", "[", "inputIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"fVec", "=", 
+       RowBox[{"freqList", "[", 
+        RowBox[{"inputIRLen", ",", "fS"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"avgR", "=", 
+       RowBox[{"Clip", "[", 
+        RowBox[{"avgRange", ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", 
+           RowBox[{"fS", "/", "2"}]}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"avgRL", "=", 
+       RowBox[{"Nearest", "[", 
+        RowBox[{"fVec", ",", 
+         RowBox[{"Min", "[", "avgR", "]"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"avgRR", "=", 
+       RowBox[{"Nearest", "[", 
+        RowBox[{"fVec", ",", 
+         RowBox[{"Max", "[", "avgR", "]"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"fIndices", "=", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Position", "[", 
+         RowBox[{"fVec", ",", 
+          RowBox[{
+           RowBox[{"avgRL", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "|", 
+           RowBox[{"avgRR", "[", 
+            RowBox[{"[", "1", "]"}], "]"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"grpDSpec", "=", 
+       RowBox[{"groupDelaySpec", "[", "inputIR", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Length", "[", "fIndices", "]"}], "\[Equal]", "1"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"avgGrpDel", "=", 
+          RowBox[{"grpDSpec", "[", 
+           RowBox[{"[", 
+            RowBox[{"fIndices", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"avgGrpDel", "=", 
+          RowBox[{"Mean", "[", 
+           RowBox[{"grpDSpec", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"Min", "[", "fIndices", "]"}], ";;", 
+              RowBox[{"Max", "[", "fIndices", "]"}]}], "]"}], "]"}], "]"}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Round", "[", "avgGrpDel", "]"}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"conv", "[", 
+    RowBox[{"x_", ",", "y_", ",", 
+     RowBox[{"type_:", "\"\<circ\>\""}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "yLen", ",", "xLen", ",", "output", ",", "padLen", ",", "yPad", ",", 
+       "xPad", ",", "outputPad"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"yLen", "=", 
+       RowBox[{"Length", "[", "y", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xLen", "=", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"type", "\[Equal]", "\"\<circ\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"xLen", "\[Equal]", "yLen"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"output", "=", 
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{
+              RowBox[{"IRtoTF", "[", "x", "]"}], " ", 
+              RowBox[{"IRtoTF", "[", "y", "]"}]}], "]"}]}], ";"}], 
+          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+           "MessageDialog", "[", 
+            "\"\<Sequences must be of the same length.\>\"", "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
+         "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"padLen", "=", 
+          RowBox[{"nextPowTwo", "[", 
+           RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"yPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"y", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"xPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"x", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"outputPad", "=", 
+          RowBox[{"TFtoIR", "[", 
+           RowBox[{
+            RowBox[{"IRtoTF", "[", "xPad", "]"}], " ", 
+            RowBox[{"IRtoTF", "[", "yPad", "]"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"output", "=", 
+          RowBox[{"outputPad", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", 
+             RowBox[{"xLen", "+", "yLen", "-", "1"}]}], "]"}], "]"}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "output"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"deconv", "[", 
+    RowBox[{"y_", ",", "x_", ",", 
+     RowBox[{"type_:", "\"\<circ\>\""}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "yLen", ",", "xLen", ",", "padLen", ",", "yPad", ",", "xPad", ",", 
+       "outputPad", ",", "output"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"yLen", "=", 
+       RowBox[{"Length", "[", "y", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xLen", "=", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"type", "\[Equal]", "\"\<circ\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"xLen", "\[Equal]", "yLen"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"output", "=", 
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{
+              RowBox[{"Quiet", "[", 
+               RowBox[{
+                RowBox[{"IRtoTF", "[", "y", "]"}], "/", " ", 
+                RowBox[{"IRtoTF", "[", "x", "]"}]}], "]"}], "/.", 
+              RowBox[{"ComplexInfinity", "\[Rule]", 
+               RowBox[{"(", 
+                RowBox[{"0.", "+", 
+                 RowBox[{"0.", " ", "\[ImaginaryI]"}]}], ")"}]}]}], "]"}]}], 
+           ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+           "MessageDialog", "[", 
+            "\"\<Sequences must be of the same length.\>\"", "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
+         "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"padLen", "=", 
+          RowBox[{"nextPowTwo", "[", 
+           RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"yPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"y", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"xPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"x", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"outputPad", "=", 
+          RowBox[{"TFtoIR", "[", 
+           RowBox[{
+            RowBox[{"Quiet", "[", 
+             RowBox[{
+              RowBox[{"IRtoTF", "[", "yPad", "]"}], "/", 
+              RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
+            RowBox[{"ComplexInfinity", "\[Rule]", 
+             RowBox[{"(", 
+              RowBox[{"0.", "+", 
+               RowBox[{"0.", " ", "\[ImaginaryI]"}]}], ")"}]}]}], "]"}]}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{"output", "=", 
+          RowBox[{"outputPad", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", "yLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]",
+        "]"}], ";", "\[IndentingNewLine]", "output"}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"groupDelaySpec", "[", "inputIR_", "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"inputIRLen", ",", "ramp", ",", "grpDSpec"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputIRLen", "=", 
+       RowBox[{"Length", "[", "inputIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"ramp", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"inputIRLen", "-", "1"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"grpDSpec", "=", 
+       RowBox[{"Re", "[", 
+        RowBox[{
+         RowBox[{"IRtoTF", "[", 
+          RowBox[{"inputIR", " ", "ramp"}], "]"}], "/", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Chop", "[", 
+            RowBox[{"N", "[", 
+             RowBox[{"IRtoTF", "[", "inputIR", "]"}], "]"}], "]"}], "/.", 
+           RowBox[{"{", 
+            RowBox[{"0", "\[Rule]", "\[Infinity]"}], "}"}]}], ")"}]}], 
+        "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"IRtoTF", "[", "IR_", "]"}], ":=", 
+   RowBox[{"Fourier", "[", 
+    RowBox[{"IR", ",", 
+     RowBox[{"FourierParameters", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", 
+        RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "KaiserLPFIR", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<PB Gain\>\"", "\[Rule]", 
+      RowBox[{"-", "1"}]}], ",", 
+     RowBox[{"\"\<SB Gain\>\"", "\[Rule]", 
+      RowBox[{"-", "30"}]}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"KaiserLPFIR", "[", 
+    RowBox[{"irLen_", ",", "pbCutoff_", ",", "sbCutoff_", ",", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "\[Delta]1", ",", "\[Delta]2", ",", "\[Delta]", ",", "\[Omega]c", ",", 
+       "d\[Omega]", ",", "A", ",", "\[Beta]", ",", "M", ",", "filterLen", ",",
+        "\[Alpha]", ",", "filterIR"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"\[Delta]1", "=", 
+       RowBox[{"1", "-", 
+        RowBox[{"(", 
+         RowBox[{"10", "^", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"OptionValue", "[", "\"\<PB Gain\>\"", "]"}], "/", "20"}],
+            ")"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"\[Delta]2", "=", 
+       RowBox[{"10", "^", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<SB Gain\>\"", "]"}], "/", "20"}], 
+         ")"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"\[Delta]", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"\[Delta]1", ",", "\[Delta]2"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"\[Omega]c", "=", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"pbCutoff", "+", "sbCutoff"}], ")"}], "/", "2"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"d\[Omega]", "=", 
+       RowBox[{"sbCutoff", "-", "pbCutoff"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"A", "=", 
+       RowBox[{
+        RowBox[{"-", "20"}], 
+        RowBox[{"Log10", "[", "\[Delta]", "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"A", ">", "50"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\[Beta]", "=", 
+          RowBox[{"0.1102", " ", 
+           RowBox[{"(", 
+            RowBox[{"A", "-", "8.7"}], ")"}]}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"A", "\[GreaterEqual]", "21"}], "&&", 
+           RowBox[{"A", "\[LessEqual]", "50"}]}], ",", "\[IndentingNewLine]", 
+          
+          RowBox[{
+           RowBox[{"\[Beta]", "=", 
+            RowBox[{
+             RowBox[{"0.5842", " ", 
+              SuperscriptBox[
+               RowBox[{"(", 
+                RowBox[{"A", "-", "21"}], ")"}], "0.4"]}], "+", 
+             RowBox[{"0.07886", " ", 
+              RowBox[{"(", 
+               RowBox[{"A", "-", "21"}], ")"}]}]}]}], ";"}], 
+          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"\[Beta]", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
+         "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"M", "=", 
+       RowBox[{"Round", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"A", "-", "8"}], ")"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"2.285", " ", "d\[Omega]"}], ")"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"filterLen", "=", "irLen"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"filterLen", "<", 
+         RowBox[{"(", 
+          RowBox[{"M", "+", "1"}], ")"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"filterLen", "=", 
+          RowBox[{"M", "+", "1"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"\[Alpha]", "=", 
+       RowBox[{"M", "/", "2"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"filterIR", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "filterLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{
+       RowBox[{"filterIR", "[", 
+        RowBox[{"[", 
+         RowBox[{";;", 
+          RowBox[{"M", "+", "1"}]}], "]"}], "]"}], "=", 
+       RowBox[{
+        RowBox[{"Sinc", "[", 
+         RowBox[{"\[Omega]c", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Range", "[", 
+             RowBox[{"0", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}]}], 
+         "]"}], 
+        RowBox[{"(", 
+         FractionBox["\[Omega]c", "\[Pi]"], ")"}], 
+        RowBox[{"(", 
+         FractionBox[
+          RowBox[{"BesselI", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{
+             RowBox[{"N", "[", "\[Beta]", "]"}], " ", 
+             RowBox[{"Sqrt", "[", 
+              RowBox[{"1", "-", 
+               SuperscriptBox[
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"Range", "[", 
+                    RowBox[{"0", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}], 
+                  "/", "\[Alpha]"}], ")"}], "2"]}], "]"}]}]}], "]"}], 
+          RowBox[{"BesselI", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"N", "[", "\[Beta]", "]"}]}], "]"}]], ")"}]}]}], ";", 
+      "\[IndentingNewLine]", "filterIR"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"lpResidual", "[", 
+    RowBox[{"signal_", ",", "p_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "autoCorrList", ",", "autoCorrMat", ",", "aVec", ",", "lpRes", ",", 
+       "predVec"}], "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     
+     RowBox[{
+      RowBox[{"autoCorrList", "=", 
+       RowBox[{"autoCorrFunc", "[", 
+        RowBox[{"signal", ",", 
+         RowBox[{"p", "+", "1"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"autoCorrMat", "=", 
+       RowBox[{"ToeplitzMatrix", "[", 
+        RowBox[{"autoCorrList", "[", 
+         RowBox[{"[", 
+          RowBox[{"2", ";;"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"aVec", "=", 
+       RowBox[{
+        RowBox[{"Inverse", "[", "autoCorrMat", "]"}], ".", 
+        RowBox[{"(", 
+         RowBox[{"-", 
+          RowBox[{"autoCorrList", "[", 
+           RowBox[{"[", 
+            RowBox[{"2", ";;"}], "]"}], "]"}]}], ")"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"lpRes", "=", "signal"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"predVec", "=", 
+       RowBox[{
+        RowBox[{"LowerTriangularize", "[", 
+         RowBox[{"ToeplitzMatrix", "[", 
+          RowBox[{"signal", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", 
+             RowBox[{"-", "2"}]}], "]"}], "]"}], "]"}], "]"}], ".", 
+        RowBox[{"PadRight", "[", 
+         RowBox[{"aVec", ",", 
+          RowBox[{
+           RowBox[{"Length", "[", "signal", "]"}], "-", "1"}]}], "]"}]}]}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"lpRes", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;"}], "]"}], "]"}], "=", 
+       RowBox[{
+        RowBox[{"signal", "[", 
+         RowBox[{"[", 
+          RowBox[{"2", ";;"}], "]"}], "]"}], "+", "predVec"}]}], ";", 
+      "\[IndentingNewLine]", "lpRes"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"minPhaseIR", "[", "inputIR_", "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "irLen", ",", "padIRLen", ",", "padIR", ",", "padRCeps", ",", "win", 
+       ",", "padIRHalfLen", ",", "minPhasePadIR", ",", "minPhaseIR"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"irLen", "=", 
+       RowBox[{"Length", "[", "inputIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"padIRLen", "=", 
+       RowBox[{"nextPowTwo", "[", "irLen", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"padIR", "=", 
+       RowBox[{"PadRight", "[", 
+        RowBox[{"inputIR", ",", "padIRLen"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"padRCeps", "=", 
+       RowBox[{"TFtoIR", "[", 
+        RowBox[{"Log", "[", 
+         RowBox[{"Abs", "[", 
+          RowBox[{"IRtoTF", "[", "padIR", "]"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"win", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "padIRLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"padIRHalfLen", "=", 
+       RowBox[{"padIRLen", "/", "2"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"win", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"win", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", 
+          RowBox[{"padIRHalfLen", "-", "1"}]}], "]"}], "]"}], "=", "2"}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"win", "[", 
+        RowBox[{"[", "padIRHalfLen", "]"}], "]"}], "=", "1"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"minPhasePadIR", "=", 
+       RowBox[{"TFtoIR", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{"IRtoTF", "[", 
+          RowBox[{"win", " ", "padRCeps"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"minPhaseIR", "=", 
+       RowBox[{"minPhasePadIR", "[", 
+        RowBox[{"[", 
+         RowBox[{";;", "irLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"raisedCosWin", "[", 
+    RowBox[{"winLen_", ",", 
+     RowBox[{"r_:", " ", 
+      RowBox[{"{", 
+       RowBox[{"0.25", ",", "0.25"}], "}"}]}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "winVec", ",", "rFinal"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"x", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"1", "-", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", "winLen"}], ")"}]}], ",", 
+         RowBox[{"(", 
+          RowBox[{"1", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"winVec", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"1", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"rFinal", "=", 
+       RowBox[{"Clip", "[", 
+        RowBox[{
+         RowBox[{"Abs", "[", "r", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "1"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Mean", "[", "rFinal", "]"}], ">", "0.5"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"rFinal", "=", 
+          RowBox[{"Clip", "[", 
+           RowBox[{"rFinal", ",", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", 
+              RowBox[{"Clip", "[", 
+               RowBox[{
+                RowBox[{"Min", "[", "rFinal", "]"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0.5"}], "}"}]}], "]"}]}], "}"}]}], 
+           "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"rFinal", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "\[NotEqual]", "0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"winVec", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", 
+             RowBox[{"Round", "[", 
+              RowBox[{"winLen", " ", 
+               RowBox[{"rFinal", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], "]"}], "=", 
+          
+          RowBox[{"0.5", 
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               FractionBox["Pi", 
+                RowBox[{"rFinal", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]], 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"x", "[", 
+                  RowBox[{"[", 
+                   RowBox[{";;", 
+                    RowBox[{"Round", "[", 
+                    RowBox[{"winLen", " ", 
+                    RowBox[{"rFinal", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], "]"}], 
+                 "-", 
+                 RowBox[{"rFinal", "[", 
+                  RowBox[{"[", "1", "]"}], "]"}]}], ")"}]}], "]"}]}], 
+            ")"}]}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"rFinal", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "\[NotEqual]", "0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"winVec", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"winLen", "-", 
+              RowBox[{"Round", "[", 
+               RowBox[{"winLen", " ", 
+                RowBox[{"rFinal", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "+", "1"}], ";;"}], 
+            "]"}], "]"}], "=", 
+          RowBox[{"0.5", 
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               FractionBox["Pi", 
+                RowBox[{"rFinal", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]], 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"x", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"winLen", "-", 
+                    RowBox[{"Round", "[", 
+                    RowBox[{"winLen", " ", 
+                    RowBox[{"rFinal", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "+", "1"}], 
+                    ";;"}], "]"}], "]"}], "-", "1", "+", 
+                 RowBox[{"rFinal", "[", 
+                  RowBox[{"[", "2", "]"}], "]"}]}], ")"}]}], "]"}]}], 
+            ")"}]}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", "winVec"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"resample", "[", 
+    RowBox[{"inputSignal_", ",", "inputSR_", ",", "outputSR_"}], "]"}], ":=", 
+   " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "rationalR", ",", "outputSignal", ",", "L", ",", "M", ",", 
+       "inputSignalLen", ",", "upsampSignal", ",", "upsampSigLen", ",", 
+       "cutoff", ",", "lpfIR", ",", "lpfIRDel", ",", "lpfIRLen", ",", 
+       "maxLen", ",", "upsampSignalPad", ",", "lpfIRPad", ",", 
+       "delCompLPFIRPad", ",", "interpSignal"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"rationalR", "=", 
+       RowBox[{"Rationalize", "[", 
+        RowBox[{"outputSR", "/", "inputSR"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"rationalR", " ", "\[Equal]", " ", "1"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"outputSignal", "=", "inputSignal"}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"L", "=", 
+          RowBox[{"Numerator", "[", "rationalR", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"M", "=", 
+          RowBox[{"Denominator", "[", "rationalR", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"inputSignalLen", "=", 
+          RowBox[{"Length", "[", "inputSignal", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"upsampSignal", "=", 
+          RowBox[{"Upsample", "[", 
+           RowBox[{"inputSignal", ",", "L"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"upsampSigLen", "=", 
+          RowBox[{"Length", "[", "upsampSignal", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"cutoff", "=", 
+          RowBox[{"Min", "[", 
+           RowBox[{
+            RowBox[{"Pi", "/", "L"}], ",", 
+            RowBox[{"Pi", "/", "M"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"lpfIR", "=", 
+          RowBox[{"L", " ", 
+           RowBox[{"KaiserLPFIR", "[", 
+            RowBox[{"upsampSigLen", ",", 
+             RowBox[{"0.95", "cutoff"}], ",", "cutoff", ",", 
+             RowBox[{"\"\<SB Gain\>\"", "\[Rule]", 
+              RowBox[{"-", "60"}]}]}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"lpfIRDel", "=", 
+          RowBox[{"avgGroupDelay", "[", 
+           RowBox[{"lpfIR", ",", 
+            RowBox[{"inputSR", " ", "L"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"lpfIRLen", "=", 
+          RowBox[{"Length", "[", "lpfIR", "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"maxLen", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"upsampSigLen", ",", "lpfIRLen"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"upsampSignalPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"upsampSignal", ",", "maxLen"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"lpfIRPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"lpfIR", ",", "maxLen"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"delCompLPFIRPad", "=", 
+          RowBox[{"RotateLeft", "[", 
+           RowBox[{"lpfIRPad", ",", "lpfIRDel"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"interpSignal", "=", 
+          RowBox[{"conv", "[", 
+           RowBox[{"upsampSignalPad", ",", "delCompLPFIRPad"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"outputSignal", "=", 
+          RowBox[{"Downsample", "[", 
+           RowBox[{
+            RowBox[{"interpSignal", "[", 
+             RowBox[{"[", 
+              RowBox[{";;", "upsampSigLen"}], "]"}], "]"}], ",", "M"}], 
+           "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", "outputSignal"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "signalOnset", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20"}], ",", 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"signalOnset", "[", 
+    RowBox[{"inputSignal_", ",", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "resampling", ",", "interpSignal", ",", "threshold", ",", 
+       "onsetSample"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"resampling", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Resampling\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"interpSignal", "=", 
+       RowBox[{"resample", "[", 
+        RowBox[{"inputSignal", ",", "1", ",", "resampling"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"threshold", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"OptionValue", "[", "\"\<Threshold\>\"", "]"}], "/", 
+          "100"}], ")"}], " ", 
+        RowBox[{"Max", "[", 
+         RowBox[{"Abs", "[", "interpSignal", "]"}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"onsetSample", " ", "=", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Position", "[", 
+          RowBox[{"interpSignal", ",", 
+           RowBox[{"_", "?", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Abs", "[", "#", "]"}], "\[GreaterEqual]", 
+               "threshold"}], " ", "&"}], ")"}]}]}], "]"}], "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "1"}], "]"}], "]"}], "/", "resampling"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"TFtoIR", "[", "TF_", "]"}], ":=", 
+   RowBox[{"Re", "[", 
+    RowBox[{"InverseFourier", "[", 
+     RowBox[{"TF", ",", 
+      RowBox[{"FourierParameters", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"tukeyWin", "[", 
+    RowBox[{"winLen_", ",", 
+     RowBox[{"r_:", " ", "0.5"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "winVec"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"x", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"1", "-", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", "winLen"}], ")"}]}], ",", 
+         RowBox[{"(", 
+          RowBox[{"1", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"winVec", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"1", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"r", "\[NotEqual]", "0"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"winVec", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", 
+             RowBox[{"Round", "[", 
+              RowBox[{"winLen", " ", 
+               RowBox[{"r", "/", "2"}]}], "]"}]}], "]"}], "]"}], "=", 
+          RowBox[{"0.5", 
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               FractionBox[
+                RowBox[{"2", "Pi"}], "r"], 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"x", "[", 
+                  RowBox[{"[", 
+                   RowBox[{";;", 
+                    RowBox[{"Round", "[", 
+                    RowBox[{"winLen", " ", 
+                    RowBox[{"r", "/", "2"}]}], "]"}]}], "]"}], "]"}], "-", 
+                 RowBox[{"r", "/", "2"}]}], ")"}]}], "]"}]}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"winVec", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"winLen", "-", 
+              RowBox[{"Round", "[", 
+               RowBox[{"winLen", " ", 
+                RowBox[{"r", "/", "2"}]}], "]"}], "+", "1"}], ";;"}], "]"}], 
+           "]"}], "=", 
+          RowBox[{"0.5", 
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               FractionBox[
+                RowBox[{"2", "Pi"}], "r"], 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"x", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"winLen", "-", 
+                    RowBox[{"Round", "[", 
+                    RowBox[{"winLen", " ", 
+                    RowBox[{"r", "/", "2"}]}], "]"}], "+", "1"}], ";;"}], 
+                   "]"}], "]"}], "-", "1", "+", 
+                 RowBox[{"r", "/", "2"}]}], ")"}]}], "]"}]}], ")"}]}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "winVec"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"unwrapPhase", "[", 
+    RowBox[{"inputPhase_", ",", 
+     RowBox[{"tol_:", " ", "\[Pi]"}]}], "]"}], " ", ":=", " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"inputPhaseLen", ",", "unwrappedPhase"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputPhaseLen", "=", 
+       RowBox[{"Length", "[", "inputPhase", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"unwrappedPhase", "=", "inputPhase"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"inputPhase", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", "+", "1"}], "]"}], "]"}], "-", 
+             RowBox[{"inputPhase", "[", 
+              RowBox[{"[", "ii", "]"}], "]"}]}], "\[GreaterEqual]", "tol"}], 
+           ")"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"unwrappedPhase", "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"ii", "+", "1"}], ";;"}], "]"}], "]"}], "=", 
+            RowBox[{
+             RowBox[{"unwrappedPhase", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"ii", "+", "1"}], ";;"}], "]"}], "]"}], "-", 
+             RowBox[{"2", " ", "tol"}]}]}], ";"}]}], "\[IndentingNewLine]", 
+         "]"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"ii", ",", "1", ",", 
+          RowBox[{"inputPhaseLen", "-", "1"}]}], "}"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "unwrappedPhase"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "inverseFilter", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Regularization\>\"", "\[Rule]", "\"\<None\>\""}], ",", 
+     RowBox[{"\"\<Regularization Ranges\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1", ",", "0"}], "}"}], "}"}]}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"inverseFilter", "[", 
+    RowBox[{"h_", ",", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"IRLen", ",", "H", ",", "z", ",", "\[Epsilon]"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"IRLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "h", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"H", " ", "=", " ", 
+       RowBox[{"IRtoTF", "[", "h", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<Regularization\>\"", "]"}], ",", 
+        "\[IndentingNewLine]", "\"\<None\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"z", " ", "=", " ", 
+          RowBox[{"TFtoIR", "[", 
+           FractionBox["1", "H"], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", "\"\<Piecewise\>\"", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\[Epsilon]", " ", "=", " ", 
+          RowBox[{"piecewiseRegularization", "[", 
+           RowBox[{"IRLen", ",", 
+            RowBox[{
+            "OptionValue", "[", "\"\<Regularization Ranges\>\"", "]"}]}], 
+           "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"z", " ", "=", " ", 
+          RowBox[{"TFtoIR", "[", 
+           FractionBox[
+            RowBox[{"Conjugate", "[", "H", "]"}], 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Conjugate", "[", "H", "]"}], "H"}], "+", 
+             "\[Epsilon]"}]], "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "z"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"piecewiseRegularization", "[", 
+    RowBox[{"N_", ",", "\[Epsilon]List_"}], " ", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"regPoints", ",", "regFn", ",", "regHalf"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"regPoints", " ", "=", " ", 
+       RowBox[{"DeleteDuplicates", "[", 
+        RowBox[{"Flatten", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"\[Epsilon]List", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"ii", ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"\[Epsilon]List", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"ii", ",", "3"}], "]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"\[Epsilon]List", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"ii", ",", "2"}], "]"}], "]"}], ",", 
+                RowBox[{"\[Epsilon]List", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"ii", ",", "3"}], "]"}], "]"}]}], "}"}]}], "}"}], 
+            ",", 
+            RowBox[{"{", 
+             RowBox[{"ii", ",", "1", ",", 
+              RowBox[{"Length", "[", "\[Epsilon]List", "]"}]}], "}"}]}], 
+           "]"}], ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"regFn", " ", "=", " ", 
+       RowBox[{"Interpolation", "[", 
+        RowBox[{"regPoints", ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"regHalf", " ", "=", " ", 
+       RowBox[{"regFn", "[", 
+        RowBox[{"Range", "[", 
+         RowBox[{"0", ",", "1", ",", 
+          FractionBox["2", "N"]}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Join", "[", 
+       RowBox[{"regHalf", ",", 
+        RowBox[{"Reverse", "[", 
+         RowBox[{"regHalf", "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ";;", 
+            RowBox[{"-", "2"}]}], "]"}], "]"}], "]"}]}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "HatzOctaveSmoothPS", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Smoothing Factor\>\"", "\[Rule]", "3"}], ",", 
+     RowBox[{"\"\<Window\>\"", "\[Rule]", "\"\<Hanning\>\""}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HatzOctaveSmoothPS", "[", 
+    RowBox[{"inputPowerSpectrum_", ",", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "powerSpectrumLen", ",", "nyqIndex", ",", "oSFrac", ",", "oSWinType", 
+       ",", "Pf", ",", "mk", ",", "mkMax", ",", "b", ",", "Wsm", ",", 
+       "smoothedPSHalf", ",", "smoothedPS"}], "}"}], "\[IndentingNewLine]", 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"powerSpectrumLen", "=", 
+       RowBox[{"Length", "[", "inputPowerSpectrum", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"nyqIndex", "=", 
+       RowBox[{"Ceiling", "[", 
+        FractionBox[
+         RowBox[{"powerSpectrumLen", "+", "1"}], "2"], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"oSFrac", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Smoothing Factor\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"oSWinType", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Window\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Pf", " ", "=", " ", 
+       RowBox[{
+        SuperscriptBox["2", 
+         FractionBox["0.5", "oSFrac"]], "-", 
+        SuperscriptBox["0.5", 
+         FractionBox["0.5", "oSFrac"]]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"mk", "=", 
+       RowBox[{"IntegerPart", "[", 
+        RowBox[{
+         FractionBox[
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Range", "[", "nyqIndex", "]"}], "-", "1"}], ")"}], "2"], 
+         " ", "Pf"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"mk", "=", 
+       RowBox[{"Clip", "[", 
+        RowBox[{"mk", ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", 
+           RowBox[{"nyqIndex", "-", "1"}]}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"mkMax", "=", 
+       RowBox[{"Max", "[", "mk", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
+       RowBox[{
+       "oSWinType", ",", "\[IndentingNewLine]", "\"\<Rectangular\>\"", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"b", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+        ",", "\"\<Hanning\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"b", " ", "=", " ", "0.5"}], ";"}], "\[IndentingNewLine]", 
+        ",", "\"\<Hamming\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"b", " ", "=", " ", "0.54"}], ";"}]}], "\[IndentingNewLine]",
+        "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Wsm", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"{", 
+          RowBox[{"mkMax", ",", "powerSpectrumLen"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Wsm", "[", 
+           RowBox[{"[", 
+            RowBox[{"m", ",", 
+             RowBox[{"1", ";;", 
+              RowBox[{"m", "+", "1"}]}]}], "]"}], "]"}], "=", 
+          FractionBox[
+           RowBox[{"b", "-", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"b", "-", "1"}], ")"}], 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"\[Pi]", "/", "m"}], ")"}], 
+               RowBox[{"(", 
+                RowBox[{"Range", "[", 
+                 RowBox[{
+                  RowBox[{"-", "m"}], ",", "0"}], "]"}], ")"}]}], "]"}]}]}], 
+           RowBox[{
+            RowBox[{"2", " ", "b", " ", 
+             RowBox[{"(", 
+              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1"}]]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Wsm", "[", 
+           RowBox[{"[", 
+            RowBox[{"m", ",", 
+             RowBox[{
+              RowBox[{"m", "+", "2"}], ";;", 
+              RowBox[{
+               RowBox[{"2", "m"}], "+", "1"}]}]}], "]"}], "]"}], "=", 
+          FractionBox[
+           RowBox[{"b", "-", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"b", "-", "1"}], ")"}], 
+             RowBox[{"Cos", "[", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"\[Pi]", "/", "m"}], ")"}], 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"Range", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{"m", "+", "1"}]}], "]"}], "-", "1"}], ")"}]}], 
+              "]"}]}]}], 
+           RowBox[{
+            RowBox[{"2", " ", "b", " ", 
+             RowBox[{"(", 
+              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1"}]]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"m", ",", "1", ",", "mkMax"}], "}"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"smoothedPSHalf", "=", 
+       RowBox[{"inputPowerSpectrum", "[", 
+        RowBox[{"[", 
+         RowBox[{"1", ";;", "nyqIndex"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"smoothedPSHalf", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", 
+          RowBox[{"nyqIndex", "-", "1"}]}], "]"}], "]"}], "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Total", "[", 
+          RowBox[{
+           RowBox[{"inputPowerSpectrum", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"ii", "-", 
+               RowBox[{"mk", "[", 
+                RowBox[{"[", "ii", "]"}], "]"}]}], ";;", 
+              RowBox[{"ii", "+", 
+               RowBox[{"mk", "[", 
+                RowBox[{"[", "ii", "]"}], "]"}]}]}], "]"}], "]"}], " ", 
+           RowBox[{"Wsm", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"mk", "[", 
+               RowBox[{"[", "ii", "]"}], "]"}], ",", 
+              RowBox[{"1", ";;", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"2", 
+                  RowBox[{"mk", "[", 
+                   RowBox[{"[", "ii", "]"}], "]"}]}], "+", "1"}], ")"}]}]}], 
+             "]"}], "]"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"ii", ",", "2", ",", 
+           RowBox[{"nyqIndex", "-", "1"}]}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"smoothedPS", "=", 
+       RowBox[{"Join", "[", 
+        RowBox[{"smoothedPSHalf", ",", 
+         RowBox[{"Reverse", "[", 
+          RowBox[{"Conjugate", "[", 
+           RowBox[{"smoothedPSHalf", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ";;", 
+              RowBox[{"-", "2"}]}], "]"}], "]"}], "]"}], "]"}]}], "]"}]}]}]}],
+     "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"discreteAnalyticSignal", "[", "inputSignal_", "]"}], " ", ":=", 
+   " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "inputSignalReal", ",", "inputSignalRealDFT", ",", 
+       "inputSignalRealLength", ",", "inputSignalRealHalfLength", ",", 
+       "hilbertDFT", ",", "outputSignal"}], "}"}], "\[IndentingNewLine]", ",",
+      "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputSignalReal", "=", 
+       RowBox[{"Re", "[", "inputSignal", "]"}]}], ";", 
+      RowBox[{"inputSignalRealDFT", "=", 
+       RowBox[{"Fourier", "[", 
+        RowBox[{"inputSignalReal", ",", 
+         RowBox[{"FourierParameters", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", 
+            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], ";", 
+      RowBox[{"inputSignalRealLength", "=", 
+       RowBox[{"Length", "[", "inputSignalReal", "]"}]}], ";", 
+      RowBox[{"inputSignalRealHalfLength", "=", 
+       RowBox[{"Ceiling", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"inputSignalRealLength", "+", "1"}], ")"}], "/", "2"}], 
+        "]"}]}], ";", 
+      RowBox[{"hilbertDFT", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "inputSignalRealLength"}], "]"}]}], ";", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "inputSignalRealLength", "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"hilbertDFT", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"hilbertDFT", "[", 
+           RowBox[{"[", 
+            RowBox[{"2", ";;", 
+             RowBox[{"inputSignalRealHalfLength", "-", "1"}]}], "]"}], "]"}], 
+          "=", "2"}], ";", 
+         RowBox[{
+          RowBox[{"hilbertDFT", "[", 
+           RowBox[{"[", "inputSignalRealHalfLength", "]"}], "]"}], "=", "1"}],
+          ";"}], "\[IndentingNewLine]", ",", " ", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"hilbertDFT", "[", 
+           RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"hilbertDFT", "[", 
+           RowBox[{"[", 
+            RowBox[{"2", ";;", "inputSignalRealHalfLength"}], "]"}], "]"}], 
+          "=", "2"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"outputSignal", "=", 
+       RowBox[{"InverseFourier", "[", 
+        RowBox[{
+         RowBox[{"inputSignalRealDFT", " ", "hilbertDFT"}], ",", 
+         RowBox[{"FourierParameters", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", 
+            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"envelopeSignal", "[", "inputSignal_", "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "positiveEnvelope", ",", "negativeEnvelope", ",", "outputSignal"}], 
+      "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"positiveEnvelope", "=", 
+       RowBox[{"Chop", "[", 
+        RowBox[{"Abs", "[", 
+         RowBox[{"discreteAnalyticSignal", "[", "inputSignal", "]"}], "]"}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"negativeEnvelope", "=", 
+       RowBox[{"-", "positiveEnvelope"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"outputSignal", "=", 
+       RowBox[{"{", 
+        RowBox[{"positiveEnvelope", ",", "negativeEnvelope"}], "}"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HilbertTransform", "[", "inputSignal_", "]"}], " ", ":=", " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dAnalyticSignal", ",", "outputSignal"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"dAnalyticSignal", "=", 
+       RowBox[{"discreteAnalyticSignal", "[", "inputSignal", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"outputSignal", "=", 
+       RowBox[{"Im", "[", "dAnalyticSignal", "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getAllPassIR", "[", "inputIR_", "]"}], " ", ":=", " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "inputIRLen", ",", "inputIRHalfLen", ",", "inputTFMag", ",", 
+       "inputTFPhase", ",", "evenPartIR", ",", "oddPartIR", ",", 
+       "minPhaseResponse", ",", "outputIR"}], "}"}], "\[IndentingNewLine]", 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputIRLen", "=", 
+       RowBox[{"Length", "[", "inputIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"inputIRHalfLen", "=", 
+       RowBox[{"Ceiling", "[", 
+        RowBox[{"inputIRLen", "/", "2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"inputTFMag", "=", 
+       RowBox[{"Abs", "[", 
+        RowBox[{"Fourier", "[", 
+         RowBox[{"inputIR", ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"inputTFPhase", "=", 
+       RowBox[{"Arg", "[", 
+        RowBox[{"Fourier", "[", 
+         RowBox[{"inputIR", ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"evenPartIR", "=", 
+       RowBox[{"Re", "[", 
+        RowBox[{"InverseFourier", "[", 
+         RowBox[{
+          RowBox[{"Log", "[", "inputTFMag", "]"}], ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"oddPartIR", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "inputIRLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"oddPartIR", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", "inputIRHalfLen"}], "]"}], "]"}], "=", 
+       RowBox[{"evenPartIR", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", "inputIRHalfLen"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "inputIRLen", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"oddPartIR", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"inputIRHalfLen", "+", "2"}], ";;"}], "]"}], "]"}], "=", 
+          
+          RowBox[{"-", 
+           RowBox[{"evenPartIR", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"inputIRHalfLen", "+", "2"}], ";;"}], "]"}], "]"}]}]}], 
+         ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"oddPartIR", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"inputIRHalfLen", "+", "1"}], ";;"}], "]"}], "]"}], "=", 
+          
+          RowBox[{"-", 
+           RowBox[{"evenPartIR", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"inputIRHalfLen", "+", "1"}], ";;"}], "]"}], "]"}]}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"minPhaseResponse", "=", 
+       RowBox[{"Im", "[", 
+        RowBox[{"Fourier", "[", 
+         RowBox[{"oddPartIR", ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"outputIR", "=", 
+       RowBox[{"Re", "[", 
+        RowBox[{"InverseFourier", "[", 
+         RowBox[{
+          RowBox[{"E", "^", 
+           RowBox[{"(", 
+            RowBox[{"\[ImaginaryJ]", " ", 
+             RowBox[{"(", 
+              RowBox[{"inputTFPhase", "-", "minPhaseResponse"}], ")"}]}], 
+            ")"}]}], ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}]}], "\n", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getMinimumPhaseIR", "[", "inputIR_", "]"}], " ", ":=", " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "inputIRLen", ",", "inputIRHalfLen", ",", "inputTFMag", ",", 
+       "evenPartIR", ",", "oddPartIR", ",", "minPhaseResponse", ",", 
+       "outputIR"}], "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"inputIRLen", "=", 
+       RowBox[{"Length", "[", "inputIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"inputIRHalfLen", "=", 
+       RowBox[{"Ceiling", "[", 
+        RowBox[{"inputIRLen", "/", "2"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"inputTFMag", "=", 
+       RowBox[{"Abs", "[", 
+        RowBox[{"Fourier", "[", 
+         RowBox[{"inputIR", ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"evenPartIR", "=", 
+       RowBox[{"Re", "[", 
+        RowBox[{"InverseFourier", "[", 
+         RowBox[{
+          RowBox[{"Log", "[", "inputTFMag", "]"}], ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"oddPartIR", "=", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "inputIRLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"oddPartIR", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", "inputIRHalfLen"}], "]"}], "]"}], "=", 
+       RowBox[{"evenPartIR", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", "inputIRHalfLen"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "inputIRLen", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"oddPartIR", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"inputIRHalfLen", "+", "2"}], ";;"}], "]"}], "]"}], "=", 
+          
+          RowBox[{"-", 
+           RowBox[{"evenPartIR", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"inputIRHalfLen", "+", "2"}], ";;"}], "]"}], "]"}]}]}], 
+         ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"oddPartIR", "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"inputIRHalfLen", "+", "1"}], ";;"}], "]"}], "]"}], "=", 
+          
+          RowBox[{"-", 
+           RowBox[{"evenPartIR", "[", 
+            RowBox[{"[", 
+             RowBox[{
+              RowBox[{"inputIRHalfLen", "+", "1"}], ";;"}], "]"}], "]"}]}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"minPhaseResponse", "=", 
+       RowBox[{"Im", "[", 
+        RowBox[{"Fourier", "[", 
+         RowBox[{"oddPartIR", ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"outputIR", "=", 
+       RowBox[{"Re", "[", 
+        RowBox[{"InverseFourier", "[", 
+         RowBox[{
+          RowBox[{"inputTFMag", " ", 
+           RowBox[{"E", "^", 
+            RowBox[{"(", 
+             RowBox[{"\[ImaginaryJ]", " ", "minPhaseResponse"}], ")"}]}]}], 
+          ",", 
+          RowBox[{"FourierParameters", "->", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", " ", 
+             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}]}], "\n", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"realCepstrum", "[", "inputSignal_", "]"}], " ", ":=", " ", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", "outputSignal", "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"outputSignal", "=", 
+      RowBox[{"Re", "[", 
+       RowBox[{"InverseFourier", "[", 
+        RowBox[{
+         RowBox[{"Log", "[", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"Fourier", "[", 
+            RowBox[{"inputSignal", ",", 
+             RowBox[{"FourierParameters", "->", 
+              RowBox[{"{", 
+               RowBox[{"1", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}], "]"}], ",", 
+         RowBox[{"FourierParameters", "->", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", 
+            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}], "\n", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "getBalancedIR", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Order\>\"", "\[Rule]", "0"}], ",", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getBalancedIR", "[", 
+    RowBox[{"inputIR_", ",", 
+     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "iR", ",", "irLen", ",", "order", ",", "hankelMat", ",", "uMat", ",", 
+       "sigmaMat", ",", "vMat", ",", "hatA", ",", "hatB", ",", "hatC", ",", 
+       "hatD", ",", "fS", ",", "sys", ",", "sysIR"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"iR", "=", 
+       RowBox[{"Join", "[", 
+        RowBox[{
+         RowBox[{"{", "0", "}"}], ",", "inputIR"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"irLen", "=", 
+       RowBox[{"Length", "[", "iR", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"order", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Order\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"fS", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Sampling Rate\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"order", "\[LessEqual]", "0"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"order", "=", 
+          RowBox[{"irLen", "-", "1"}]}], ";"}]}], "\[IndentingNewLine]", 
+       "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"order", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"order", ",", "irLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"hankelMat", "=", 
+       RowBox[{"HankelMatrix", "[", "iR", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"uMat", ",", "sigmaMat", ",", "vMat"}], "}"}], "=", 
+       RowBox[{"SingularValueDecomposition", "[", "hankelMat", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"hatA", "=", 
+       RowBox[{
+        RowBox[{"Transpose", "[", 
+         RowBox[{"vMat", "[", 
+          RowBox[{"[", 
+           RowBox[{
+            RowBox[{"2", ";;", "irLen"}], ",", 
+            RowBox[{"1", ";;", "order"}]}], "]"}], "]"}], "]"}], ".", 
+        RowBox[{"vMat", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"1", ";;", 
+            RowBox[{"(", 
+             RowBox[{"irLen", "-", "1"}], ")"}]}], ",", 
+           RowBox[{"1", ";;", "order"}]}], "]"}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"hatB", "=", 
+       RowBox[{"Transpose", "[", 
+        RowBox[{"{", 
+         RowBox[{"vMat", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", 
+            RowBox[{"1", ";;", "order"}]}], "]"}], "]"}], "}"}], "]"}]}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"hatC", "=", 
+       RowBox[{"{", 
+        RowBox[{"iR", ".", 
+         RowBox[{"vMat", "[", 
+          RowBox[{"[", 
+           RowBox[{
+            RowBox[{"1", ";;", "irLen"}], ",", 
+            RowBox[{"1", ";;", "order"}]}], "]"}], "]"}]}], "}"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"hatD", "=", 
+       RowBox[{"{", 
+        RowBox[{"{", "0", "}"}], "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sys", "=", 
+       RowBox[{"StateSpaceModel", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"hatA", ",", "hatB", ",", "hatC", ",", "hatD"}], "}"}], ",", 
+         RowBox[{"SamplingPeriod", "\[Rule]", 
+          RowBox[{"1", "/", "fS"}]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"sysIR", "=", 
+       RowBox[{"RotateLeft", "[", 
+        RowBox[{"Flatten", "[", 
+         RowBox[{"OutputResponse", "[", 
+          RowBox[{"sys", ",", 
+           RowBox[{"N", "[", 
+            RowBox[{"Join", "[", 
+             RowBox[{
+              RowBox[{"{", "1", "}"}], ",", 
+              RowBox[{"ConstantArray", "[", 
+               RowBox[{"0", ",", 
+                RowBox[{
+                 RowBox[{"Length", "[", "inputIR", "]"}], "-", "1"}]}], 
+               "]"}]}], "]"}], "]"}]}], "]"}], "]"}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logCompensatedWeightsMatrix", "[", 
+    RowBox[{"FullLen_", ",", "Frac_", ",", "WinType_"}], "]"}], ":=", " ", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "SpecLen", ",", "Output", ",", "n", ",", "fL", ",", "nL", ",", "fH", 
+       ",", "nH", ",", "WinLen", ",", "WinVec", ",", "TempWinVec", ",", "m", 
+       ",", "mL", ",", "mH"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"SpecLen", " ", "=", " ", 
+       RowBox[{
+        FractionBox["FullLen", "2"], "+", "1"}]}], ";", "\[IndentingNewLine]",
+       "\[IndentingNewLine]", 
+      RowBox[{"Output", " ", "=", " ", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0.", ",", 
+         RowBox[{"{", 
+          RowBox[{"SpecLen", ",", "FullLen"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"n", "=", "0"}], ",", 
+        RowBox[{"n", "<", 
+         RowBox[{"SpecLen", "-", "1"}]}], ",", 
+        RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"fL", " ", "=", " ", 
+          RowBox[{"N", "[", 
+           RowBox[{"n", " ", 
+            SuperscriptBox["2", 
+             FractionBox[
+              RowBox[{"-", "1"}], 
+              RowBox[{"2", " ", "Frac"}]]]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"nL", " ", "=", " ", 
+          RowBox[{"Floor", "[", "fL", "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"fH", " ", "=", " ", 
+          RowBox[{"N", "[", 
+           RowBox[{"n", " ", 
+            SuperscriptBox["2", 
+             FractionBox["1", 
+              RowBox[{"2", " ", "Frac"}]]]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"nH", " ", "=", " ", 
+          RowBox[{"Ceiling", "[", "fH", "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"Upper", " ", "limit", " ", "correction"}], " ", "*)"}], 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"nH", ">", 
+            RowBox[{"SpecLen", "-", "1"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"nH", "=", 
+             RowBox[{"SpecLen", "-", "1"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"nL", "=", 
+             RowBox[{"Floor", "[", 
+              FractionBox[
+               SuperscriptBox["n", "2"], "nH"], "]"}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"fH", ">", 
+            RowBox[{"SpecLen", "-", "1"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"fH", "=", 
+             RowBox[{"SpecLen", "-", "1"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"fL", "=", 
+             FractionBox[
+              SuperscriptBox["n", "2"], "fH"]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"Window", " ", "function", " ", "computation"}], " ", 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"WinLen", " ", "=", " ", 
+          RowBox[{"nH", "-", "nL", "+", "1"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"WinVec", " ", "=", " ", 
+          RowBox[{"ConstantArray", "[", 
+           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"TempWinVec", " ", "=", " ", 
+          RowBox[{"ConstantArray", "[", 
+           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"WinLen", "\[Equal]", "1"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"WinVec", " ", "=", " ", "1"}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"m", " ", "=", " ", 
+             RowBox[{"Range", "[", 
+              RowBox[{"nL", ",", "nH"}], "]"}]}], ";", "\[IndentingNewLine]", 
+            
+            RowBox[{"mL", " ", "=", " ", 
+             RowBox[{"m", "-", "0.5"}]}], ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{"Lower", " ", "limit", " ", "of", " ", "integral"}], " ",
+              "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"mL", " ", "=", " ", 
+             RowBox[{
+              RowBox[{"mL", " ", 
+               RowBox[{"Unitize", "[", 
+                RowBox[{"Threshold", "[", 
+                 RowBox[{"mL", ",", "fL"}], "]"}], "]"}]}], "+", 
+              RowBox[{"fL", 
+               RowBox[{"(", 
+                RowBox[{"1", "-", 
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"Threshold", "[", 
+                   RowBox[{"mL", ",", "fL"}], "]"}], "]"}]}], ")"}]}]}]}], 
+            ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Lower", " ", "limit", " ", "cannot", " ", "be", " ", "smaller", 
+              " ", "than", " ", "fL"}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"mL", " ", "=", " ", 
+             RowBox[{
+              RowBox[{"mL", 
+               RowBox[{"(", 
+                RowBox[{"1", "-", 
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"Threshold", "[", 
+                   RowBox[{"mL", ",", "fH"}], "]"}], "]"}]}], ")"}]}], "+", 
+              " ", 
+              RowBox[{"fH", " ", 
+               RowBox[{"Unitize", "[", 
+                RowBox[{"Threshold", "[", 
+                 RowBox[{"mL", ",", "fH"}], "]"}], "]"}]}]}]}], ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Lower", " ", "limit", " ", "cannot", " ", "be", " ", "greater", 
+              " ", "than", " ", "fH"}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"mH", " ", "=", " ", 
+             RowBox[{"m", "+", "0.5"}]}], ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{"Upper", " ", "limit", " ", "of", " ", "integral"}], " ",
+              "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"mH", " ", "=", " ", 
+             RowBox[{
+              RowBox[{"mH", " ", 
+               RowBox[{"Unitize", "[", 
+                RowBox[{"Threshold", "[", 
+                 RowBox[{"mH", ",", "fL"}], "]"}], "]"}]}], "+", 
+              RowBox[{"fL", 
+               RowBox[{"(", 
+                RowBox[{"1", "-", 
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"Threshold", "[", 
+                   RowBox[{"mH", ",", "fL"}], "]"}], "]"}]}], ")"}]}]}]}], 
+            ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Upper", " ", "limit", " ", "cannot", " ", "be", " ", "smaller", 
+              " ", "than", " ", "fL"}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"mH", " ", "=", " ", 
+             RowBox[{
+              RowBox[{"mH", 
+               RowBox[{"(", 
+                RowBox[{"1", "-", 
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"Threshold", "[", 
+                   RowBox[{"mH", ",", "fH"}], "]"}], "]"}]}], ")"}]}], "+", 
+              " ", 
+              RowBox[{"fH", " ", 
+               RowBox[{"Unitize", "[", 
+                RowBox[{"Threshold", "[", 
+                 RowBox[{"mH", ",", "fH"}], "]"}], "]"}]}]}]}], ";", " ", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Upper", " ", "limit", " ", "cannot", " ", "be", " ", "greater", 
+              " ", "than", " ", "fH"}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"Switch", "[", 
+             RowBox[{
+             "WinType", ",", "\[IndentingNewLine]", "\"\<Rectangular\>\"", 
+              ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"TempWinVec", " ", "=", " ", 
+                RowBox[{
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"mL", "-", "mH"}], "]"}], " ", 
+                 RowBox[{"N", "[", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mH", "/", "n"}]}], "]"}], "-", 
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mL", "/", "n"}]}], "]"}]}], ")"}], "]"}]}]}], 
+               ";"}], ",", "\[IndentingNewLine]", "\"\<Hanning\>\"", ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"TempWinVec", " ", "=", " ", 
+                RowBox[{
+                 RowBox[{"Unitize", "[", 
+                  RowBox[{"mL", "-", "mH"}], "]"}], " ", 
+                 RowBox[{"N", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mH", "/", "n"}]}], "]"}], "-", 
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mL", "/", "n"}]}], "]"}]}], ")"}], "/", "2"}], 
+                   "+", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sin", "[", 
+                    RowBox[{"2", "\[Pi]", " ", "Frac", " ", 
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mH", "/", "n"}]}], "]"}]}], "]"}], "-", 
+                    RowBox[{"Sin", "[", 
+                    RowBox[{"2", "\[Pi]", " ", "Frac", " ", 
+                    RowBox[{"Log", "[", 
+                    RowBox[{"2", ",", 
+                    RowBox[{"mL", "/", "n"}]}], "]"}]}], "]"}]}], ")"}], "/", 
+                    
+                    RowBox[{"(", 
+                    RowBox[{"4", " ", "\[Pi]", " ", "Frac"}], ")"}]}]}], 
+                  "]"}]}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"WinVec", " ", "=", " ", 
+             RowBox[{"TempWinVec", "/", 
+              RowBox[{"Total", "[", "TempWinVec", "]"}]}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"Smoothing", " ", "matrix", " ", "computation"}], " ", 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Output", "[", 
+            RowBox[{"[", 
+             RowBox[{"n", "+", "1"}], "]"}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"nL", "+", "1"}], ";;", 
+             RowBox[{"nH", "+", "1"}]}], "]"}], "]"}], " ", "=", " ", 
+          "WinVec"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Output", "[", 
+        RowBox[{"[", "SpecLen", "]"}], "]"}], " ", "=", " ", 
+       RowBox[{"Output", "[", 
+        RowBox[{"[", 
+         RowBox[{"SpecLen", "-", "1"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "Output"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"centerAlignedWindowMatrix", "[", 
+    RowBox[{"FullLen_", ",", "Frac_", ",", "WinType_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "SpecLen", ",", "Output", ",", "M", ",", "Q", ",", "m", ",", "y", ",", 
+       "n", ",", "WinLen", ",", "WinVec", ",", "TempWinVec", ",", "b"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"SpecLen", " ", "=", " ", 
+       RowBox[{
+        FractionBox["FullLen", "2"], "+", "1"}]}], ";", "\[IndentingNewLine]",
+       "\[IndentingNewLine]", 
+      RowBox[{"Output", " ", "=", " ", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0.", ",", 
+         RowBox[{"{", 
+          RowBox[{"SpecLen", ",", "FullLen"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"M", " ", "=", " ", 
+       RowBox[{
+        FractionBox["FullLen", "2"], "-", "1"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Q", " ", "=", " ", 
+       RowBox[{"N", "[", 
+        FractionBox["1", 
+         RowBox[{
+          SuperscriptBox["2", 
+           FractionBox["1", 
+            RowBox[{"2", " ", "Frac"}]]], "-", 
+          SuperscriptBox["2", 
+           FractionBox[
+            RowBox[{"-", "1"}], 
+            RowBox[{"2", " ", "Frac"}]]]}]], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"m", " ", "=", " ", 
+       RowBox[{"Floor", "[", 
+        RowBox[{
+         FractionBox["1", "2"], 
+         FractionBox[
+          RowBox[{"Range", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"SpecLen", "-", "1"}]}], "]"}], "Q"]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"m", " ", "=", " ", 
+       RowBox[{"m", "+", 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"Unitize", "[", "m", "]"}]}], ")"}]}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"Make", " ", "sure", " ", "m"}], " ", "\[NotEqual]", " ", 
+        "0"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"y", " ", "=", " ", 
+       RowBox[{"m", " ", "-", " ", 
+        RowBox[{"Threshold", "[", 
+         RowBox[{"m", ",", 
+          RowBox[{
+           FractionBox["FullLen", "2"], "-", "2"}]}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"m", " ", "=", " ", 
+       RowBox[{"y", " ", "+", " ", 
+        RowBox[{"M", 
+         RowBox[{"(", 
+          RowBox[{"1", "-", 
+           RowBox[{"Unitize", "[", "y", "]"}]}], ")"}]}]}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"Make", " ", "sure", " ", "m"}], " ", "\[LessEqual]", " ", 
+        "M"}], " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"n", "=", "0"}], ",", 
+        RowBox[{"n", "<", "SpecLen"}], ",", 
+        RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{"Window", " ", "function", " ", "computation"}], " ", "*)"}],
+         "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"WinLen", " ", "=", " ", 
+          RowBox[{
+           RowBox[{"2", 
+            RowBox[{"m", "[", 
+             RowBox[{"[", 
+              RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "+", "1"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"WinVec", " ", "=", " ", 
+          RowBox[{"ConstantArray", "[", 
+           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"TempWinVec", " ", "=", " ", 
+          RowBox[{"ConstantArray", "[", 
+           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Switch", "[", 
+          RowBox[{
+          "WinType", ",", "\[IndentingNewLine]", "\"\<Rectangular\>\"", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"TempWinVec", " ", "=", 
+             FractionBox[
+              RowBox[{"ConstantArray", "[", 
+               RowBox[{"1.", ",", "WinLen"}], "]"}], "WinLen"]}], ";"}], ",", 
+           "\[IndentingNewLine]", "\"\<Hanning\>\"", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"b", " ", "=", " ", "0.5"}], ";", "\[IndentingNewLine]", 
+            RowBox[{"TempWinVec", " ", "=", 
+             RowBox[{"N", "[", 
+              FractionBox[
+               RowBox[{"b", "-", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{"b", "-", "1"}], ")"}], " ", 
+                 RowBox[{"Cos", "[", 
+                  RowBox[{
+                   FractionBox["\[Pi]", 
+                    RowBox[{"m", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"n", "+", "1"}], "]"}], "]"}]], 
+                   RowBox[{"Range", "[", 
+                    RowBox[{
+                    RowBox[{"-", 
+                    RowBox[{"m", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"n", "+", "1"}], "]"}], "]"}]}], ",", 
+                    RowBox[{"m", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "]"}]}], 
+                  "]"}]}]}], 
+               RowBox[{
+                RowBox[{"2", "b", " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"m", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"n", "+", "1"}], "]"}], "]"}], "+", "1"}], 
+                  ")"}]}], "-", "1"}]], "]"}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"WinVec", " ", "=", " ", 
+          RowBox[{"TempWinVec", "/", 
+           RowBox[{"Total", "[", "TempWinVec", "]"}]}]}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{"Smoothing", " ", "matrix", " ", "computation"}], " ", 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"n", "-", 
+             RowBox[{"m", "[", 
+              RowBox[{"[", 
+               RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "<", "0"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Output", "[", 
+             RowBox[{"[", 
+              RowBox[{"n", "+", "1"}], "]"}], "]"}], " ", "=", " ", 
+            RowBox[{"RotateLeft", "[", 
+             RowBox[{
+              RowBox[{"PadRight", "[", 
+               RowBox[{"WinVec", " ", ",", "FullLen"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"m", "[", 
+                RowBox[{"[", 
+                 RowBox[{"n", "+", "1"}], "]"}], "]"}], "-", "n"}]}], "]"}]}],
+            "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Output", "[", 
+              RowBox[{"[", 
+               RowBox[{"n", "+", "1"}], "]"}], "]"}], "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"n", "+", "1", "-", 
+                RowBox[{"m", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"n", "+", "1"}], "]"}], "]"}]}], ";;", 
+               RowBox[{"n", "+", "1", "+", 
+                RowBox[{"m", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"n", "+", "1"}], "]"}], "]"}]}]}], "]"}], "]"}], 
+            " ", "=", " ", "WinVec"}]}], "\[IndentingNewLine]", "]"}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "Output"}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getSmoothedTF", "[", 
+    RowBox[{"IR_", ",", "SmoothingMatrix_", ",", "SmoothingScale_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "FullIR", ",", "FullTF", ",", "FullPS", ",", "SmoothPSHalf", ",", 
+       "SmoothTF", ",", "SPLnorm", ",", "MagnitudeResponse"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"FullIR", " ", "=", " ", 
+       RowBox[{"PadRight", "[", 
+        RowBox[{"IR", ",", "FFTLength"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"FullTF", " ", "=", " ", 
+       RowBox[{"IRtoTF", "[", "FullIR", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"FullPS", " ", "=", " ", 
+       SuperscriptBox[
+        RowBox[{"Abs", "[", "FullTF", "]"}], "2"]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"SmoothPSHalf", " ", "=", " ", 
+       RowBox[{"SmoothingMatrix", ".", "FullPS"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
+       RowBox[{
+       "SmoothingScale", ",", "\[IndentingNewLine]", "\"\<Power\>\"", ",", 
+        RowBox[{
+         RowBox[{"SmoothPSHalf", " ", "=", " ", 
+          RowBox[{"SmoothingMatrix", ".", "FullPS"}]}], ";"}], ",", 
+        "\[IndentingNewLine]", "\"\<dB\>\"", ",", 
+        RowBox[{
+         RowBox[{"SmoothPSHalf", " ", "=", " ", 
+          RowBox[{"10", "^", 
+           RowBox[{"(", 
+            RowBox[{"SmoothingMatrix", ".", 
+             RowBox[{"Log", "[", 
+              RowBox[{"10", ",", "FullPS"}], "]"}]}], ")"}]}]}], ";"}]}], 
+       "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"SmoothTF", " ", "=", " ", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{"Join", "[", 
+         RowBox[{"SmoothPSHalf", ",", 
+          RowBox[{"Reverse", "[", 
+           RowBox[{"SmoothPSHalf", "[", 
+            RowBox[{"[", 
+             RowBox[{"2", ";;", 
+              RowBox[{"-", "2"}]}], "]"}], "]"}], "]"}]}], "]"}], "]"}]}]}]}],
+     "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getSPLNorm", "[", 
+   RowBox[{"refSPL_:", " ", "105"}], "]"}], ":=", 
+  RowBox[{"10", "^", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", "refSPL"}], "/", "20."}], ")"}]}]}]}], "Input",
+ CellChangeTimes->{
+  3.6964254067997217`*^9, {3.696426245240288*^9, 3.696426289308839*^9}, {
+   3.69642640587595*^9, 3.696426452128778*^9}, {3.6964269747974367`*^9, 
+   3.6964270325342197`*^9}, {3.696427065794364*^9, 3.696427087484063*^9}, {
+   3.696428291447131*^9, 3.6964283605344276`*^9}, {3.696428977167259*^9, 
+   3.696428982123331*^9}, {3.6964294557856092`*^9, 3.69642947791803*^9}, 
+   3.696429508773425*^9, {3.696429636435956*^9, 3.6964297768217497`*^9}, {
+   3.696431142207358*^9, 3.696431142836886*^9}, {3.6964349305567093`*^9, 
+   3.696434931074234*^9}, {3.696436985091125*^9, 3.6964370418469477`*^9}, {
+   3.6964371354019547`*^9, 3.696437261744685*^9}, {3.696437338237109*^9, 
+   3.696437425250938*^9}, {3.696476882260889*^9, 3.696476887559086*^9}, {
+   3.697302974453986*^9, 3.697302975396779*^9}, {3.6973030441953697`*^9, 
+   3.69730311804261*^9}, {3.697303682104973*^9, 3.697303699367806*^9}, {
+   3.6973037592857857`*^9, 3.697303786740789*^9}, {3.697303877339334*^9, 
+   3.697303922215788*^9}, {3.697303969999442*^9, 3.697304011296136*^9}, {
+   3.697304045406611*^9, 3.6973040772554693`*^9}, {3.697304109429257*^9, 
+   3.697304262492527*^9}, {3.697304432539358*^9, 3.697304443900227*^9}, {
+   3.6973046269969397`*^9, 3.697304679943791*^9}, {3.697305334035898*^9, 
+   3.69730533627907*^9}, {3.697305766636776*^9, 3.6973057764639883`*^9}, {
+   3.697305832254943*^9, 3.6973058991411543`*^9}, {3.6973101075029488`*^9, 
+   3.697310112620408*^9}, {3.697310144565506*^9, 3.697310174929572*^9}, {
+   3.697310317881916*^9, 3.697310368493416*^9}, {3.6973105234265614`*^9, 
+   3.697310586346423*^9}, {3.697310917907619*^9, 3.697310921570005*^9}, {
+   3.697311096092177*^9, 3.6973110979478903`*^9}, {3.69731114064711*^9, 
+   3.6973111416141787`*^9}, {3.697311173226907*^9, 3.697311230873596*^9}, {
+   3.697311466542942*^9, 3.6973114929110947`*^9}, {3.6973120367705307`*^9, 
+   3.6973120741759863`*^9}, {3.697312119074712*^9, 3.6973121350605593`*^9}, 
+   3.697322869409721*^9, {3.697322950293067*^9, 3.697322969845133*^9}, {
+   3.6973230009818974`*^9, 3.697323039780324*^9}, {3.697323124426083*^9, 
+   3.69732316528712*^9}, 3.697323339040353*^9, 3.697323408007764*^9, {
+   3.6973234501424427`*^9, 3.697323592125091*^9}, 3.697323678454233*^9, {
+   3.697323718366996*^9, 3.697323735193142*^9}, {3.69732381642027*^9, 
+   3.697323824154003*^9}, {3.697323985919621*^9, 3.697323985960483*^9}, {
+   3.69732430056523*^9, 3.697324367664188*^9}, {3.697324678605338*^9, 
+   3.697324737755063*^9}, {3.697324805988603*^9, 3.697324807100321*^9}, {
+   3.6973252518513193`*^9, 3.697325308739718*^9}, {3.697325359620104*^9, 
+   3.697325361170497*^9}, {3.6973254415105457`*^9, 3.6973254549028387`*^9}, {
+   3.697325502936934*^9, 3.697325507856882*^9}, {3.697325874007584*^9, 
+   3.6973259181743526`*^9}, {3.697326040693643*^9, 3.697326119787737*^9}, {
+   3.6973261700052433`*^9, 3.697326279361507*^9}, {3.69732671455552*^9, 
+   3.697326721896084*^9}, {3.697327142316534*^9, 3.697327154973999*^9}, {
+   3.697327434831151*^9, 3.697327443866253*^9}, {3.6973274755630417`*^9, 
+   3.697327501772771*^9}, {3.697328068390411*^9, 3.697328071238412*^9}, {
+   3.697328558424944*^9, 3.697328573707615*^9}, {3.697328649412703*^9, 
+   3.697328718983968*^9}, {3.697331287487541*^9, 3.697331372948575*^9}, {
+   3.69738064061401*^9, 3.697380647167285*^9}, 3.697485883971064*^9, 
+   3.69755096966255*^9, {3.697552510827012*^9, 3.697552552526146*^9}, {
+   3.697562940453828*^9, 3.697562966621739*^9}, 3.697566852824074*^9, {
+   3.69756916735498*^9, 3.697569204633974*^9}, {3.69756923515276*^9, 
+   3.6975692380548573`*^9}, {3.6975693331563387`*^9, 3.697569363635008*^9}, {
+   3.7008023747310543`*^9, 3.700802374832141*^9}, {3.7008025487849617`*^9, 
+   3.700802566454664*^9}, {3.7008028435291023`*^9, 3.70080284483924*^9}, {
+   3.700802992694543*^9, 3.700802994221753*^9}, {3.700862548471241*^9, 
+   3.7008625495106697`*^9}, {3.7008630036857*^9, 3.700863004163802*^9}, {
+   3.7108806886277027`*^9, 3.71088070017295*^9}, {3.710979601493927*^9, 
+   3.710979602345035*^9}, 3.710979650075598*^9, {3.710979741379221*^9, 
+   3.710979741759816*^9}, {3.710980348565116*^9, 3.7109803494042807`*^9}, {
+   3.7109820844371033`*^9, 3.710982151952886*^9}, {3.710982254478057*^9, 
+   3.710982299833465*^9}, {3.7109823707843018`*^9, 3.710982378251789*^9}, {
+   3.7109825877219563`*^9, 3.710982594597763*^9}, {3.711281729040804*^9, 
+   3.711281734263935*^9}, {3.711282050081573*^9, 3.711282104437627*^9}, {
+   3.711282159066339*^9, 3.711282208022943*^9}, {3.711282245473814*^9, 
+   3.711282438142296*^9}, {3.711282905915585*^9, 3.711282906031768*^9}, {
+   3.711283181572776*^9, 3.71128320993556*^9}, {3.7112832434086637`*^9, 
+   3.711283358496161*^9}, {3.71128339073341*^9, 3.7112833911379004`*^9}, {
+   3.711283450548318*^9, 3.711283487735177*^9}, 3.711283542929722*^9, 
+   3.711283587957405*^9, {3.711283888885992*^9, 3.711283917472127*^9}, {
+   3.725494141751453*^9, 3.725494144787938*^9}, 3.725499382461955*^9, {
+   3.730643426522358*^9, 3.730643428824481*^9}, {3.730643696322856*^9, 
+   3.730643722350617*^9}, {3.730665297484737*^9, 3.730665335729488*^9}, 
+   3.730665538045487*^9, {3.730666858419088*^9, 3.730666927476688*^9}, 
+   3.730667056526393*^9, {3.740170428781705*^9, 3.7401704577925587`*^9}, {
+   3.740170522600808*^9, 3.740170529888485*^9}, {3.7401712073608513`*^9, 
+   3.740171241394766*^9}, {3.740171354381405*^9, 3.740171359988839*^9}, {
+   3.7401714020349417`*^9, 3.7401714505862017`*^9}, {3.7401714908963203`*^9, 
+   3.740171515448062*^9}, {3.740180568107717*^9, 3.74018066037752*^9}, {
+   3.740246500249729*^9, 3.740246518158349*^9}, {3.740246759735137*^9, 
+   3.740246779605422*^9}, {3.740247065802297*^9, 3.740247072352274*^9}, {
+   3.7402479173547583`*^9, 3.740247922036078*^9}, {3.740248024877022*^9, 
+   3.740248047943358*^9}, 3.740248378946838*^9, {3.740248581084365*^9, 
+   3.740248582920545*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+50c544207a54"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the `Private context", "Section"],
+
+Cell[BoxData[
+ RowBox[{"End", "[", "]"}]], "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the package context", "Section"],
+
+Cell[BoxData[
+ RowBox[{"EndPackage", "[", "]"}]], "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+}, Open  ]]
+}, Open  ]]
+},
+AutoGeneratedPackage->Automatic,
+WindowSize->{945, 750},
+WindowMargins->{{239, Automatic}, {Automatic, 30}},
+SpellingDictionaries->{"CorrectWords"->{"dsp"}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["Code"], PageWidth -> WindowWidth, AutoIndent -> Automatic, 
+    AutoSpacing -> True, LineBreakWithin -> Automatic, LineIndent -> 1, 
+    LinebreakAdjustments -> {0.85, 2, 10, 0, 1}], 
+   Cell[
+    StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
+  FrontEndVersion -> 
+  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, 2017)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 175, 2, 92, "Title", "ExpressionUUID" -> \
+"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+Cell[758, 26, 1776, 39, 600, "Text", "ExpressionUUID" -> \
+"dca19e92-ab53-460e-aff2-921c62d34d07"],
+Cell[CellGroupData[{
+Cell[2559, 69, 36, 0, 64, "Section", "ExpressionUUID" -> \
+"38c1865a-3c49-47bf-80d2-18f70c86ad6c"],
+Cell[2598, 71, 317, 7, 48, "Input", "ExpressionUUID" -> \
+"71729209-1ef9-4b73-8904-8ce8c08cb755"],
+Cell[CellGroupData[{
+Cell[2940, 82, 116, 0, 44, "Subsection", "ExpressionUUID" -> \
+"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+Cell[3059, 84, 18369, 344, 4228, "Input", "ExpressionUUID" -> \
+"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21477, 434, 45, 0, 64, "Section", "ExpressionUUID" -> \
+"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
+Cell[21525, 436, 253, 5, 48, "Input", "ExpressionUUID" -> \
+"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[CellGroupData[{
+Cell[21803, 445, 42, 0, 44, "Subsection", "ExpressionUUID" -> \
+"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
+Cell[21848, 447, 97162, 2416, 11849, "Input", "ExpressionUUID" -> \
+"c183ef61-fc0b-44b0-949b-50c544207a54"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[119059, 2869, 43, 0, 64, "Section", "ExpressionUUID" -> \
+"93737186-8317-4603-9248-c252d9c69474"],
+Cell[119105, 2871, 106, 1, 48, "Input", "ExpressionUUID" -> \
+"e8b95233-aef3-4c13-b826-1a71099026dd"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[119248, 2877, 42, 0, 64, "Section", "ExpressionUUID" -> \
+"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
+Cell[119293, 2879, 113, 1, 48, "Input", "ExpressionUUID" -> \
+"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

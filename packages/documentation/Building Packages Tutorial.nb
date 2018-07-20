@@ -1,0 +1,2331 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     84282,       2323]
+NotebookOptionsPosition[     66935,       1828]
+NotebookOutlinePosition[     75607,       2023]
+CellTagsIndexPosition[     74496,       2002]
+WindowTitle->Automatic
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Building Packages", "Title",
+ Editable->True,
+ CellOpen->True,
+ TextAlignment->Center,
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]", 
+   "CellGUID[239753465983758287344161802390409510960]"},
+ CellID->1881910291],
+
+Cell[TextData[{
+ "This notebook is Copyright \[Copyright] 2014 Scientific Arts, LLC,  all \
+rights reserved.  It may be redistributed only in full and in its original \
+form without modification; and it may not be used for any commercial purpose \
+without permission from Scientific Arts.  A non-exclusive royalty-free \
+license is given to reproduce and use all the of the ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " ",
+ StyleBox["code",
+  FontSlant->"Italic"],
+ " in this notebook for any purpose whatsoever, as well as any of the ideas.  \
+No guarantee whatsoever is given as to the  accuracy or functionality of \
+anything presented in this document.  Use at your own risk. \[LineSeparator]\
+\[LineSeparator]Enjoy!I hope that it's useful. For further information on \
+Scientific Arts Consulting and Training, please click on the following Link: ",
+ ButtonBox["Scientific Arts",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://scientificarts.com"], None},
+  ButtonNote->"http://scientificarts.com"],
+ ".\n\nTo email, use the following address ",
+ ButtonBox["info@scientificarts.com",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["mailto:info@scientificarts.com"], None},
+  ButtonNote->"mailto:info@scientificarts.com"],
+ "."
+}], "Text",
+ Editable->False,
+ CellFrame->True,
+ ShowCellBracket->False,
+ CellChangeTimes->{{3.417128787102659*^9, 3.417128932911289*^9}, {
+   3.417128966977538*^9, 3.417129009600556*^9}, {3.4171299658753567`*^9, 
+   3.41713007488867*^9}, 3.417130106213378*^9, {3.417130890353876*^9, 
+   3.417130965142454*^9}, {3.4171310313529577`*^9, 3.417131134463414*^9}, {
+   3.417131180005157*^9, 3.41713120084977*^9}, {3.602940312728759*^9, 
+   3.602940427619114*^9}, {3.6032319876255503`*^9, 3.603232042402145*^9}},
+ Background->GrayLevel[0.9],
+ CellID->2123826423],
+
+Cell[CellGroupData[{
+
+Cell["Introduction", "Section",
+ CellChangeTimes->{{3.5996571327863483`*^9, 3.5996571344005003`*^9}, {
+  3.603214789525092*^9, 3.603214790423173*^9}},
+ CellID->1570131523],
+
+Cell[TextData[{
+ "Code that you want to reuse often as a \[OpenCurlyDoubleQuote]library\
+\[CloseCurlyDoubleQuote] for ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " is best created in a Package. A tutorial for the general methods for \
+setting up Packages is in the on-line documentation at this link: ",
+ ButtonBox["tutorial/SettingUpMathematicaPackages",
+  BaseStyle->"Link",
+  ButtonData->"paclet:tutorial/SettingUpMathematicaPackages"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.599655494672112*^9, 3.599655552981276*^9}, {
+  3.599655603151106*^9, 3.599655676059204*^9}, {3.599655711296185*^9, 
+  3.599655711298418*^9}, {3.599655742002569*^9, 3.599655752776931*^9}},
+ CellID->128461890],
+
+Cell[TextData[{
+ "In understanding packages it is good to also be familiar with Contexts in \
+",
+ StyleBox["Mathematica. ",
+  FontSlant->"Italic"],
+ "A tutorial about Contexts can be found at this on-line documentation link: ",
+ ButtonBox["tutorial/Contexts",
+  BaseStyle->"Link",
+  ButtonData->"paclet:tutorial/Contexts"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.5996562753624268`*^9, 3.599656371082728*^9}},
+ CellID->576973479],
+
+Cell["\<\
+A Package is contained in a text file which ends with the suffix \
+\[OpenCurlyDoubleQuote].m\[CloseCurlyDoubleQuote] as opposed to a notebook\
+\[CloseCurlyQuote]s \[OpenCurlyDoubleQuote].nb\[CloseCurlyDoubleQuote].\
+\>", "Text",
+ CellChangeTimes->{{3.599655858987028*^9, 3.599655902966799*^9}},
+ CellID->894600753],
+
+Cell[TextData[{
+ "There are several ways to code the ",
+ StyleBox[".m", "MR"],
+ " file.  One is to work directly with the file either from within ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", from within a text editor, or through Wolfram Workbench. I generally use ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " as it\[CloseCurlyQuote]s most convenient.  But some folks use Workbench \
+for large projects, especially when it is a collaborative one amongst several \
+developers. "
+}], "Text",
+ CellChangeTimes->{{3.5996559041721907`*^9, 3.5996560235167713`*^9}, 
+   3.599745441693823*^9},
+ CellID->749531548],
+
+Cell[TextData[{
+ "Within ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " there are two approaches.  The first is to open the ",
+ StyleBox[".m", "MR"],
+ " file directly in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " and edit it there.  The second is to create a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " notebook which contains the code but where the ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " notebook is set up in a special way to automatically save the code \
+intended for the package\[CloseCurlyQuote]s ",
+ StyleBox[".m", "MR"],
+ " file into a separate ",
+ StyleBox[".m", "MR"],
+ " file. "
+}], "Text",
+ CellChangeTimes->{{3.599656038596613*^9, 3.599656120081614*^9}},
+ CellID->243210937],
+
+Cell[TextData[{
+ "I generally use the latter approach and we can cover the details of how to \
+do that at a later time.  But to do things in the least complex way first, I \
+will show how to write a package directly in a ",
+ StyleBox[".m", "MR"],
+ " file and will review what has been done there in this notebook. "
+}], "Text",
+ CellChangeTimes->{{3.599656130549911*^9, 3.599656203854397*^9}, {
+  3.599745492367146*^9, 3.5997455124844313`*^9}},
+ CellID->295849766],
+
+Cell[TextData[{
+ "The advantage of using the .nb with automatic saving is that one can use \
+all the advanced features of notebooks when writing one\[CloseCurlyQuote]s \
+code.  But when working with a ",
+ StyleBox[".m", "MR"],
+ " file directly within ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " one can still add textual comments in the file easily (without actually \
+having to set them off using comment characters).   "
+}], "Text",
+ CellChangeTimes->{{3.599658171377873*^9, 3.5996582944977303`*^9}, 
+   3.599678934374371*^9},
+ CellID->36603766],
+
+Cell[TextData[{
+ "One significant disadvantage of coding directly in the ",
+ StyleBox[".m", "MR"],
+ " file is that the code is only saved in a 1-dimensional manner (without \
+2-dimensional equation layout and without things like automatically wrapping \
+and indenting).  So a bit of code that you might write like this in a \
+notebook,"
+}], "Text",
+ CellChangeTimes->{{3.599658521740612*^9, 3.599658680678562*^9}},
+ CellID->918504750],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"myFunction", "[", "x_", "]"}], ":=", 
+   FractionBox[
+    RowBox[{
+     FractionBox[
+      RowBox[{"ArcTan", "[", 
+       FractionBox[
+        RowBox[{
+         RowBox[{"-", "1"}], "+", 
+         RowBox[{"2", " ", "x"}]}], 
+        SqrtBox["3"]], "]"}], 
+      SqrtBox["3"]], "+", 
+     RowBox[{
+      FractionBox["1", "3"], " ", 
+      RowBox[{"Log", "[", 
+       RowBox[{"1", "+", "x"}], "]"}]}], "-", 
+     RowBox[{
+      FractionBox["1", "6"], " ", 
+      RowBox[{"Log", "[", 
+       RowBox[{"1", "-", "x", "+", 
+        SuperscriptBox["x", "2"]}], "]"}]}]}], 
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "12"], " ", 
+      SqrtBox[
+       RowBox[{
+        SqrtBox["x"], "+", "x"}]], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"-", "3"}], "+", 
+        RowBox[{"2", " ", 
+         SqrtBox["x"]}], "+", 
+        RowBox[{"8", " ", "x"}]}], ")"}]}], "+", 
+     RowBox[{
+      FractionBox["1", "8"], " ", 
+      RowBox[{"Log", "[", 
+       RowBox[{"1", "+", 
+        RowBox[{"2", " ", 
+         SqrtBox["x"]}], "+", 
+        RowBox[{"2", " ", 
+         SqrtBox[
+          RowBox[{
+           SqrtBox["x"], "+", "x"}]]}]}], "]"}]}]}]]}], ";"}]], "Input",
+ CellChangeTimes->{{3.599658687599975*^9, 3.599658703319007*^9}, {
+   3.599658752569643*^9, 3.599658762183598*^9}, 3.599658905696677*^9},
+ CellID->637636743],
+
+Cell[TextData[{
+ "would, in the ",
+ StyleBox[".m", "MR"],
+ " file have to be written as, "
+}], "Text",
+ CellChangeTimes->{{3.5996587676378527`*^9, 3.599658786682329*^9}},
+ CellID->1984270432],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"myFunction", "[", "x_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"ArcTan", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "1"}], "+", 
+           RowBox[{"2", " ", "x"}]}], ")"}], "/", 
+         RowBox[{"Sqrt", "[", "3", "]"}]}], "]"}], "/", 
+       RowBox[{"Sqrt", "[", "3", "]"}]}], "+", 
+      RowBox[{
+       RowBox[{"1", "/", "3"}], " ", 
+       RowBox[{"Log", "[", 
+        RowBox[{"1", "+", "x"}], "]"}]}], "-", 
+      RowBox[{
+       RowBox[{"1", "/", "6"}], " ", 
+       RowBox[{"Log", "[", 
+        RowBox[{"1", "-", "x", "+", 
+         RowBox[{"x", "^", "2"}]}], "]"}]}]}], ")"}], "/", 
+    RowBox[{"(", "\n", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"1", "/", "12"}], " ", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{
+         RowBox[{"Sqrt", "[", "x", "]"}], "+", "x"}], "]"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"-", "3"}], "+", 
+         RowBox[{"2", " ", 
+          RowBox[{"Sqrt", "[", "x", "]"}]}], "+", 
+         RowBox[{"8", " ", "x"}]}], ")"}]}], "+", 
+      RowBox[{
+       RowBox[{"1", "/", "8"}], " ", 
+       RowBox[{"Log", "[", 
+        RowBox[{"1", "+", 
+         RowBox[{"2", " ", 
+          RowBox[{"Sqrt", "[", "x", "]"}]}], "+", 
+         RowBox[{"2", " ", 
+          RowBox[{"Sqrt", "[", 
+           RowBox[{
+            RowBox[{"Sqrt", "[", "x", "]"}], "+", "x"}], "]"}]}]}], "]"}]}]}],
+      ")"}]}]}], ";"}]], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.599658796530138*^9, 3.599658805611652*^9}, {
+   3.599658903001007*^9, 3.599658917620182*^9}, {3.5996589598897057`*^9, 
+   3.599658967803742*^9}, 3.6032322823679943`*^9},
+ CellID->2091006776],
+
+Cell[TextData[{
+ "(Actually you could enter it in the first form in the ",
+ StyleBox[".m", "MR"],
+ " file.  But once the ",
+ StyleBox[".m", "MR"],
+ " file is saved, closed, and then reopened, it will have reverted to the \
+second form. You can temporarily regain the more sophisticated 2-dimensional \
+formatting in any given cell in the .",
+ StyleBox["m", "MR"],
+ " file by selecting the cell bracket and using the ",
+ StyleBox["Cell\[RightAngleBracket]Convert \
+To\[RightAngleBracket]StandardForm", "SB"],
+ " menu command.)"
+}], "Text",
+ CellChangeTimes->{{3.5996589749649878`*^9, 3.5996590184377947`*^9}, 
+   3.599676554379283*^9, {3.599678279883453*^9, 3.599678285588963*^9}, {
+   3.599679117361766*^9, 3.599679213653447*^9}, {3.5996792637241173`*^9, 
+   3.599679272813136*^9}, {3.599745556768861*^9, 3.5997455575822897`*^9}},
+ CellID->2059386194],
+
+Cell[TextData[{
+ "There are several steps in the process of creating, coding, and then \
+setting things up so that the ",
+ StyleBox[".m", "MR"],
+ " file gives you access to the functions that you have defined in it and \
+made publicly usable."
+}], "Text",
+ CellChangeTimes->{{3.599656211125107*^9, 3.599656271431115*^9}, {
+   3.599656623750442*^9, 3.599656624251812*^9}, 3.599678940032909*^9},
+ CellID->467937078],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Create the ",
+ StyleBox[".m", "MR"],
+ " file and set up its basic commands"
+}], "Item",
+ Editable->True,
+ TaggingRules:>{"GUIDTag[277496830830043457138791447807180897171]"},
+ CellChangeTimes->{{3.599656657439042*^9, 3.599656686615542*^9}},
+ FontFamily->"Helvetica",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+   "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+   "CellGUID[290790887467933463437083315803046136934]"},
+ CellID->809885586],
+
+Cell["\<\
+Code both the private (non-publicly accessible) and publicly deployed code\
+\>", "Item",
+ Editable->True,
+ TaggingRules:>{"GUIDTag[29169657490858014683841636725930053595]"},
+ CellChangeTimes->{{3.5996566967975683`*^9, 3.599656718945867*^9}, {
+  3.59967894213315*^9, 3.599678947003986*^9}, {3.599745590687317*^9, 
+  3.599745592962077*^9}},
+ FontFamily->"Helvetica",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+   "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+   "CellGUID[216414782914739427049422513515343342866]"},
+ CellID->1630099433],
+
+Cell["Test and recode", "Item",
+ Editable->True,
+ TaggingRules:>{"GUIDTag[265020232026120895401983431503707301637]"},
+ CellChangeTimes->{{3.599656735233529*^9, 3.599656737327835*^9}},
+ FontFamily->"Helvetica",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+   "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+   "CellGUID[334194252049779448392758499698240480077]"},
+ CellID->2132879464],
+
+Cell[TextData[{
+ "Place the final ",
+ StyleBox[".m", "MR"],
+ " file (or the directory that contains it if that is how it is organized) \
+into the proper place on your disk so that the ",
+ StyleBox["Needs", "MR"],
+ " command (documentation at this link: ",
+ StyleBox[ButtonBox["Needs",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/Needs"], "MR"],
+ ") knows where to look for it when you wish to load the package. "
+}], "Item",
+ Editable->True,
+ TaggingRules:>{"GUIDTag[192260198354742108933811882875653830719]"},
+ CellChangeTimes->{{3.5996567435966663`*^9, 3.59965685542266*^9}},
+ FontFamily->"Helvetica",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+   "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+   "CellGUID[215718345637159749150813977434082078854]"},
+ CellID->1508115724]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["The naming of things", "Section",
+ CellChangeTimes->{{3.599657142411662*^9, 3.599657145339836*^9}},
+ CellID->921452725],
+
+Cell["\<\
+First a few comments on the naming of parameters and functions. \
+\>", "Text",
+ CellChangeTimes->{{3.599657147635651*^9, 3.599657164785767*^9}},
+ CellID->1351370558],
+
+Cell[TextData[{
+ "Generally it is best to give functions and parameters descriptive names.  \
+And generally the names should be (by ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " convention) be in CamelCase.  So rather than a function called ",
+ StyleBox["comparry", "MR"],
+ " it should be called ",
+ StyleBox["ComputeArray", "MR"],
+ ". This makes is much easier to read the code and understand the proposed \
+meaning of the symbols in it. "
+}], "Text",
+ CellChangeTimes->{{3.599657167443926*^9, 3.599657190431582*^9}, {
+   3.599657392332597*^9, 3.5996574528956127`*^9}, {3.599657501395281*^9, 
+   3.599657521008663*^9}, {3.5996577849802847`*^9, 3.599657802530298*^9}, 
+   3.599678958742676*^9},
+ CellID->969869368],
+
+Cell[TextData[{
+ "An alternative to strict CamelCase is to use a convention where the first \
+letter is always lower case, as in ",
+ StyleBox["computeArray", "MR"],
+ ". The advantage of this is that, since all internal ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " symbols are in strict CamelCase, you will never create a symbol that \
+conflicts with an internal ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " one.  However, using strict CamelCase is fine so long as your symbol names \
+are well named. "
+}], "Text",
+ CellChangeTimes->{{3.599657562008059*^9, 3.59965764251422*^9}, {
+   3.5996577736358147`*^9, 3.5996578472070837`*^9}, 3.59967896755149*^9},
+ CellID->1543303611],
+
+Cell[TextData[{
+ "Also very short names should be avoided. So one should not call something \
+",
+ StyleBox["v", "MR"],
+ ", rather it should be called ",
+ StyleBox["Velocity", "MR"],
+ ". "
+}], "Text",
+ CellChangeTimes->{{3.5996575152173223`*^9, 3.599657558038433*^9}, 
+   3.5996789695494843`*^9},
+ CellID->384029282],
+
+Cell[TextData[{
+ "When creating symbols one should always be careful that they do not \
+conflict with ones that ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " already has defined.  This may be tricky since ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " ships with add-on packages which are not loaded by default.  So a symbol \
+that you define may conflict with one that is already reserved but not \
+loaded.  If you define a symbol that conflict with one that is already loaded \
+it will generate a \[OpenCurlyDoubleQuote]shadowing\[CloseCurlyDoubleQuote] \
+error when you load the package. "
+}], "Text",
+ CellChangeTimes->{{3.5996576501701183`*^9, 3.599657761694783*^9}, 
+   3.599657854324622*^9, {3.5996789737875233`*^9, 3.599678976970808*^9}},
+ CellID->889444559],
+
+Cell["\<\
+When writing a function definition the pattern names should generally not \
+start with a capital letter.  Thus one would write\
+\>", "Text",
+ CellChangeTimes->{{3.599661190120269*^9, 3.599661232377935*^9}, {
+  3.59967897888011*^9, 3.599678993674417*^9}},
+ CellID->1691195001],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"gTest", "[", "radiusValue_", "]"}], ":=", 
+   RowBox[{"\[Pi]", " ", 
+    SuperscriptBox["radiusValue", "2"]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.599661238462719*^9, 3.599661272438093*^9}},
+ CellID->183268118],
+
+Cell["rather than", "Text",
+ CellChangeTimes->{{3.599661275317375*^9, 3.5996612764775677`*^9}},
+ CellID->225983671],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"gTest", "[", "RadiusValue_", "]"}], ":=", 
+   RowBox[{"\[Pi]", " ", 
+    SuperscriptBox["RadiusValue", "2"]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.599661238462719*^9, 3.599661310242403*^9}},
+ CellID->1356470601],
+
+Cell[TextData[{
+ "As a technical matter either way is fine since the pattern names are tags \
+and not symbols themselves. However, it is clearer and generally the way \
+things are done by ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " developers. "
+}], "Text",
+ CellChangeTimes->{{3.599661287960698*^9, 3.599661362616476*^9}},
+ CellID->514994455],
+
+Cell["\<\
+When naming symbols that are fixed constants I generally set them apart in \
+their naming convention by starting their names with a $. So if I were to \
+have a fixed parameter in a package I would name it \
+\>", "Text",
+ CellChangeTimes->{{3.5996613749473267`*^9, 3.599661425594297*^9}},
+ CellID->79727029],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"$PiSquaredValue", "=", 
+   RowBox[{"\[Pi]", "^", "2"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.599661429200137*^9, 3.5996614533084173`*^9}},
+ CellID->1033425407],
+
+Cell["rather than", "Text",
+ CellChangeTimes->{{3.5996614556194563`*^9, 3.599661460462338*^9}},
+ CellID->2000482202],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PiSquaredValue", "=", 
+   RowBox[{"\[Pi]", "^", "2"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.599661429200137*^9, 3.599661464160583*^9}},
+ CellID->963122120]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Creating a new ",
+ StyleBox[".m", "MR"],
+ " file"
+}], "Section",
+ CellChangeTimes->{{3.599675974850075*^9, 3.5996759788103724`*^9}},
+ CellID->1361293294],
+
+Cell[TextData[{
+ "To create a new ",
+ StyleBox[".m", "MR"],
+ " file from within ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " just use the ",
+ StyleBox["File\[RightAngleBracket]New\[RightAngleBracket]Package", "SB"],
+ " menu command. "
+}], "Text",
+ CellChangeTimes->{{3.599675982754149*^9, 3.599676030630947*^9}},
+ CellID->1947520530],
+
+Cell[TextData[{
+ "Alternatively you can create an empty ASCII file with a text editor and \
+give it a ",
+ StyleBox[".m", "MR"],
+ " suffix."
+}], "Text",
+ CellChangeTimes->{{3.59967603483927*^9, 3.599676067192089*^9}},
+ CellID->193091982]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Adding content to the ",
+ StyleBox[".m", "MR"],
+ " file from within Mathematica"
+}], "Section",
+ CellChangeTimes->{{3.599676088092701*^9, 3.599676102620253*^9}},
+ CellID->37925195],
+
+Cell[TextData[{
+ "When in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", you add code to the ",
+ StyleBox[".m", "MR"],
+ " file simply by typing in it to create, by default, a cell with the Code \
+style.  The file still has what appears to be Cells as in a regular notebook, \
+but any formatting that you add will not be saved."
+}], "Text",
+ CellChangeTimes->{{3.599676105800416*^9, 3.599676187931085*^9}, {
+  3.5996762216883574`*^9, 3.5996762325376*^9}},
+ CellID->1800738397],
+
+Cell[TextData[{
+ "You can also add Text Cells between the Code cells in which to write notes. \
+ These are preserved when saving the ",
+ StyleBox[".m", "MR"],
+ " file (but again, no formatting is saved as comments with some additional \
+information to let ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " display them as Text cells rather than as text in a Code Cell delimited by \
+the (* ....*) comment characters."
+}], "Text",
+ CellChangeTimes->{{3.599676201418168*^9, 3.5996763653938007`*^9}},
+ CellID->689194689],
+
+Cell[TextData[{
+ "To see how all this works, create a ",
+ StyleBox[".m", "MR"],
+ " file, add some code and then some commentary, and then open up the \
+resulting file in a text editor to see what is going on behind the scenes."
+}], "Text",
+ CellChangeTimes->{{3.599676371492661*^9, 3.599676415312799*^9}},
+ CellID->852252742]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Structure of a package", "Section",
+ CellChangeTimes->{{3.599659025642481*^9, 3.599659030447379*^9}},
+ CellID->2119661185],
+
+Cell[TextData[{
+ "Here is the basic structure of a package, copied from the Package tutorial \
+linked to above but with the name of our package substituted (we\
+\[CloseCurlyQuote]ll be calling it ",
+ StyleBox["MyTools.m", "MR"],
+ ")."
+}], "Text",
+ CellChangeTimes->{{3.599659067353196*^9, 3.599659080326828*^9}, {
+  3.5996591398308687`*^9, 3.599659196015443*^9}, {3.602935452940546*^9, 
+  3.602935462962184*^9}},
+ CellID->1906584744],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "First comes the ",
+ StyleBox["BeginPackage", "MR"],
+ " command (documentation here: ",
+ ButtonBox["BeginPackage",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/BeginPackage"],
+ "). This sets up the Context for the package.  Note the quotes and the \
+back-tick."
+}], "Item",
+ CellChangeTimes->{{3.599659269043249*^9, 3.5996593240221367`*^9}, {
+   3.5996593814465237`*^9, 3.599659405234665*^9}, 3.5996790012131042`*^9},
+ CellID->1041989963],
+
+Cell[TextData[{
+ "Prior to executing the ",
+ StyleBox["BeginPackage", "MR"],
+ " command one is generally in the ",
+ StyleBox["Global`", "MR"],
+ " Context unless one has purposely set one\[CloseCurlyQuote]s context to \
+something else."
+}], "Item",
+ CellChangeTimes->{{3.599660113412201*^9, 3.5996601519265223`*^9}, 
+   3.599679005127418*^9},
+ CellID->229978897]
+}, Open  ]],
+
+Cell[TextData[{
+ "BeginPackage[\"",
+ StyleBox["My", "MR"],
+ "Tools`\"]"
+}], "Program",
+ CellChangeTimes->{{3.599659199721445*^9, 3.599659230033559*^9}, 
+   3.599659395769022*^9, 3.5996782482024193`*^9, 3.602935466277996*^9},
+ CellID->26124],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "After executing  the ",
+ StyleBox["BeginPackage", "MR"],
+ " command one is now in the context specified by the argument of the \
+command.  In our case it is the ",
+ StyleBox["My", "MR"],
+ StyleBox["Tools`", "MR"],
+ " context."
+}], "Item",
+ CellChangeTimes->{{3.599660171198091*^9, 3.599660217882059*^9}, 
+   3.602935467748101*^9},
+ CellID->1712818540],
+
+Cell[TextData[{
+ "Between the ",
+ StyleBox["BeginPackage", "MR"],
+ " and the subsequent  ",
+ StyleBox["Begin[\[OpenCurlyDoubleQuote]`Private`\[CloseCurlyDoubleQuote]]", 
+  "MR"],
+ " command are the names and usage messages for the functions and parameters \
+what will be publicly exported from the package. These are in the form of \
+\[OpenCurlyDoubleQuote]usage messages\[CloseCurlyDoubleQuote] which server \
+several purposes.  They declare the symbol names outside of the following \
+\[OpenCurlyDoubleQuote]Private`\[CloseCurlyDoubleQuote] context, and they \
+provide basic documentation for the symbols.  The latter both gives you \
+information when you ask for information on the symbol using the ? command \
+(see this documentation link: ",
+ ButtonBox["ref/Information",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/Information"],
+ "), and if the usage message is written correctly it lets you use command \
+completion (see ",
+ ButtonBox["here",
+  BaseStyle->"Link",
+  ButtonData->"paclet:tutorial/UsingTheInputAssistant"],
+ " for a discussion of command completion).  The code for the exported \
+symbols is not placed here.  It is put after the ",
+ StyleBox["Begin[\[OpenCurlyDoubleQuote]`Private`\[CloseCurlyDoubleQuote]] ", 
+  "MR"],
+ "command."
+}], "Item",
+ CellChangeTimes->{{3.599659413143342*^9, 3.599659722917622*^9}, {
+  3.599659792468974*^9, 3.599659821699486*^9}, {3.599679009437199*^9, 
+  3.5996790223481407`*^9}},
+ CellID->363658022]
+}, Open  ]],
+
+Cell["Begin[\"`Private`\"]", "Program",
+ CellChangeTimes->{{3.599659199721445*^9, 3.5996592349884577`*^9}, 
+   3.599678248202837*^9},
+ CellID->711477533],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "All the code for your package appears here.  Any symbols defined here which \
+do not have a usage message above after the ",
+ StyleBox["BeginPackage", "MR"],
+ " command are not publicly usable.  They are also protected from having \
+shadowing conflicts with any similarly named symbols that are in other public \
+Contexts."
+}], "Item",
+ CellChangeTimes->{{3.599659828372937*^9, 3.599659919909464*^9}, 
+   3.59967902417943*^9},
+ CellID->1618262324],
+
+Cell[TextData[{
+ "All such ",
+ StyleBox["Private`", "MR"],
+ " symbols are actually in the ",
+ StyleBox["My", "MR"],
+ StyleBox["Tools`Private`", "MR"],
+ " Context."
+}], "Item",
+ CellChangeTimes->{{3.599659955275279*^9, 3.599659980445039*^9}, 
+   3.6029354689510937`*^9},
+ CellID->1919240546]
+}, Open  ]],
+
+Cell["End[ ]", "Program",
+ CellChangeTimes->{{3.599659199721445*^9, 3.599659227969503*^9}, 
+   3.599678248203155*^9},
+ CellID->9398610],
+
+Cell[TextData[{
+ "The ",
+ StyleBox["End", "MR"],
+ " command above takes you out of the ",
+ StyleBox["Private`", "MR"],
+ " Context and back to the ",
+ StyleBox["My", "MR"],
+ StyleBox["Tools`", "MR"],
+ " context."
+}], "Item",
+ CellChangeTimes->{{3.599659930311681*^9, 3.599659945319398*^9}, {
+   3.599660243724207*^9, 3.599660261014728*^9}, 3.6029354707070312`*^9},
+ CellID->1004458111],
+
+Cell["EndPackage[ ]", "Program",
+ CellChangeTimes->{{3.599659199721445*^9, 3.59965922647363*^9}, 
+   3.599678248203465*^9},
+ CellID->1196132039],
+
+Cell[TextData[{
+ "The EndPackage command returns you to the Context that you were in prior to \
+the execution of the ",
+ StyleBox["BeginPackage", "MR"],
+ " command above. "
+}], "Item",
+ CellChangeTimes->{{3.599659955275279*^9, 3.599659980445039*^9}, {
+  3.599660052386117*^9, 3.599660097879875*^9}},
+ CellID->1136105323]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Writing a usage message", "Section",
+ CellChangeTimes->{{3.599660269057291*^9, 3.599660277930382*^9}},
+ CellID->1453578399],
+
+Cell["\<\
+A usage message has the following form for a simple function.\
+\>", "Text",
+ CellChangeTimes->{{3.599660284416667*^9, 3.599660323196516*^9}},
+ CellID->607822386],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"myFunction", "::", "usage"}], "=", 
+   "\"\<myFunction[x] gives the result of computing a bunch of stuff using \
+ArcTan, Log, and square roots.\>\""}], ";"}]], "Input",
+ CellChangeTimes->{{3.599660329431069*^9, 3.599660382240088*^9}},
+ CellID->1283782684],
+
+Cell["\<\
+The important element of this is that the default way of calling the function \
+is what appears first in the usage message string. \
+\>", "Text",
+ CellChangeTimes->{{3.5996603869027367`*^9, 3.599660430965328*^9}},
+ CellID->786864292],
+
+Cell["\<\
+If you execute the above usage message definition and then execute the \
+following you will get the information back.\
+\>", "Text",
+ CellChangeTimes->{{3.599660434597485*^9, 3.599660462118544*^9}, 
+   3.599679031064413*^9},
+ CellID->1094716403],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "myFunction"}]], "Input",
+ CellChangeTimes->{{3.599660466998776*^9, 3.599660467306308*^9}},
+ CellID->1848755452],
+
+Cell[BoxData[
+ StyleBox["\<\"myFunction[x] gives the result of computing a bunch of stuff \
+using ArcTan, Log, and square roots.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.599660468057865*^9},
+ CellTags->"Info3599642467-1873928",
+ CellID->2091003854]
+}, Open  ]],
+
+Cell["\<\
+More complex function definitions (for example ones where there are multiple \
+different argument forms for the function) will have slightly different =, \
+more extensive, usage messages.  But all usage messages have the above form \
+where the function default is first in the definition. \
+\>", "Text",
+ CellChangeTimes->{{3.599660484398031*^9, 3.599660567220313*^9}, {
+  3.59967903962731*^9, 3.599679041139347*^9}},
+ CellID->2079374670],
+
+Cell[TextData[{
+ "Every publicly exported function and parameter has a single usage message \
+between the ",
+ StyleBox["BeginPackage", "MR"],
+ " and the ",
+ StyleBox["Begin", "MR"],
+ " commands."
+}], "Text",
+ CellChangeTimes->{{3.5996605777832117`*^9, 3.599660605918755*^9}, {
+  3.599679042889141*^9, 3.599679053641927*^9}},
+ CellID->14485719]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Writing code", "Section",
+ CellChangeTimes->{{3.599678563420936*^9, 3.5996785652753267`*^9}},
+ CellID->1390507002],
+
+Cell[TextData[{
+ "You can write your code directly in the ",
+ StyleBox[".m", "MR"],
+ " file. However often one starts to develop a function outside of the ",
+ StyleBox[".m", "MR"],
+ " file and then, when it is sufficiently figured out, one pastes it into the \
+correct place in the ",
+ StyleBox[".m", "MR"],
+ " file for further development in the package Context."
+}], "Text",
+ CellChangeTimes->{{3.5996785676490803`*^9, 3.599678685801002*^9}},
+ CellID->1334135960],
+
+Cell[TextData[{
+ "The key things that one has to be careful of if doing this are that, if you \
+write and execute code outside of the package\[CloseCurlyQuote]s BeginPackage \
+and other structural commands, the functions and parameters of that code will \
+now exist in the ",
+ StyleBox["Global`", "MR"],
+ " context.  Then when one proceeds to work on them inside of the .m file and \
+executes the code using the \[OpenCurlyDoubleQuote]",
+ StyleBox["Run Package", "SR"],
+ "\[CloseCurlyDoubleQuote] button (see below) the functions and parameters of \
+the package that are meant to be exported will exist in two contexts if the \
+ones in the ",
+ StyleBox["Global`", "MR"],
+ " context have not been removed using the ",
+ StyleBox["Remove", "MR"],
+ " command."
+}], "Text",
+ CellChangeTimes->{{3.5996787029034348`*^9, 3.599678867995859*^9}},
+ CellID->1713354700]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Where to put packages", "Section",
+ CellChangeTimes->{{3.599676448423962*^9, 3.59967645366133*^9}},
+ CellID->125627579],
+
+Cell[TextData[{
+ "For ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " to automatically know where to look when you load your package using the \
+",
+ StyleBox["Needs", "MR"],
+ " function the package ",
+ StyleBox[".m", "MR"],
+ " file needs either to be put in a special directory or the directory where \
+it resides needs to be taught to ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ".  "
+}], "Text",
+ CellChangeTimes->{{3.599676455616033*^9, 3.5996764846381483`*^9}, {
+   3.599676592698251*^9, 3.5996766597339773`*^9}, 3.599677268543297*^9, 
+   3.5996790553617287`*^9},
+ CellID->659013318],
+
+Cell[CellGroupData[{
+
+Cell["First approach", "Subsection",
+ CellChangeTimes->{{3.599677272038341*^9, 3.5996772741966553`*^9}},
+ CellID->1585528342],
+
+Cell["The first approach is generally the simplest. ", "Text",
+ CellChangeTimes->{{3.599676455616033*^9, 3.5996764846381483`*^9}, {
+   3.599676592698251*^9, 3.5996766597339773`*^9}, 3.599677268543297*^9},
+ CellID->130806289],
+
+Cell["\<\
+User created packages can be deployed to the following directory (execute the \
+cell for the path on your system):\
+\>", "Text",
+ CellChangeTimes->{{3.59967666308591*^9, 3.599676679291871*^9}, {
+  3.599676749786458*^9, 3.599676765435976*^9}, {3.599677236458671*^9, 
+  3.599677240733824*^9}},
+ CellID->1018765832],
+
+Cell[BoxData[
+ RowBox[{"FileNameJoin", "[", 
+  RowBox[{"{", 
+   RowBox[{"$UserBaseDirectory", ",", "\"\<Applications\>\""}], "}"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.5996767169598083`*^9, 3.599676747898521*^9}, 
+   3.5996769546156263`*^9},
+ CellID->1243117399],
+
+Cell[TextData[{
+ "And you can open that directory from ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " with the following command:"
+}], "Text",
+ CellChangeTimes->{{3.599676772840274*^9, 3.5996767869058037`*^9}},
+ CellID->250908534],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{"$UserBaseDirectory", ",", "\"\<Applications\>\""}], "}"}], "]"}],
+   "]"}]], "Input",
+ CellChangeTimes->{{3.59967668684822*^9, 3.5996767301571913`*^9}, 
+   3.599676962449905*^9},
+ CellID->380346180],
+
+Cell["\<\
+By putting the package in this directory it will be available to the single \
+user on the system whose owns it.  (This is generally where I put my \
+personally developed packages.)\
+\>", "Text",
+ CellChangeTimes->{{3.599676789397031*^9, 3.5996768798274117`*^9}, {
+  3.599677187402673*^9, 3.599677221992551*^9}},
+ CellID->1264018375],
+
+Cell["\<\
+Alternatively you can put it in the following directory so that all users of \
+the system can access it.\
+\>", "Text",
+ CellChangeTimes->{{3.59967688905593*^9, 3.599676912180591*^9}},
+ CellID->965456548],
+
+Cell[BoxData[
+ RowBox[{"FileNameJoin", "[", 
+  RowBox[{"{", 
+   RowBox[{"$BaseDirectory", ",", "\"\<Applications\>\""}], "}"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.599676919154502*^9, 3.599676934563776*^9}, {
+  3.5996769717012777`*^9, 3.5996770024024773`*^9}},
+ CellID->36173422],
+
+Cell["which you can open by the following command:", "Text",
+ CellChangeTimes->{{3.599676986443131*^9, 3.599676992996607*^9}},
+ CellID->1922569451],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{"$BaseDirectory", ",", "\"\<Applications\>\""}], "}"}], "]"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{3.5996770078038263`*^9},
+ CellID->998973200],
+
+Cell[TextData[{
+ "You should only put the package in one of the directories, not both.  If it \
+is in both then only one will be loaded with the ",
+ StyleBox["Needs", "MR"],
+ " command."
+}], "Text",
+ CellChangeTimes->{{3.59967701719619*^9, 3.5996770484385033`*^9}},
+ CellID->27475776],
+
+Cell[TextData[{
+ "If the ",
+ StyleBox[".m", "MR"],
+ " package file is located elsewhere for development purposes and you copy it \
+to one of the above directories for general use you have to be careful to \
+only edit the development version and then, once edited, copy the updated one \
+to the deployment directory."
+}], "Text",
+ CellChangeTimes->{{3.5996770816204777`*^9, 3.599677172032592*^9}, {
+  3.5996772290507517`*^9, 3.599677232858824*^9}},
+ CellID->591149809]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Second approach", "Subsection",
+ CellChangeTimes->{{3.599677276716831*^9, 3.5996772792392197`*^9}},
+ CellID->1997752018],
+
+Cell[TextData[{
+ "The second approach is generally less preferable as it requires setting \
+things up in each ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " session.  However this brief description will teach you how ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " finds the files that it needs."
+}], "Text",
+ CellChangeTimes->{{3.599677281519259*^9, 3.5996773287823353`*^9}},
+ CellID->311345681],
+
+Cell[TextData[{
+ "When ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " looks for a file\[LongDash]such as when you execute a Needs command\
+\[LongDash]it looks sequentially in the directories that are listed in its \
+$Path parameter.  To learn about the ",
+ StyleBox["$Path", "MR"],
+ " parameter read the on-line documentation at this link: ",
+ StyleBox[ButtonBox["$Path",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/$Path"], "MR"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.599677333806326*^9, 3.599677434485054*^9}, 
+   3.599679059381033*^9},
+ CellID->1246053659],
+
+Cell[TextData[{
+ "Execute the following to see the current value of the ",
+ StyleBox["$Path", "MR"],
+ " parameter on your system:"
+}], "Text",
+ CellChangeTimes->{{3.599677461598866*^9, 3.599677481651475*^9}},
+ CellID->731849667],
+
+Cell[BoxData["$Path"], "Input",
+ CellChangeTimes->{{3.599677482996541*^9, 3.59967748415624*^9}},
+ CellID->2002057449],
+
+Cell[TextData[{
+ "When executing Needs, ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " looks for your package in the directories listed in ",
+ StyleBox["$Path", "MR"],
+ ". When it finds it in one, then it loads it and stops. Hence the reason for \
+only putting your package in one place."
+}], "Text",
+ CellChangeTimes->{{3.599677492288086*^9, 3.599677568574608*^9}, 
+   3.5996790652228518`*^9},
+ CellID->1727889616],
+
+Cell["\<\
+To add a directory to the $Path parameter you just need to append or prepend \
+it to the parameter: appending is usually the best way.  To do this use a \
+command like the following\
+\>", "Text",
+ CellChangeTimes->{{3.599677572270735*^9, 3.599677625669571*^9}},
+ CellID->254535816],
+
+Cell[BoxData[
+ RowBox[{"AppendTo", "[", 
+  RowBox[{
+  "$Path", ",", " ", 
+   "\"\<put the full path to the desired directory here\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.599677626937216*^9, 3.599677669317946*^9}},
+ CellID->1667652171]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["How to load the package", "Section",
+ CellChangeTimes->{{3.599677705015221*^9, 3.599677710416836*^9}},
+ CellID->2031354958],
+
+Cell[CellGroupData[{
+
+Cell["When developing", "Subsection",
+ CellChangeTimes->{{3.599677722453511*^9, 3.599677725004085*^9}},
+ CellID->234020656],
+
+Cell[TextData[{
+ "When you are developing the package within ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " (as opposed to in a text editor) the ",
+ StyleBox[".m", "MR"],
+ " file displays several buttons and menus at its top. In particular clicking \
+on the \[OpenCurlyDoubleQuote]",
+ StyleBox["Run Package", "SR"],
+ "\[CloseCurlyDoubleQuote] button on the upper right will cause all of the \
+code in the package to execute.  This allows you to cycle through the \
+development process and then test your functions.  You should test the \
+functions in a separate ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " notebook rather than in the ",
+ StyleBox[".m", "MR"],
+ " file.  Any error messages will be generated in the same way they would be \
+when executing a cell in a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " notebook which has a syntax or other problem that generates a message."
+}], "Text",
+ CellChangeTimes->{{3.59967772878789*^9, 3.599677955088641*^9}, {
+  3.599679066765197*^9, 3.599679087476321*^9}},
+ CellID->1142607735]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["After the package has been deployed", "Subsection",
+ CellChangeTimes->{{3.5996779643729553`*^9, 3.5996779669866056`*^9}, {
+  3.599678898703865*^9, 3.5996789057652283`*^9}},
+ CellID->1512611994],
+
+Cell[TextData[{
+ "If you have finished developing your package and deployed it by copying it \
+to one of the directories mentioned in the preceding section, it is then \
+available in any ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " session that you are in in the future."
+}], "Text",
+ CellChangeTimes->{{3.5996779697347527`*^9, 3.599678031272666*^9}, 
+   3.599679089406043*^9},
+ CellID->558369972],
+
+Cell[TextData[{
+ "To load the package you just need to use the ",
+ StyleBox["Needs", "MR"],
+ " command once in that session before you attempt to use any of the \
+functions that the package exports.  In the case of our example package the \
+",
+ StyleBox["Needs", "MR"],
+ " command is simply"
+}], "Text",
+ CellChangeTimes->{{3.599678034360537*^9, 3.599678086383669*^9}, 
+   3.599679098018873*^9},
+ CellID->1707307530],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<\!\(\*
+StyleBox[\(\*
+StyleBox[\"My\", \"MR\"]Tools`\)]\)\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.599678114890526*^9, 3.599678115729574*^9}, 
+   3.602935472263229*^9},
+ CellID->1864871259],
+
+Cell[TextData[{
+ "Note the syntax where ",
+ StyleBox["\[OpenCurlyDoubleQuote]MyTools`\[CloseCurlyDoubleQuote]", "MR"],
+ " is a string and the context back-tick mark is in the string in the same \
+way it appears in the ",
+ StyleBox["BeginPackage", "MR"],
+ " command within the package itself."
+}], "Text",
+ CellChangeTimes->{{3.5996781194516573`*^9, 3.599678182653681*^9}, 
+   3.59967910015489*^9, 3.602935473610033*^9},
+ CellID->367422048],
+
+Cell[TextData[{
+ "An alternative to using the ",
+ StyleBox["Needs", "MR"],
+ " function is to use the ",
+ StyleBox["Get", "MR"],
+ " function to load a package. The practical difference between the two is \
+this. If ",
+ StyleBox["Needs", "MR"],
+ " has been executed once in a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " session to load a particular package then, if it is executed again to load \
+that same package it will not reload it\[LongDash]saving computation time by \
+not redundantly defining code that has already been defined.  ",
+ StyleBox["Get", "MR"],
+ ", on the other hand, will reload the package.  This can sometimes cause \
+problems if other things in your current ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " session have been defined which depend on the functions from your package. "
+}], "Text",
+ CellChangeTimes->{{3.599679472162693*^9, 3.5996797091122837`*^9}},
+ CellID->12675049]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Programming packages in notebooks", "Section",
+ CellChangeTimes->{{3.6032176636440372`*^9, 3.603217668972636*^9}},
+ CellID->1383658386],
+
+Cell[TextData[{
+ "Above, I outlined the process for directly creating and editing ",
+ StyleBox[".m", "MR"],
+ " files to create a package.  However, there is much more that one can do by \
+doing one\[CloseCurlyQuote]s programming directly in a notebook and having \
+that notebook\[CloseCurlyQuote]s code saved directly into a ",
+ StyleBox[".m", "MR"],
+ " file. The way to set this up is to create a notebook with the property \
+that it\[CloseCurlyQuote]s ",
+ StyleBox["AutoGeneratedPackage", "MR"],
+ " Option is set to ",
+ StyleBox["Automatic", "MR"],
+ ". Then, whenever this notebook is saved, all cells which have the Option ",
+ StyleBox["InitializationCell\[Rule]True", "MR"],
+ " will be saved to the automatically generated .m file."
+}], "Text",
+ CellChangeTimes->{{3.6032176719010267`*^9, 3.603217861508765*^9}, 
+   3.60321961191761*^9, {3.603219647747281*^9, 3.6032196492836657`*^9}, {
+   3.603220112386168*^9, 3.603220151185246*^9}},
+ CellID->46080139],
+
+Cell[TextData[{
+ "There are two types of executable cells that are available in the default \
+stylesheet of a notebook.  The first is the ",
+ StyleBox["Input", "MR"],
+ " style and the second is the ",
+ StyleBox["Code", "MR"],
+ " style. Cells of the ",
+ StyleBox["Code", "MR"],
+ " style are ",
+ StyleBox["InitializationCell", "MR"],
+ "s by default.  Cells of the ",
+ StyleBox["Input", "MR"],
+ " style are not ",
+ StyleBox["InitializationCell", "MR"],
+ "s by default.  However you can make an ",
+ StyleBox["Input", "MR"],
+ " style cell an ",
+ StyleBox["InitializationCell", "MR"],
+ " by selecting its cell bracket and then using the ",
+ StyleBox["Cell\[RightAngleBracket]CellProperties\[RightAngleBracket]\
+Initialization Cell", "SB"],
+ " menu command.  Alternatively one can set up the \
+notebook\[CloseCurlyQuote]s private stylesheet to redefine the properties of \
+an ",
+ StyleBox["Input", "MR"],
+ " cell so that it is an ",
+ StyleBox["InitializationCell", "MR"],
+ " by default."
+}], "Text",
+ CellChangeTimes->{{3.603219665556183*^9, 3.603219880949526*^9}, 
+   3.603220204494281*^9},
+ CellID->2092096234],
+
+Cell[TextData[{
+ "The advantage of programming with ",
+ StyleBox["Input", "MR"],
+ " cells is that they line-wrap and indent their code by default.  In \
+contrast, ",
+ StyleBox["Code", "MR"],
+ " cells are set up without these properties so that the user must explicitly \
+format their code.  However, one can redefine the properties of a ",
+ StyleBox["Code", "MR"],
+ " cell in the private stylesheet of the notebook so that it has these \
+properties. "
+}], "Text",
+ CellChangeTimes->{{3.603219886997581*^9, 3.603220000698213*^9}, {
+   3.603220242173768*^9, 3.603220242340767*^9}, 3.603220563934636*^9},
+ CellID->1748825455],
+
+Cell["\<\
+Rather than give the detailed instructions on how to set up each of these \
+properties for a notebook I give, in the next section, a function for \
+automatically creating such a notebook.  \
+\>", "Text",
+ CellChangeTimes->{{3.6032178888210297`*^9, 3.6032179546634617`*^9}, {
+   3.6032200053306913`*^9, 3.603220005498639*^9}, 3.603220566048442*^9},
+ CellID->395705792]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Creating a new package notebook", "Section",
+ CellChangeTimes->{{3.603214804284566*^9, 3.603214813395981*^9}, {
+  3.603217656733877*^9, 3.603217657748396*^9}},
+ CellID->1816836691],
+
+Cell[TextData[{
+ "Here is a function, ",
+ StyleBox["CreatePackageNotebook", "MR"],
+ ", that creates a new notebook, sets up its options so that all ",
+ StyleBox["Input", "MR"],
+ " cell are ",
+ StyleBox["InitializationCell", "MR"],
+ "s, all ",
+ StyleBox["Code", "MR"],
+ " Cells have line-wrapping, and that the notebook has the ",
+ StyleBox["AutoGeneratedPackage\[Rule]Automatic", "MR"],
+ " option set."
+}], "Text",
+ CellChangeTimes->{{3.603214821626656*^9, 3.603214930624308*^9}, {
+   3.603214989786075*^9, 3.603214990690901*^9}, {3.6032200240429583`*^9, 
+   3.603220059140957*^9}, {3.603220276696957*^9, 3.6032202891501293`*^9}, 
+   3.603220569614667*^9, {3.603222662820621*^9, 3.603222672292045*^9}},
+ CellID->504288944],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"CreatePackageNotebook", "::", "usage"}], "=", 
+    "\"\<CreatePackageNotebook[\\\"package\\\"] creates a new notebook that \
+that has the property that it will save a package version of itself when the \
+notebook itself is saved. The argument, \\\"package\\\", should be a string \
+without any whitespace.  If it contains whitespace then that will be removed. \
+When CreatePackageNotebook is executed it will bring up a dialog asking you \
+in which directory to save the notebook. \>\""}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CreatePackageNotebook", "[", "theName_String", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Catch", "@", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"name", ",", "document", ",", "directory", ",", "nb"}], "}"}], 
+      ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"name", "=", 
+        RowBox[{"StringReplace", "[", 
+         RowBox[{"theName", ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Except", "[", "WordCharacter", "]"}], "\[Rule]", 
+            "\"\<\>\""}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"name", "===", "\"\<\>\""}], ",", 
+         RowBox[{"Throw", "[", "$Failed", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"document", "=", "\[IndentingNewLine]", 
+        RowBox[{"DocumentNotebook", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"TextCell", "[", 
+               RowBox[{"#", ",", "\"\<Title\>\"", ",", 
+                RowBox[{"TextAlignment", "\[Rule]", "Center"}]}], "]"}], 
+              "&"}], "[", 
+             RowBox[{"name", "<>", "\"\<.m package\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{"\"\<Begin the package\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"ExpressionCell", "[", 
+               RowBox[{
+                RowBox[{"Defer", "[", 
+                 RowBox[{"BeginPackage", "[", "#", "]"}], "]"}], ",", 
+                "\"\<Input\>\""}], "]"}], "&"}], "[", 
+             RowBox[{"name", "<>", "\"\<`\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Usage messages for the public functions\>\"", ",", 
+              "\"\<Subsection\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"MyFunction", "::", "usage"}], "=", 
+                 "\"\<MyFunction[x] is a function that does something.\>\""}],
+                 ";"}], "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Begin the `Private context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], "]"}], ",", 
+              "\"\<Input\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Function definitions\>\"", ",", "\"\<Subsection\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"MyFunction", "[", "x", "]"}], ":=", "x"}], ";"}], 
+               "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<End the `Private context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"End", "[", "]"}], "]"}], ",", "\"\<Input\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<End the package context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"EndPackage", "[", "]"}], "]"}], ",", 
+              "\"\<Input\>\""}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"StyleDefinitions", "\[Rule]", 
+           RowBox[{"Notebook", "[", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Cell", "[", 
+                RowBox[{"StyleData", "[", 
+                 RowBox[{
+                 "StyleDefinitions", "\[Rule]", "\"\<Default.nb\>\""}], "]"}],
+                 "]"}], ",", 
+               RowBox[{"Cell", "[", 
+                RowBox[{
+                 RowBox[{"StyleData", "[", "\"\<Code\>\"", "]"}], ",", 
+                 RowBox[{"PageWidth", "\[Rule]", "WindowWidth"}], ",", 
+                 RowBox[{"AutoIndent", "\[Rule]", "Automatic"}], ",", 
+                 RowBox[{"AutoSpacing", "\[Rule]", "True"}], ",", 
+                 RowBox[{"LineBreakWithin", "\[Rule]", "Automatic"}], ",", 
+                 RowBox[{"LineIndent", "\[Rule]", "1"}], ",", 
+                 RowBox[{"LinebreakAdjustments", "\[Rule]", 
+                  RowBox[{"{", 
+                   RowBox[{"0.85", ",", "2", ",", "10", ",", "0", ",", "1"}], 
+                   "}"}]}]}], "]"}], ",", 
+               RowBox[{"Cell", "[", 
+                RowBox[{
+                 RowBox[{"StyleData", "[", "\"\<Input\>\"", "]"}], ",", 
+                 RowBox[{"InitializationCell", "\[Rule]", "True"}]}], "]"}]}],
+               "}"}], ",", 
+             RowBox[{"Visible", "\[Rule]", "False"}], ",", 
+             RowBox[{
+             "StyleDefinitions", "\[Rule]", 
+              "\"\<PrivateStylesheetFormatting.nb\>\""}]}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AutoGeneratedPackage", "\[Rule]", "Automatic"}]}], 
+         "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"nb", "=", 
+        RowBox[{"CreateWindow", "[", "document", "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"directory", "=", 
+        RowBox[{"SystemDialogInput", "[", "\"\<Directory\>\"", "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"directory", "===", "$Canceled"}], ",", 
+         RowBox[{"Throw", "[", "$Canceled", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"NotebookSave", "[", 
+        RowBox[{"nb", ",", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"directory", ",", 
+            RowBox[{"name", "<>", "\"\<.nb\>\""}]}], "}"}], "]"}]}], 
+        "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.603215001287122*^9, 3.603215090599133*^9}, {
+   3.603215152691437*^9, 3.603215199593708*^9}, {3.603215331510047*^9, 
+   3.6032153322011147`*^9}, {3.603215380110586*^9, 3.603215392233179*^9}, {
+   3.6032154303971252`*^9, 3.6032154975761003`*^9}, 3.6032155331665363`*^9, {
+   3.603215815336483*^9, 3.603216004308446*^9}, {3.603216069730646*^9, 
+   3.603216072520352*^9}, {3.6032161158326197`*^9, 3.603216173810713*^9}, {
+   3.603216309984398*^9, 3.603216314583826*^9}, {3.6032164023004723`*^9, 
+   3.6032164344768877`*^9}, {3.603216501079822*^9, 3.60321660161942*^9}, {
+   3.6032166564484873`*^9, 3.6032167357603073`*^9}, {3.6032168797445173`*^9, 
+   3.603216920328312*^9}, {3.603216958276198*^9, 3.603216975642426*^9}, {
+   3.603217007678629*^9, 3.603217026677299*^9}, {3.603217083834538*^9, 
+   3.603217084014037*^9}, {3.603217129003519*^9, 3.603217129736967*^9}, {
+   3.603217168917123*^9, 3.603217174681346*^9}, {3.603217267239547*^9, 
+   3.603217349040689*^9}, {3.6032174092346*^9, 3.603217415961281*^9}, {
+   3.603222241561941*^9, 3.603222340222205*^9}, {3.603222383393222*^9, 
+   3.6032224666356*^9}, 3.6032225278275757`*^9, {3.603225080176652*^9, 
+   3.603225080896413*^9}, 3.6032251228590593`*^9, {3.6032319445550013`*^9, 
+   3.603231958448491*^9}, 3.6032331257067213`*^9},
+ CellID->486023811],
+
+Cell["Here is its usage message:", "Text",
+ CellChangeTimes->{{3.603222359118919*^9, 3.603222363141595*^9}},
+ CellID->1163162454],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "CreatePackageNotebook"}]], "Input",
+ CellChangeTimes->{{3.603222355460845*^9, 3.6032223558817663`*^9}},
+ CellID->1026087752],
+
+Cell[BoxData[
+ StyleBox["\<\"CreatePackageNotebook[\\\"package\\\"] creates a new notebook \
+that that has the property that it will save a package version of itself when \
+the notebook itself is saved. The argument, \\\"package\\\", should be a \
+string without any whitespace.  If it contains whitespace then that will be \
+removed. When CreatePackageNotebook is executed it will bring up a dialog \
+asking you in which directory to save the notebook. \"\>", "MSG"]], "Print", \
+"PrintUsage",
+ CellChangeTimes->{3.603222536010466*^9},
+ CellTags->"Info3603204535-1659032",
+ CellID->375238507]
+}, Open  ]],
+
+Cell[TextData[{
+ "Once you have executed the above code to define the ",
+ StyleBox["CreatePackageNotebook", "MR"],
+ " function you can use it simply as follows (with your choice of package \
+name replacing the ",
+ StyleBox["\[OpenCurlyDoubleQuote]MyTools\[CloseCurlyDoubleQuote]", "MR"],
+ " in it\[CloseCurlyQuote]s argument):"
+}], "Text",
+ CellChangeTimes->{{3.603220306800823*^9, 3.603220371570036*^9}, {
+   3.6032204038924007`*^9, 3.603220409092907*^9}, 3.603220572045086*^9},
+ CellID->1457260763],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CreatePackageNotebook", "[", "\"\<MyTools\>\"", "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.603220378852289*^9, 3.603220385122435*^9}, {
+   3.6032204185774527`*^9, 3.603220421851947*^9}, {3.603222611043008*^9, 
+   3.603222615225133*^9}, 3.603231949290483*^9},
+ CellID->1528520419],
+
+Cell[TextData[{
+ "Note that the argument is ",
+ StyleBox["\[OpenCurlyDoubleQuote]MyTools\[CloseCurlyDoubleQuote]", "MR"],
+ " rather than ",
+ StyleBox["\[OpenCurlyDoubleQuote]MyTools`\[CloseCurlyDoubleQuote]", "MR"],
+ ".  The package notebook is created, the dialog saves it as ",
+ StyleBox["MyTools.nb", "SR"],
+ " in a location of your choosing, and the context within the package is set \
+as ",
+ StyleBox["My", "MR"],
+ StyleBox["Tools`", "MR"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.603220424357285*^9, 3.6032205048955708`*^9}, {
+  3.6032205367781773`*^9, 3.603220546937147*^9}},
+ CellID->369733228],
+
+Cell[TextData[{
+ "The function ",
+ StyleBox["CreatePackageNotebook", "MR"],
+ " is very basic and can be made much more sophisticated if one wishes. "
+}], "Text",
+ CellChangeTimes->{{3.603220602845416*^9, 3.603220632012876*^9}},
+ CellID->116903153],
+
+Cell["\<\
+Alternatively, execute the following code to create a palette with a button \
+to create a new package notebook.\
+\>", "Text",
+ CellChangeTimes->{{3.603224920042705*^9, 3.603224955970273*^9}},
+ CellID->1710833099],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CreatePalette", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Button", "[", 
+     RowBox[{"\"\<New Package\>\"", ",", "\[IndentingNewLine]", " ", 
+      RowBox[{"Catch", "@", 
+       RowBox[{"Module", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "theName", ",", "name", ",", "document", ",", "directory", ",", 
+           "nb"}], "}"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"theName", "=", 
+           RowBox[{"InputString", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"name", "=", 
+           RowBox[{"StringReplace", "[", 
+            RowBox[{"theName", ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"Except", "[", "WordCharacter", "]"}], "\[Rule]", 
+               "\"\<\>\""}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"name", "===", "\"\<\>\""}], ",", 
+            RowBox[{"Throw", "[", "$Failed", "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"document", "=", "\[IndentingNewLine]", 
+           RowBox[{"DocumentNotebook", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"TextCell", "[", 
+                  RowBox[{"#", ",", "\"\<Title\>\"", ",", 
+                   RowBox[{"TextAlignment", "\[Rule]", "Center"}]}], "]"}], 
+                 "&"}], "[", 
+                RowBox[{"name", "<>", "\"\<.m package\>\""}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{"\"\<Begin the package\>\"", ",", "\"\<Section\>\""}],
+                 "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"ExpressionCell", "[", 
+                  RowBox[{
+                   RowBox[{"Defer", "[", 
+                    RowBox[{"BeginPackage", "[", "#", "]"}], "]"}], ",", 
+                   "\"\<Input\>\""}], "]"}], "&"}], "[", 
+                RowBox[{"name", "<>", "\"\<`\>\""}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{
+                "\"\<Usage messages for the public functions\>\"", ",", 
+                 "\"\<Subsection\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"ExpressionCell", "[", 
+                RowBox[{
+                 RowBox[{"Defer", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"MyFunction", "::", "usage"}], "=", 
+                    "\"\<MyFunction[x] is a function that does \
+something.\>\""}], ";"}], "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{
+                "\"\<Begin the `Private context\>\"", ",", 
+                 "\"\<Section\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"ExpressionCell", "[", 
+                RowBox[{
+                 RowBox[{"Defer", "[", 
+                  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], "]"}], 
+                 ",", "\"\<Input\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{
+                "\"\<Function definitions\>\"", ",", "\"\<Subsection\>\""}], 
+                "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"ExpressionCell", "[", 
+                RowBox[{
+                 RowBox[{"Defer", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"MyFunction", "[", "x", "]"}], ":=", "x"}], ";"}],
+                   "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{
+                "\"\<End the `Private context\>\"", ",", "\"\<Section\>\""}], 
+                "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"ExpressionCell", "[", 
+                RowBox[{
+                 RowBox[{"Defer", "[", 
+                  RowBox[{"End", "[", "]"}], "]"}], ",", "\"\<Input\>\""}], 
+                "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"TextCell", "[", 
+                RowBox[{
+                "\"\<End the package context\>\"", ",", "\"\<Section\>\""}], 
+                "]"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"ExpressionCell", "[", 
+                RowBox[{
+                 RowBox[{"Defer", "[", 
+                  RowBox[{"EndPackage", "[", "]"}], "]"}], ",", 
+                 "\"\<Input\>\""}], "]"}]}], "\[IndentingNewLine]", "}"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"StyleDefinitions", "\[Rule]", 
+              RowBox[{"Notebook", "[", 
+               RowBox[{
+                RowBox[{"{", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Cell", "[", 
+                   RowBox[{"StyleData", "[", 
+                    RowBox[{
+                    "StyleDefinitions", "\[Rule]", "\"\<Default.nb\>\""}], 
+                    "]"}], "]"}], ",", 
+                  RowBox[{"Cell", "[", 
+                   RowBox[{
+                    RowBox[{"StyleData", "[", "\"\<Code\>\"", "]"}], ",", 
+                    RowBox[{"PageWidth", "\[Rule]", "WindowWidth"}], ",", 
+                    RowBox[{"AutoIndent", "\[Rule]", "Automatic"}], ",", 
+                    RowBox[{"AutoSpacing", "\[Rule]", "True"}], ",", 
+                    RowBox[{"LineBreakWithin", "\[Rule]", "Automatic"}], ",", 
+                    
+                    RowBox[{"LineIndent", "\[Rule]", "1"}], ",", 
+                    RowBox[{"LinebreakAdjustments", "\[Rule]", 
+                    RowBox[{"{", 
+                    RowBox[{"0.85", ",", "2", ",", "10", ",", "0", ",", "1"}],
+                     "}"}]}]}], "]"}], ",", 
+                  RowBox[{"Cell", "[", 
+                   RowBox[{
+                    RowBox[{"StyleData", "[", "\"\<Input\>\"", "]"}], ",", 
+                    RowBox[{"InitializationCell", "\[Rule]", "True"}]}], 
+                   "]"}]}], "}"}], ",", 
+                RowBox[{"Visible", "\[Rule]", "False"}], ",", 
+                RowBox[{
+                "StyleDefinitions", "\[Rule]", 
+                 "\"\<PrivateStylesheetFormatting.nb\>\""}]}], "]"}]}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"AutoGeneratedPackage", "\[Rule]", "Automatic"}]}], 
+            "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"nb", "=", 
+           RowBox[{"CreateWindow", "[", "document", "]"}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"directory", "=", 
+           RowBox[{"SystemDialogInput", "[", "\"\<Directory\>\"", "]"}]}], 
+          ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"directory", "===", "$Canceled"}], ",", 
+            RowBox[{"Throw", "[", "$Canceled", "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"NotebookSave", "[", 
+           RowBox[{"nb", ",", 
+            RowBox[{"FileNameJoin", "[", 
+             RowBox[{"{", 
+              RowBox[{"directory", ",", 
+               RowBox[{"name", "<>", "\"\<.nb\>\""}]}], "}"}], "]"}]}], 
+           "]"}]}]}], "\[IndentingNewLine]", "]"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Method", "\[Rule]", "\"\<Queued\>\""}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"BaseStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"12", ",", 
+         RowBox[{"FontFamily", "\[Rule]", "\"\<Helvetica\>\""}], ",", "Bold", 
+         ",", 
+         RowBox[{"Darker", "@", 
+          RowBox[{"Darker", "@", "Green"}]}]}], "}"}]}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Palette\>\""}]}], 
+     "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"WindowTitle", "\[Rule]", "\"\<New Package\>\""}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.603222786280789*^9, 3.603222797160069*^9}, {
+   3.603223102615917*^9, 3.603223114654833*^9}, {3.603223186206093*^9, 
+   3.603223199921319*^9}, {3.603223247757699*^9, 3.603223258683494*^9}, {
+   3.603224720017671*^9, 3.603224905905237*^9}, {3.603225074825811*^9, 
+   3.6032250752650146`*^9}, 3.603225117235734*^9, {3.603231938287991*^9, 
+   3.603231940534945*^9}, {3.603232316808618*^9, 3.6032323174705067`*^9}, {
+   3.603232706768985*^9, 3.603232732761183*^9}, {3.6032328782913733`*^9, 
+   3.603232885858206*^9}},
+ CellID->1513326898],
+
+Cell[TextData[{
+ "Once you have generated the palette using the code above, you can install \
+it in your system for later use through the ",
+ StyleBox["Palettes\[RightAngleBracket]Install Palette...", "SB"],
+ " menu command."
+}], "Text",
+ CellChangeTimes->{{3.603232107718245*^9, 3.6032321573669977`*^9}, {
+  3.60323218925674*^9, 3.603232212433563*^9}},
+ CellID->1289656170]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{977, 906},
+WindowMargins->{{95, Automatic}, {Automatic, 0}},
+WindowTitle->Automatic,
+Visible->True,
+DockedCells->{},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+ShowSelection->True,
+TaggingRules:>{
+ "WorkLifeNotebookCreationVersion" -> "3.0.0:61", "Notebook", 
+  "CreatedOn[{2014, 1, 25, 16, 16, 24.704993}]", 
+  "OpenedDate[{2014, 1, 25, 16, 16, 25.476575}]", Diary`Diary`Organization :> 
+  None, "SaveBackupToolbarDockedCell", "ToolbarCellVersion" -> "3.0.0:61", 
+  "OpenedDate[{2014, 1, 26, 17, 16, 47.948174}]", 
+  "LastOpened[{2014, 1, 26, 17, 22, 30.868604}]", 
+  "OpenedDate[{2014, 1, 26, 17, 22, 30.985574}]", "Copyright" -> 
+  "This notebook is Copyright \[Copyright] 2013 Scientific Arts, LLC,  all \
+rights reserved.  It may be redistributed only in full and in its original \
+form without modification; and it may not be used for any commercial purpose \
+without permission from Scientific Arts.  A non-exclusive royalty-free \
+license is given to reproduce and use all the of the Mathematica code in this \
+notebook for any purpose whatsoever, as well as any of the ideas.  No \
+guarantee whatsoever is given as to the  accuracy or functionality of \
+anything presented in this document.  Use at your own risk. \n\nEnjoy!I hope \
+that it's useful. For further information on Scientific Arts Consulting and \
+Training, please go to the following Link: http://scientificarts.com.", 
+  "GUIDTag[31747063485061473452092160712446040810]"},
+CreateCellID->True,
+DefaultNewCellStyle->"Input",
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]"->{
+  Cell[602, 23, 233, 7, 92, "Title",
+   CellOpen->True,
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]", 
+     "CellGUID[239753465983758287344161802390409510960]"},
+   CellID->1881910291]},
+ "CellGUID[239753465983758287344161802390409510960]"->{
+  Cell[602, 23, 233, 7, 92, "Title",
+   CellOpen->True,
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]", 
+     "CellGUID[239753465983758287344161802390409510960]"},
+   CellID->1881910291]},
+ "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]"->{
+  Cell[11764, 343, 498, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+     "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+     "CellGUID[290790887467933463437083315803046136934]"},
+   CellID->809885586]},
+ "EphemeralGUID[33612399051402351712343019100371564223]"->{
+  Cell[11764, 343, 498, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+     "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+     "CellGUID[290790887467933463437083315803046136934]"},
+   CellID->809885586]},
+ "OutlineTag"->{
+  Cell[11764, 343, 498, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+     "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+     "CellGUID[290790887467933463437083315803046136934]"},
+   CellID->809885586],
+  Cell[12265, 358, 590, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+     "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+     "CellGUID[216414782914739427049422513515343342866]"},
+   CellID->1630099433],
+  Cell[12858, 373, 426, 9, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+     "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+     "CellGUID[334194252049779448392758499698240480077]"},
+   CellID->2132879464],
+  Cell[13287, 384, 822, 20, 43, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+     "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+     "CellGUID[215718345637159749150813977434082078854]"},
+   CellID->1508115724]},
+ "CellGUID[290790887467933463437083315803046136934]"->{
+  Cell[11764, 343, 498, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+     "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+     "CellGUID[290790887467933463437083315803046136934]"},
+   CellID->809885586]},
+ "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]"->{
+  Cell[12265, 358, 590, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+     "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+     "CellGUID[216414782914739427049422513515343342866]"},
+   CellID->1630099433]},
+ "EphemeralGUID[79285203377415112521504429575759095040]"->{
+  Cell[12265, 358, 590, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+     "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+     "CellGUID[216414782914739427049422513515343342866]"},
+   CellID->1630099433]},
+ "CellGUID[216414782914739427049422513515343342866]"->{
+  Cell[12265, 358, 590, 13, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+     "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+     "CellGUID[216414782914739427049422513515343342866]"},
+   CellID->1630099433]},
+ "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]"->{
+  Cell[12858, 373, 426, 9, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+     "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+     "CellGUID[334194252049779448392758499698240480077]"},
+   CellID->2132879464]},
+ "EphemeralGUID[327903047307443860755944873104696355086]"->{
+  Cell[12858, 373, 426, 9, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+     "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+     "CellGUID[334194252049779448392758499698240480077]"},
+   CellID->2132879464]},
+ "CellGUID[334194252049779448392758499698240480077]"->{
+  Cell[12858, 373, 426, 9, 27, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+     "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+     "CellGUID[334194252049779448392758499698240480077]"},
+   CellID->2132879464]},
+ "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]"->{
+  Cell[13287, 384, 822, 20, 43, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+     "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+     "CellGUID[215718345637159749150813977434082078854]"},
+   CellID->1508115724]},
+ "EphemeralGUID[165916214149998826845021435911144292524]"->{
+  Cell[13287, 384, 822, 20, 43, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+     "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+     "CellGUID[215718345637159749150813977434082078854]"},
+   CellID->1508115724]},
+ "CellGUID[215718345637159749150813977434082078854]"->{
+  Cell[13287, 384, 822, 20, 43, "Item",
+   CellTags->{
+    "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+     "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+     "CellGUID[215718345637159749150813977434082078854]"},
+   CellID->1508115724]},
+ "Info3599642467-1873928"->{
+  Cell[28313, 850, 266, 5, 43, "Print",
+   CellTags->"Info3599642467-1873928",
+   CellID->2091003854]},
+ "Info3603204535-1659032"->{
+  Cell[55111, 1563, 593, 10, 79, "Print",
+   CellTags->"Info3603204535-1659032",
+   CellID->375238507]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]", 68773, 1868},
+ {"CellGUID[239753465983758287344161802390409510960]", 69036, 1875},
+ {"DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 69293, 1882},
+ {"EphemeralGUID[33612399051402351712343019100371564223]", 69620, 1889},
+ {"OutlineTag", 69904, 1896},
+ {"CellGUID[290790887467933463437083315803046136934]", 71028, 1921},
+ {"DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 71345, 1928},
+ {"EphemeralGUID[79285203377415112521504429575759095040]", 71673, 1935},
+ {"CellGUID[216414782914739427049422513515343342866]", 71997, 1942},
+ {"DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 72315, 1949},
+ {"EphemeralGUID[327903047307443860755944873104696355086]", 72644, 1956},
+ {"CellGUID[334194252049779448392758499698240480077]", 72968, 1963},
+ {"DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 73285, 1970},
+ {"EphemeralGUID[165916214149998826845021435911144292524]", 73614, 1977},
+ {"CellGUID[215718345637159749150813977434082078854]", 73938, 1984},
+ {"Info3599642467-1873928", 74235, 1991},
+ {"Info3603204535-1659032", 74368, 1995}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[602, 23, 233, 7, 92, "Title",
+ CellOpen->True,
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 16, 24.926376}]", 
+   "CellGUID[239753465983758287344161802390409510960]"},
+ CellID->1881910291],
+Cell[838, 32, 1810, 39, 217, "Text",
+ CellID->2123826423],
+Cell[CellGroupData[{
+Cell[2673, 75, 171, 3, 64, "Section",
+ CellID->1570131523],
+Cell[2847, 80, 695, 15, 49, "Text",
+ CellID->128461890],
+Cell[3545, 97, 428, 12, 49, "Text",
+ CellID->576973479],
+Cell[3976, 111, 324, 6, 30, "Text",
+ CellID->894600753],
+Cell[4303, 119, 625, 15, 69, "Text",
+ CellID->749531548],
+Cell[4931, 136, 733, 23, 70, "Text",
+ CellID->243210937],
+Cell[5667, 161, 464, 9, 50, "Text",
+ CellID->295849766],
+Cell[6134, 172, 558, 13, 69, "Text",
+ CellID->36603766],
+Cell[6695, 187, 434, 9, 69, "Text",
+ CellID->918504750],
+Cell[7132, 198, 1379, 47, 90, "Input",
+ CellID->637636743],
+Cell[8514, 247, 191, 6, 31, "Text",
+ CellID->1984270432],
+Cell[8708, 255, 1761, 53, 66, "Code",
+ InitializationCell->False,
+ CellID->2091006776],
+Cell[10472, 310, 851, 18, 71, "Text",
+ CellID->2059386194],
+Cell[11326, 330, 413, 9, 50, "Text",
+ CellID->467937078],
+Cell[CellGroupData[{
+Cell[11764, 343, 498, 13, 27, "Item",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 37, 29.861033}]", 
+   "EphemeralGUID[33612399051402351712343019100371564223]", "OutlineTag", 
+   "CellGUID[290790887467933463437083315803046136934]"},
+ CellID->809885586],
+Cell[12265, 358, 590, 13, 27, "Item",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 38, 11.992008}]", 
+   "EphemeralGUID[79285203377415112521504429575759095040]", "OutlineTag", 
+   "CellGUID[216414782914739427049422513515343342866]"},
+ CellID->1630099433],
+Cell[12858, 373, 426, 9, 27, "Item",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 38, 51.801310}]", 
+   "EphemeralGUID[327903047307443860755944873104696355086]", "OutlineTag", 
+   "CellGUID[334194252049779448392758499698240480077]"},
+ CellID->2132879464],
+Cell[13287, 384, 822, 20, 43, "Item",
+ CellTags->{
+  "DiaryDate[{2014, 1, 25, 16, 39, 2.628851}]", 
+   "EphemeralGUID[165916214149998826845021435911144292524]", "OutlineTag", 
+   "CellGUID[215718345637159749150813977434082078854]"},
+ CellID->1508115724]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14158, 410, 125, 2, 64, "Section",
+ CellID->921452725],
+Cell[14286, 414, 175, 4, 30, "Text",
+ CellID->1351370558],
+Cell[14464, 420, 723, 16, 69, "Text",
+ CellID->969869368],
+Cell[15190, 438, 694, 16, 69, "Text",
+ CellID->1543303611],
+Cell[15887, 456, 315, 10, 31, "Text",
+ CellID->384029282],
+Cell[16205, 468, 783, 16, 87, "Text",
+ CellID->889444559],
+Cell[16991, 486, 285, 6, 30, "Text",
+ CellID->1691195001],
+Cell[17279, 494, 262, 7, 32, "Input",
+ CellID->183268118],
+Cell[17544, 503, 115, 2, 30, "Text",
+ CellID->225983671],
+Cell[17662, 507, 263, 7, 32, "Input",
+ CellID->1356470601],
+Cell[17928, 516, 354, 9, 49, "Text",
+ CellID->514994455],
+Cell[18285, 527, 316, 6, 49, "Text",
+ CellID->79727029],
+Cell[18604, 535, 198, 5, 28, "Input",
+ CellID->1033425407],
+Cell[18805, 542, 116, 2, 30, "Text",
+ CellID->2000482202],
+Cell[18924, 546, 194, 5, 28, "Input",
+ CellID->963122120]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19155, 556, 171, 6, 64, "Section",
+ CellID->1361293294],
+Cell[19329, 564, 343, 11, 31, "Text",
+ CellID->1947520530],
+Cell[19675, 577, 236, 7, 31, "Text",
+ CellID->193091982]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19948, 589, 198, 6, 64, "Section",
+ CellID->37925195],
+Cell[20149, 597, 484, 12, 50, "Text",
+ CellID->1800738397],
+Cell[20636, 611, 522, 12, 69, "Text",
+ CellID->689194689],
+Cell[21161, 625, 325, 7, 50, "Text",
+ CellID->852252742]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21523, 637, 128, 2, 64, "Section",
+ CellID->2119661185],
+Cell[21654, 641, 433, 10, 50, "Text",
+ CellID->1906584744],
+Cell[CellGroupData[{
+Cell[22112, 655, 457, 12, 46, "Item",
+ CellID->1041989963],
+Cell[22572, 669, 361, 10, 46, "Item",
+ CellID->229978897]
+}, Open  ]],
+Cell[22948, 682, 240, 7, 46, "Program",
+ CellID->26124],
+Cell[CellGroupData[{
+Cell[23213, 693, 369, 11, 47, "Item",
+ CellID->1712818540],
+Cell[23585, 706, 1454, 31, 133, "Item",
+ CellID->363658022]
+}, Open  ]],
+Cell[25054, 740, 153, 3, 46, "Program",
+ CellID->711477533],
+Cell[CellGroupData[{
+Cell[25232, 747, 465, 10, 64, "Item",
+ CellID->1618262324],
+Cell[25700, 759, 290, 10, 29, "Item",
+ CellID->1919240546]
+}, Open  ]],
+Cell[26005, 772, 135, 3, 46, "Program",
+ CellID->9398610],
+Cell[26143, 777, 384, 12, 29, "Item",
+ CellID->1004458111],
+Cell[26530, 791, 144, 3, 46, "Program",
+ CellID->1196132039],
+Cell[26677, 796, 320, 8, 29, "Item",
+ CellID->1136105323]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27034, 809, 129, 2, 64, "Section",
+ CellID->1453578399],
+Cell[27166, 813, 171, 4, 30, "Text",
+ CellID->607822386],
+Cell[27340, 819, 302, 7, 46, "Input",
+ CellID->1283782684],
+Cell[27645, 828, 243, 5, 30, "Text",
+ CellID->786864292],
+Cell[27891, 835, 254, 6, 30, "Text",
+ CellID->1094716403],
+Cell[CellGroupData[{
+Cell[28170, 845, 140, 3, 28, "Input",
+ CellID->1848755452],
+Cell[28313, 850, 266, 5, 43, "Print",
+ CellTags->"Info3599642467-1873928",
+ CellID->2091003854]
+}, Open  ]],
+Cell[28594, 858, 448, 8, 68, "Text",
+ CellID->2079374670],
+Cell[29045, 868, 343, 10, 31, "Text",
+ CellID->14485719]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29425, 883, 120, 2, 64, "Section",
+ CellID->1390507002],
+Cell[29548, 887, 465, 11, 51, "Text",
+ CellID->1334135960],
+Cell[30016, 900, 857, 18, 110, "Text",
+ CellID->1713354700]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30910, 923, 125, 2, 64, "Section",
+ CellID->125627579],
+Cell[31038, 927, 603, 18, 50, "Text",
+ CellID->659013318],
+Cell[CellGroupData[{
+Cell[31666, 949, 125, 2, 44, "Subsection",
+ CellID->1585528342],
+Cell[31794, 953, 224, 3, 30, "Text",
+ CellID->130806289],
+Cell[32021, 958, 322, 7, 30, "Text",
+ CellID->1018765832],
+Cell[32346, 967, 268, 7, 28, "Input",
+ CellID->1243117399],
+Cell[32617, 976, 238, 7, 30, "Text",
+ CellID->250908534],
+Cell[32858, 985, 303, 8, 28, "Input",
+ CellID->380346180],
+Cell[33164, 995, 342, 7, 49, "Text",
+ CellID->1264018375],
+Cell[33509, 1004, 213, 5, 30, "Text",
+ CellID->965456548],
+Cell[33725, 1011, 285, 7, 28, "Input",
+ CellID->36173422],
+Cell[34013, 1020, 147, 2, 30, "Text",
+ CellID->1922569451],
+Cell[34163, 1024, 250, 7, 28, "Input",
+ CellID->998973200],
+Cell[34416, 1033, 284, 7, 31, "Text",
+ CellID->27475776],
+Cell[34703, 1042, 467, 10, 50, "Text",
+ CellID->591149809]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[35207, 1057, 126, 2, 44, "Subsection",
+ CellID->1997752018],
+Cell[35336, 1061, 411, 11, 49, "Text",
+ CellID->311345681],
+Cell[35750, 1074, 572, 16, 50, "Text",
+ CellID->1246053659],
+Cell[36325, 1092, 228, 6, 31, "Text",
+ CellID->731849667],
+Cell[36556, 1100, 117, 2, 28, "Input",
+ CellID->2002057449],
+Cell[36676, 1104, 423, 11, 50, "Text",
+ CellID->1727889616],
+Cell[37102, 1117, 291, 6, 49, "Text",
+ CellID->254535816],
+Cell[37396, 1125, 244, 7, 28, "Input",
+ CellID->1667652171]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37689, 1138, 129, 2, 64, "Section",
+ CellID->2031354958],
+Cell[CellGroupData[{
+Cell[37843, 1144, 123, 2, 44, "Subsection",
+ CellID->234020656],
+Cell[37969, 1148, 1058, 25, 109, "Text",
+ CellID->1142607735]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39064, 1178, 199, 3, 44, "Subsection",
+ CellID->1512611994],
+Cell[39266, 1183, 407, 10, 49, "Text",
+ CellID->558369972],
+Cell[39676, 1195, 416, 11, 51, "Text",
+ CellID->1707307530],
+Cell[40095, 1208, 234, 6, 28, "Input",
+ CellID->1864871259],
+Cell[40332, 1216, 439, 10, 51, "Text",
+ CellID->367422048],
+Cell[40774, 1228, 921, 22, 109, "Text",
+ CellID->12675049]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41744, 1256, 141, 2, 64, "Section",
+ CellID->1383658386],
+Cell[41888, 1260, 958, 19, 91, "Text",
+ CellID->46080139],
+Cell[42849, 1281, 1105, 31, 111, "Text",
+ CellID->2092096234],
+Cell[43957, 1314, 622, 14, 70, "Text",
+ CellID->1748825455],
+Cell[44582, 1330, 377, 7, 49, "Text",
+ CellID->395705792]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[44996, 1342, 186, 3, 64, "Section",
+ CellID->1816836691],
+Cell[45185, 1347, 722, 17, 51, "Text",
+ CellID->504288944],
+Cell[45910, 1366, 8888, 184, 845, "Input",
+ CellID->486023811],
+Cell[54801, 1552, 129, 2, 30, "Text",
+ CellID->1163162454],
+Cell[CellGroupData[{
+Cell[54955, 1558, 153, 3, 28, "Input",
+ CellID->1026087752],
+Cell[55111, 1563, 593, 10, 79, "Print",
+ CellTags->"Info3603204535-1659032",
+ CellID->375238507]
+}, Open  ]],
+Cell[55719, 1576, 500, 10, 51, "Text",
+ CellID->1457260763],
+Cell[56222, 1588, 320, 7, 28, "Input",
+ CellID->1528520419],
+Cell[56545, 1597, 601, 15, 51, "Text",
+ CellID->369733228],
+Cell[57149, 1614, 247, 6, 31, "Text",
+ CellID->116903153],
+Cell[57399, 1622, 222, 5, 30, "Text",
+ CellID->1710833099],
+Cell[57624, 1629, 8906, 185, 879, "Input",
+ CellID->1513326898],
+Cell[66533, 1816, 374, 8, 51, "Text",
+ CellID->1289656170]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

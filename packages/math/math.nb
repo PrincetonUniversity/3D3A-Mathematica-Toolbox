@@ -1,0 +1,420 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     15624,        412]
+NotebookOptionsPosition[     13232,        345]
+NotebookOutlinePosition[     14115,        373]
+CellTagsIndexPosition[     14072,        370]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["math.m package", "Title",
+ TextAlignment->Center,ExpressionUUID->"8680a799-f2f4-4428-ba97-a6b12239780a"],
+
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \
+\[OpenCurlyDoubleQuote]Software\[CloseCurlyDoubleQuote]), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \[OpenCurlyDoubleQuote]AS \
+IS\[CloseCurlyDoubleQuote], WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{
+  3.7410921975594893`*^9},ExpressionUUID->"f02472c4-b29c-480d-8fc7-\
+b1464ba0bbb2"],
+
+Cell[CellGroupData[{
+
+Cell["Begin the package", "Section",ExpressionUUID->"728f0d90-2637-4255-8fee-2e4cb31580e9"],
+
+Cell[BoxData[
+ RowBox[{"BeginPackage", "[", "\"\<math`\>\"", "]"}]], "Input",ExpressionUUID->"ff6454b6-51f4-40d6-abcc-d6af7d941401"],
+
+Cell[CellGroupData[{
+
+Cell["Usage messages for the public functions", "Subsection",ExpressionUUID->"9590927c-171f-468f-a73f-716503700453"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"listDifferentiate", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<listDifferentiate[listData] computes the numerical derivative of \
+listData using a central difference scheme, except at the end points where \
+either a forward or backward difference scheme is used as appropriate.\n\n\
+DATA FORMAT:\n\t1. listData \[RightArrow] a two-dimensional list of data \
+where the first dimension contains data corresponding to the independent \
+variable and the other to the dependent variable.\>\""}], " ", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox[
+    RowBox[{"listIntegrate", "::", "usage"}], "MessageName"], 
+   StyleBox["=", "MessageName"], 
+   "\"\<listIntegrate[listData] computes the numerical integral of listData \
+using the trapezoidal rule.\n\nDATA FORMAT:\n\t1. listData \[RightArrow] a \
+two-dimensional list of data where the first dimension contains data \
+corresponding to the independent variable and the other to the dependent \
+variable.\>\""}], " ", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logMean", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<logMean[f,df,Q] computes the logarithmically-weighted mean of the \
+list Q given f and df, where f is a list of the same length as Q containing \
+the values at which the corresponding values of Q are specified, and df is \
+the average separation between the values in f. Typically, f is monotonically \
+increasing with its values having a uniform separation df.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"logSTD", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<logSTD[f,df,Q] computes the logarithmically-weighted standard \
+deviation of the list Q given f and df, where f is a list of the same length \
+as Q containing the values at which the corresponding values of Q are \
+specified, and df is the average separation between the values in f. \
+Typically, f is monotonically increasing with its values having a uniform \
+separation df.\>\""}]}], "Input",
+ CellChangeTimes->{{3.710981009938883*^9, 3.7109810313349543`*^9}, {
+  3.71098109419849*^9, 3.710981180531123*^9}, {3.710981256331766*^9, 
+  3.710981281969541*^9}, {3.730668027268035*^9, 3.730668082620163*^9}, {
+  3.7306681158121443`*^9, 
+  3.730668308453586*^9}},ExpressionUUID->"541bab32-4168-4b94-975e-\
+93d9e21aaf32"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Begin the `Private context", "Section",ExpressionUUID->"1997f2b9-a0e1-4215-a220-0a41dd830860"],
+
+Cell[BoxData[
+ RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input",ExpressionUUID->"84d8f929-0812-40b7-83f3-cab12256d9e9"],
+
+Cell[CellGroupData[{
+
+Cell["Function definitions", "Subsection",ExpressionUUID->"63506a71-b295-4cd6-94f6-58c0f409e49b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"listDifferentiate", "[", "listData_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "xData", ",", "yData", ",", "xDataShiftLeft", ",", "yDataShiftLeft", 
+       ",", "listDataLen", ",", "outputData"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"xData", " ", "=", " ", 
+       RowBox[{"listData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"yData", " ", "=", " ", 
+       RowBox[{"listData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xDataShiftLeft", " ", "=", " ", 
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{"RotateLeft", "[", 
+          RowBox[{"xData", ",", "2"}], "]"}], ",", 
+         RowBox[{"-", "2"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"yDataShiftLeft", " ", "=", " ", 
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{"RotateLeft", "[", 
+          RowBox[{"yData", ",", "2"}], "]"}], ",", 
+         RowBox[{"-", "2"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"listDataLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "xData", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"outputData", " ", "=", " ", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "listDataLen"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"outputData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "=", 
+       RowBox[{"N", "[", 
+        FractionBox[
+         RowBox[{
+          RowBox[{"yData", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "-", 
+          RowBox[{"yData", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}], 
+         RowBox[{
+          RowBox[{"xData", "[", 
+           RowBox[{"[", "2", "]"}], "]"}], "-", 
+          RowBox[{"xData", "[", 
+           RowBox[{"[", "1", "]"}], "]"}]}]], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"outputData", "[", 
+        RowBox[{"[", 
+         RowBox[{"2", ";;", 
+          RowBox[{"listDataLen", "-", "1"}]}], "]"}], "]"}], "=", 
+       RowBox[{"N", "[", 
+        FractionBox[
+         RowBox[{"yDataShiftLeft", "-", 
+          RowBox[{"Drop", "[", 
+           RowBox[{"yData", ",", 
+            RowBox[{"-", "2"}]}], "]"}]}], 
+         RowBox[{"xDataShiftLeft", "-", 
+          RowBox[{"Drop", "[", 
+           RowBox[{"xData", ",", 
+            RowBox[{"-", "2"}]}], "]"}]}]], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"outputData", "[", 
+        RowBox[{"[", "listDataLen", "]"}], "]"}], "=", 
+       RowBox[{"N", "[", 
+        FractionBox[
+         RowBox[{
+          RowBox[{"yData", "[", 
+           RowBox[{"[", "listDataLen", "]"}], "]"}], "-", 
+          RowBox[{"yData", "[", 
+           RowBox[{"[", 
+            RowBox[{"listDataLen", "-", "1"}], "]"}], "]"}]}], 
+         RowBox[{
+          RowBox[{"xData", "[", 
+           RowBox[{"[", "listDataLen", "]"}], "]"}], "-", 
+          RowBox[{"xData", "[", 
+           RowBox[{"[", 
+            RowBox[{"listDataLen", "-", "1"}], "]"}], "]"}]}]], "]"}]}], ";", 
+      "\[IndentingNewLine]", "outputData"}]}], "\[IndentingNewLine]", "]"}]}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"listIntegrate", "[", "listdata_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "xdata", ",", "ydata", ",", "xdataShift", ",", "ydataShift", ",", 
+       "totalIntegral"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"xdata", " ", "=", " ", 
+       RowBox[{"listdata", "[", 
+        RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"ydata", " ", "=", " ", 
+       RowBox[{"listdata", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"xdataShift", " ", "=", " ", 
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{"RotateLeft", "[", 
+          RowBox[{"xdata", ",", "1"}], "]"}], ",", 
+         RowBox[{"-", "1"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"ydataShift", " ", "=", " ", 
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{"RotateLeft", "[", 
+          RowBox[{"ydata", ",", "1"}], "]"}], ",", 
+         RowBox[{"-", "1"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"totalIntegral", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Total", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           FractionBox[
+            RowBox[{
+             RowBox[{"Drop", "[", 
+              RowBox[{"ydata", ",", 
+               RowBox[{"-", "1"}]}], "]"}], "+", "ydataShift"}], "2"], ")"}], 
+          " ", 
+          RowBox[{"(", 
+           RowBox[{"xdataShift", "-", 
+            RowBox[{"Drop", "[", 
+             RowBox[{"xdata", ",", 
+              RowBox[{"-", "1"}]}], "]"}]}], ")"}]}], "]"}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logMean", "[", 
+    RowBox[{"f_", ",", "df_", ",", "Q_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "W", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"W", "=", 
+       RowBox[{"Log", "[", 
+        RowBox[{"10", ",", 
+         FractionBox[
+          RowBox[{"f", "+", 
+           RowBox[{"df", "/", "2"}]}], 
+          RowBox[{"f", "-", 
+           RowBox[{"df", "/", "2"}]}]]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Total", "[", 
+        RowBox[{"W", " ", "Q"}], "]"}], "/", 
+       RowBox[{"Total", "[", "W", "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"logSTD", "[", 
+   RowBox[{"f_", ",", "df_", ",", "Q_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"W", ",", "Qbar"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"W", "=", 
+      RowBox[{"Log", "[", 
+       RowBox[{"10", ",", 
+        FractionBox[
+         RowBox[{"f", "+", 
+          RowBox[{"df", "/", "2"}]}], 
+         RowBox[{"f", "-", 
+          RowBox[{"df", "/", "2"}]}]]}], "]"}]}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"Qbar", " ", "=", " ", 
+      RowBox[{"logMean", "[", 
+       RowBox[{"f", ",", "df", ",", "Q"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Sqrt", "[", 
+      RowBox[{
+       RowBox[{"Total", "[", 
+        RowBox[{"W", " ", 
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"Q", "-", "Qbar"}], ")"}], "2"]}], "]"}], "/", 
+       RowBox[{"Total", "[", "W", "]"}]}], "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.710980992460129*^9, 3.710980997483789*^9}, {
+  3.710981249679347*^9, 3.71098125043565*^9}, {3.7306678754093122`*^9, 
+  3.730667886710092*^9}},ExpressionUUID->"a90f920c-becc-4990-b756-\
+a8242710e3a7"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the `Private context", "Section",ExpressionUUID->"9e67901c-e875-4d2e-9bbc-e0ad6031ef10"],
+
+Cell[BoxData[
+ RowBox[{"End", "[", "]"}]], "Input",ExpressionUUID->"ca8aeceb-b9b7-4b4b-8c71-27444fd87286"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the package context", "Section",ExpressionUUID->"95621cd2-43b0-4f23-bb6f-05063fa13b0b"],
+
+Cell[BoxData[
+ RowBox[{"EndPackage", "[", "]"}]], "Input",ExpressionUUID->"f363ecf7-0b91-4166-a4ea-89bee543b5cb"]
+}, Open  ]]
+}, Open  ]]
+},
+AutoGeneratedPackage->Automatic,
+WindowSize->{808, 751},
+WindowMargins->{{Automatic, 298}, {Automatic, 0}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["Code"], PageWidth -> WindowWidth, AutoIndent -> Automatic, 
+    AutoSpacing -> True, LineBreakWithin -> Automatic, LineIndent -> 1, 
+    LinebreakAdjustments -> {0.85, 2, 10, 0, 1}], 
+   Cell[
+    StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
+  FrontEndVersion -> 
+  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, 2017)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 110, 1, 92, "Title", "ExpressionUUID" -> \
+"8680a799-f2f4-4428-ba97-a6b12239780a"],
+Cell[693, 25, 1778, 39, 600, "Text", "ExpressionUUID" -> \
+"f02472c4-b29c-480d-8fc7-b1464ba0bbb2"],
+Cell[CellGroupData[{
+Cell[2496, 68, 91, 0, 64, "Section", "ExpressionUUID" -> \
+"728f0d90-2637-4255-8fee-2e4cb31580e9"],
+Cell[2590, 70, 132, 1, 48, "Input", "ExpressionUUID" -> \
+"ff6454b6-51f4-40d6-abcc-d6af7d941401"],
+Cell[CellGroupData[{
+Cell[2747, 75, 116, 0, 44, "Subsection", "ExpressionUUID" -> \
+"9590927c-171f-468f-a73f-716503700453"],
+Cell[2866, 77, 2466, 45, 721, "Input", "ExpressionUUID" -> \
+"541bab32-4168-4b94-975e-93d9e21aaf32"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5381, 128, 100, 0, 64, "Section", "ExpressionUUID" -> \
+"1997f2b9-a0e1-4215-a220-0a41dd830860"],
+Cell[5484, 130, 129, 1, 48, "Input", "ExpressionUUID" -> \
+"84d8f929-0812-40b7-83f3-cab12256d9e9"],
+Cell[CellGroupData[{
+Cell[5638, 135, 97, 0, 44, "Subsection", "ExpressionUUID" -> \
+"63506a71-b295-4cd6-94f6-58c0f409e49b"],
+Cell[5738, 137, 6960, 187, 924, "Input", "ExpressionUUID" -> \
+"a90f920c-becc-4990-b756-a8242710e3a7"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12747, 330, 98, 0, 64, "Section", "ExpressionUUID" -> \
+"9e67901c-e875-4d2e-9bbc-e0ad6031ef10"],
+Cell[12848, 332, 106, 1, 48, "Input", "ExpressionUUID" -> \
+"ca8aeceb-b9b7-4b4b-8c71-27444fd87286"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12991, 338, 97, 0, 64, "Section", "ExpressionUUID" -> \
+"95621cd2-43b0-4f23-bb6f-05063fa13b0b"],
+Cell[13091, 340, 113, 1, 48, "Input", "ExpressionUUID" -> \
+"f363ecf7-0b91-4166-a4ea-89bee543b5cb"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

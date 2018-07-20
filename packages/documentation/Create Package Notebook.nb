@@ -1,0 +1,301 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     12807,        293]
+NotebookOptionsPosition[     12130,        269]
+NotebookOutlinePosition[     12484,        285]
+CellTagsIndexPosition[     12441,        282]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{{3.74109170337764*^9, 
+  3.74109178585573*^9}},ExpressionUUID->"16dd1f1d-4dbd-4061-8b64-\
+7c6087915fed"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ StyleBox["To create a new package, execute the cell below and then execute \
+CreatePackageNotebook[\[OpenCurlyDoubleQuote]PackageName\
+\[CloseCurlyDoubleQuote]];, where \[OpenCurlyDoubleQuote]PackageName\
+\[CloseCurlyDoubleQuote] is the name of your package.\n", "Subsubsection"],
+ StyleBox["This function was taken from \[OpenCurlyDoubleQuote]Building \
+Packages Tutorial.nb\[CloseCurlyDoubleQuote] written by Scientific Arts LLC.",
+   "Text"]
+}], "Subsection",
+ CellChangeTimes->{{3.6960372895755997`*^9, 3.696037393792472*^9}, {
+  3.6960374404006233`*^9, 3.6960374885930223`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"CreatePackageNotebook", "::", "usage"}], "=", 
+    "\"\<CreatePackageNotebook[\\\"package\\\"] creates a new notebook that \
+that has the property that it will save a package version of itself when the \
+notebook itself is saved. The argument, \\\"package\\\", should be a string \
+without any whitespace.  If it contains whitespace then that will be removed. \
+When CreatePackageNotebook is executed it will bring up a dialog asking you \
+in which directory to save the notebook. \>\""}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"CreatePackageNotebook", "[", "theName_String", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Catch", "@", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"name", ",", "document", ",", "directory", ",", "nb"}], "}"}], 
+      ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"name", "=", 
+        RowBox[{"StringReplace", "[", 
+         RowBox[{"theName", ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Except", "[", "WordCharacter", "]"}], "\[Rule]", 
+            "\"\<\>\""}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"name", "===", "\"\<\>\""}], ",", 
+         RowBox[{"Throw", "[", "$Failed", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"document", "=", "\[IndentingNewLine]", 
+        RowBox[{"DocumentNotebook", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"TextCell", "[", 
+               RowBox[{"#", ",", "\"\<Title\>\"", ",", 
+                RowBox[{"TextAlignment", "\[Rule]", "Center"}]}], "]"}], 
+              "&"}], "[", 
+             RowBox[{"name", "<>", "\"\<.m package\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{"\"\<Begin the package\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"ExpressionCell", "[", 
+               RowBox[{
+                RowBox[{"Defer", "[", 
+                 RowBox[{"BeginPackage", "[", "#", "]"}], "]"}], ",", 
+                "\"\<Input\>\""}], "]"}], "&"}], "[", 
+             RowBox[{"name", "<>", "\"\<`\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Usage messages for the public functions\>\"", ",", 
+              "\"\<Subsection\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"MyFunction", "::", "usage"}], "=", 
+                 "\"\<MyFunction[x] is a function that does something.\>\""}],
+                 ";"}], "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Begin the `Private context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], "]"}], ",", 
+              "\"\<Input\>\""}], "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<Function definitions\>\"", ",", "\"\<Subsection\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"MyFunction", "[", "x", "]"}], ":=", "x"}], ";"}], 
+               "]"}], ",", "\"\<Input\>\""}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<End the `Private context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"End", "[", "]"}], "]"}], ",", "\"\<Input\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+             "\"\<End the package context\>\"", ",", "\"\<Section\>\""}], 
+             "]"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"ExpressionCell", "[", 
+             RowBox[{
+              RowBox[{"Defer", "[", 
+               RowBox[{"EndPackage", "[", "]"}], "]"}], ",", 
+              "\"\<Input\>\""}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"StyleDefinitions", "\[Rule]", 
+           RowBox[{"Notebook", "[", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Cell", "[", 
+                RowBox[{"StyleData", "[", 
+                 RowBox[{
+                 "StyleDefinitions", "\[Rule]", "\"\<Default.nb\>\""}], "]"}],
+                 "]"}], ",", 
+               RowBox[{"Cell", "[", 
+                RowBox[{
+                 RowBox[{"StyleData", "[", "\"\<Code\>\"", "]"}], ",", 
+                 RowBox[{"PageWidth", "\[Rule]", "WindowWidth"}], ",", 
+                 RowBox[{"AutoIndent", "\[Rule]", "Automatic"}], ",", 
+                 RowBox[{"AutoSpacing", "\[Rule]", "True"}], ",", 
+                 RowBox[{"LineBreakWithin", "\[Rule]", "Automatic"}], ",", 
+                 RowBox[{"LineIndent", "\[Rule]", "1"}], ",", 
+                 RowBox[{"LinebreakAdjustments", "\[Rule]", 
+                  RowBox[{"{", 
+                   RowBox[{"0.85", ",", "2", ",", "10", ",", "0", ",", "1"}], 
+                   "}"}]}]}], "]"}], ",", 
+               RowBox[{"Cell", "[", 
+                RowBox[{
+                 RowBox[{"StyleData", "[", "\"\<Input\>\"", "]"}], ",", 
+                 RowBox[{"InitializationCell", "\[Rule]", "True"}]}], "]"}]}],
+               "}"}], ",", 
+             RowBox[{"Visible", "\[Rule]", "False"}], ",", 
+             RowBox[{
+             "StyleDefinitions", "\[Rule]", 
+              "\"\<PrivateStylesheetFormatting.nb\>\""}]}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AutoGeneratedPackage", "\[Rule]", "Automatic"}]}], 
+         "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"nb", "=", 
+        RowBox[{"CreateWindow", "[", "document", "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"directory", "=", 
+        RowBox[{"SystemDialogInput", "[", "\"\<Directory\>\"", "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"directory", "===", "$Canceled"}], ",", 
+         RowBox[{"Throw", "[", "$Canceled", "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"NotebookSave", "[", 
+        RowBox[{"nb", ",", 
+         RowBox[{"FileNameJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{"directory", ",", 
+            RowBox[{"name", "<>", "\"\<.nb\>\""}]}], "}"}], "]"}]}], 
+        "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.603215001287122*^9, 3.603215090599133*^9}, {
+   3.603215152691437*^9, 3.603215199593708*^9}, {3.603215331510047*^9, 
+   3.6032153322011147`*^9}, {3.603215380110586*^9, 3.603215392233179*^9}, {
+   3.6032154303971252`*^9, 3.6032154975761003`*^9}, 3.6032155331665363`*^9, {
+   3.603215815336483*^9, 3.603216004308446*^9}, {3.603216069730646*^9, 
+   3.603216072520352*^9}, {3.6032161158326197`*^9, 3.603216173810713*^9}, {
+   3.603216309984398*^9, 3.603216314583826*^9}, {3.6032164023004723`*^9, 
+   3.6032164344768877`*^9}, {3.603216501079822*^9, 3.60321660161942*^9}, {
+   3.6032166564484873`*^9, 3.6032167357603073`*^9}, {3.6032168797445173`*^9, 
+   3.603216920328312*^9}, {3.603216958276198*^9, 3.603216975642426*^9}, {
+   3.603217007678629*^9, 3.603217026677299*^9}, {3.603217083834538*^9, 
+   3.603217084014037*^9}, {3.603217129003519*^9, 3.603217129736967*^9}, {
+   3.603217168917123*^9, 3.603217174681346*^9}, {3.603217267239547*^9, 
+   3.603217349040689*^9}, {3.6032174092346*^9, 3.603217415961281*^9}, {
+   3.603222241561941*^9, 3.603222340222205*^9}, {3.603222383393222*^9, 
+   3.6032224666356*^9}, 3.6032225278275757`*^9, {3.603225080176652*^9, 
+   3.603225080896413*^9}, 3.6032251228590593`*^9, {3.6032319445550013`*^9, 
+   3.603231958448491*^9}, 3.6032331257067213`*^9},
+ CellID->486023811],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CreatePackageNotebook", "[", "\"\<dsp\>\"", "]"}], ";"}]], "Input",\
+
+ CellChangeTimes->{{3.696178526967551*^9, 3.6961785582358217`*^9}, {
+  3.696178604153954*^9, 3.696178604945653*^9}, {3.7410894160996723`*^9, 
+  3.741089416227367*^9}},ExpressionUUID->"cfb70043-c97e-4a16-813b-\
+91b9d3b44c04"]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{25, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1708, 37, 600, "Text", "ExpressionUUID" -> \
+"16dd1f1d-4dbd-4061-8b64-7c6087915fed"],
+Cell[CellGroupData[{
+Cell[2291, 61, 600, 10, 110, "Subsection", "ExpressionUUID" -> \
+"f1e028c6-508e-4cae-803a-08c6596cdede"],
+Cell[2894, 73, 8888, 184, 1104, "Input", "ExpressionUUID" -> \
+"9878a2ad-fa2f-42b0-be83-477ccef51be0",
+ CellID->486023811],
+Cell[11785, 259, 329, 7, 32, "Input", "ExpressionUUID" -> \
+"cfb70043-c97e-4a16-813b-91b9d3b44c04"]
+}, Open  ]]
+}
+]
+*)
+

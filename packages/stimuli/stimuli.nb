@@ -1,0 +1,574 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     22927,        566]
+NotebookOptionsPosition[     20532,        499]
+NotebookOutlinePosition[     21416,        527]
+CellTagsIndexPosition[     21373,        524]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["stimuli.m package", "Title",
+ TextAlignment->Center,ExpressionUUID->"bb6e937c-05c5-45a2-97d4-6d5ca881e4f7"],
+
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \
+\[OpenCurlyDoubleQuote]Software\[CloseCurlyDoubleQuote]), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \[OpenCurlyDoubleQuote]AS \
+IS\[CloseCurlyDoubleQuote], WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{
+  3.74109221591138*^9},ExpressionUUID->"d7fd2aaf-7d87-45c3-8299-2c2fcd33da80"],
+
+Cell[CellGroupData[{
+
+Cell["Begin the package", "Section",ExpressionUUID->"d56681c9-1576-4401-abb0-aeaf7bc4d3bb"],
+
+Cell[BoxData[
+ RowBox[{"BeginPackage", "[", 
+  RowBox[{"\"\<stimuli`\>\"", ",", 
+   RowBox[{"{", "\"\<dsp`\>\"", "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.7109800928788433`*^9, 3.710980097756668*^9}, {
+  3.7109896061275167`*^9, 
+  3.71098960623914*^9}},ExpressionUUID->"e6567692-c001-410f-81d9-\
+a1e2f83f3617"],
+
+Cell[CellGroupData[{
+
+Cell["Usage messages for the public functions", "Subsection",ExpressionUUID->"6a0979f1-b17d-45cd-b03e-d5a41bd35552"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"GaussianWhiteNoise", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<GaussianWhiteNoise[] generates a zero mean Gaussian White Noise \
+realization of duration 1 second assuming a sampling rate of 44100 Hz.\n\n\
+OPTIONAL INPUTS:\n\t1. \\\"Mean\\\" \[RightArrow] specifies the mean.\n\t2. \
+\\\"Standard Deviation\\\" \[RightArrow] specifies the standard deviation.\n\t\
+3. \\\"Duration\\\" \[RightArrow] specifies the duration of the signal in \
+seconds.\n\t4. \\\"Sampling Rate\\\" \[RightArrow] specifies the sampling \
+rate in Hz.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sineTone", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<sineTone[] generates a 500 Hz sine tone of duration 1 second assuming \
+a sampling rate of 44100 Hz.\n\nOPTIONAL INPUTS:\n\t1. \\\"Frequency\\\" \
+\[RightArrow] specifies the frequency in Hz.\n\t2. \\\"Duration\\\" \
+\[RightArrow] specifies the duration of the signal in seconds.\n\t3. \
+\\\"Sampling Rate\\\" \[RightArrow] specifies the sampling rate in Hz.\n\t4. \
+\\\"Zero End Amplitude\\\" \[RightArrow] specifies whether or not to adjust \
+the duration to make the last sample zero. The options are True and False \
+(default).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"twoToneComplex", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<twoToneComplex[] generates a two-tone complex of duration 1 second \
+with a 4 kHz center frequency and 250 Hz bandwidth. The default sampling rate \
+is 44100 Hz.\n\nOPTIONAL INPUTS:\n\t1. \\\"Center Frequency\\\" \[RightArrow] \
+specifies the center frequency in Hz.\n\t2. \\\"Bandwidth\\\" \[RightArrow] \
+specifies the bandwidth in Hz.\n\t3. \\\"Duration\\\" \[RightArrow] specifies \
+the duration of the signal in seconds.\n\t4. \\\"Sampling Rate\\\" \
+\[RightArrow] specifies the sampling rate in Hz.\n\t5. \\\"Zero Start \
+Amplitude\\\" \[RightArrow] specifies whether or not to adjust the duration \
+to make the first sample zero. The options are True and False (default).\n\t\
+6. \\\"Zero End Amplitude\\\" \[RightArrow] specifies whether or not to \
+adjust the duration to make the last sample zero. The options are True and \
+False (default).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"UniformWhiteNoise", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<UniformWhiteNoise[] generates a uniform White Noise realization of \
+duration 1 second assuming a sampling rate of 44100 Hz.\n\nOPTIONAL INPUTS:\n\
+\t1. \\\"Duration\\\" \[RightArrow] specifies the duration of the signal in \
+seconds.\n\t2. \\\"Sampling Rate\\\" \[RightArrow] specifies the sampling \
+rate in Hz.\>\""}]}], "Input",
+ CellChangeTimes->{
+  3.7108864617029543`*^9, {3.710886525713934*^9, 3.710886684523346*^9}, {
+   3.710979889394931*^9, 3.710980065582734*^9}, {3.710980203030244*^9, 
+   3.7109802626356163`*^9}},ExpressionUUID->"d870aace-0e83-458a-8dfb-\
+9dcf387958de"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Begin the `Private context", "Section",ExpressionUUID->"77dcb852-0463-4a65-a9cf-81aefdeccdf9"],
+
+Cell[BoxData[
+ RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input",ExpressionUUID->"464b90f6-6d90-4e30-938d-73bfb85aee58"],
+
+Cell[CellGroupData[{
+
+Cell["Function definitions", "Subsection",ExpressionUUID->"63c8b1a0-e010-4cff-8a32-dc57e8a2ff0e"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "GaussianWhiteNoise", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Mean\>\"", "\[Rule]", "0"}], ",", 
+     RowBox[{"\"\<Standard Deviation\>\"", "\[Rule]", "1"}], ",", 
+     RowBox[{"\"\<Duration\>\"", "\[Rule]", "1"}], ",", " ", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"GaussianWhiteNoise", "[", 
+    RowBox[{"OptionsPattern", "[", "]"}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "whiteNoiseMean", ",", "whiteNoiseSD", ",", "WNP", ",", 
+       "signalDuration", ",", "samplingRate", ",", "GWNRawData", ",", 
+       "outputSignal"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"whiteNoiseMean", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Mean\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"whiteNoiseSD", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Standard Deviation\>\"", "]"}]}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"WNP", "=", 
+       RowBox[{"whiteNoiseMean", "+", 
+        RowBox[{"WhiteNoiseProcess", "[", "whiteNoiseSD", "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"signalDuration", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Duration\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"samplingRate", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Sampling Rate\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"GWNRawData", "=", 
+       RowBox[{"Normal", "[", 
+        RowBox[{"RandomFunction", "[", 
+         RowBox[{"WNP", ",", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", 
+            RowBox[{
+             RowBox[{"IntegerPart", "[", 
+              RowBox[{"signalDuration", " ", "samplingRate"}], "]"}], "-", 
+             "1"}]}], "}"}]}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"outputSignal", "=", 
+       RowBox[{
+        RowBox[{"GWNRawData", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "All", ",", "2"}], "]"}], "]"}], "/", 
+        RowBox[{"Max", "[", 
+         RowBox[{"Abs", "[", 
+          RowBox[{"GWNRawData", "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "All", ",", "2"}], "]"}], "]"}], "]"}], 
+         "]"}]}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "sineTone", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Frequency\>\"", "\[Rule]", "500"}], ",", 
+     RowBox[{"\"\<Duration\>\"", "\[Rule]", "1"}], ",", " ", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}], ",", 
+     RowBox[{"\"\<Zero End Amplitude\>\"", "\[Rule]", "False"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"sineTone", "[", 
+    RowBox[{"OptionsPattern", "[", "]"}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "toneFreq", ",", "toneDuration", ",", "samplingRate", ",", "timeVec", 
+       ",", "rawSignal", ",", "lastZero", ",", "outputSignal"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"toneFreq", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Frequency\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"toneDuration", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Duration\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"samplingRate", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Sampling Rate\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"timeVec", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"toneDuration", "-", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", "samplingRate"}], ")"}]}], ",", 
+         RowBox[{"(", 
+          RowBox[{"1", "/", "samplingRate"}], ")"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"rawSignal", "=", 
+       RowBox[{"Sin", "[", 
+        RowBox[{"2", "\[Pi]", " ", "toneFreq", " ", "timeVec"}], "]"}]}], ";",
+       "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<Zero End Amplitude\>\"", "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"lastZero", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"rawSignal", ",", "0"}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"rawSignal", "[", 
+             RowBox[{"[", 
+              RowBox[{"lastZero", "-", "1"}], "]"}], "]"}], "<", "0"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"outputSignal", "=", 
+             RowBox[{"rawSignal", "[", 
+              RowBox[{"[", 
+               RowBox[{";;", "lastZero"}], "]"}], "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"lastZero", "=", 
+             RowBox[{
+              RowBox[{"Position", "[", 
+               RowBox[{"rawSignal", ",", "0"}], "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"outputSignal", "=", 
+             RowBox[{"rawSignal", "[", 
+              RowBox[{"[", 
+               RowBox[{";;", "lastZero"}], "]"}], "]"}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"outputSignal", "=", "rawSignal"}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"N", "[", "outputSignal", "]"}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "twoToneComplex", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Center Frequency\>\"", "\[Rule]", "4000"}], ",", 
+     RowBox[{"\"\<Bandwidth\>\"", "\[Rule]", "250"}], ",", 
+     RowBox[{"\"\<Duration\>\"", "\[Rule]", "1"}], ",", " ", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}], ",", 
+     RowBox[{"\"\<Zero Start Amplitude\>\"", "\[Rule]", "False"}], ",", 
+     RowBox[{"\"\<Zero End Amplitude\>\"", "\[Rule]", "False"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"twoToneComplex", "[", 
+    RowBox[{"OptionsPattern", "[", "]"}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "centerFreq", ",", "bandWidth", ",", "toneDuration", ",", 
+       "samplingRate", ",", "timeVec", ",", "rawTwoTone", ",", 
+       "rawTwoToneNorm", ",", "rawTwoTonePosEnvelope", ",", 
+       "rawTwoToneNegEnvelope", ",", "envelopeFirstZeroPos", ",", 
+       "envelopeLastZeroPos", ",", "outputSignal"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"centerFreq", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Center Frequency\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"bandWidth", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Bandwidth\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"toneDuration", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Duration\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"samplingRate", "=", 
+       RowBox[{"OptionValue", "[", "\"\<Sampling Rate\>\"", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"timeVec", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"toneDuration", "-", 
+          RowBox[{"(", 
+           RowBox[{"1", "/", "samplingRate"}], ")"}]}], ",", 
+         RowBox[{"(", 
+          RowBox[{"1", "/", "samplingRate"}], ")"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"rawTwoTone", "=", 
+       RowBox[{
+        RowBox[{"0.5", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"2", " ", "\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{"centerFreq", "-", 
+             FractionBox["bandWidth", "2"]}], ")"}], " ", "timeVec"}], 
+          "]"}]}], "+", 
+        RowBox[{"0.5", " ", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"2", "\[Pi]", " ", 
+           RowBox[{"(", 
+            RowBox[{"centerFreq", "+", 
+             FractionBox["bandWidth", "2"]}], ")"}], " ", " ", "timeVec"}], 
+          "]"}]}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"rawTwoToneNorm", "=", 
+       RowBox[{"rawTwoTone", "/", 
+        RowBox[{"Max", "[", 
+         RowBox[{"Abs", "[", "rawTwoTone", "]"}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"rawTwoTonePosEnvelope", ",", "rawTwoToneNegEnvelope"}], 
+        "}"}], "=", 
+       RowBox[{"Chop", "[", 
+        RowBox[{
+         RowBox[{"envelopeSignal", "[", "rawTwoToneNorm", "]"}], ",", 
+         SuperscriptBox["10", 
+          RowBox[{"-", "2"}]]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<Zero Start Amplitude\>\"", "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"envelopeFirstZeroPos", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"rawTwoTonePosEnvelope", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"rawTwoTonePosEnvelope", ",", "0"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"envelopeFirstZeroPos", "=", "1"}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<Zero End Amplitude\>\"", "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"envelopeLastZeroPos", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"rawTwoTonePosEnvelope", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"rawTwoTonePosEnvelope", ",", "0"}], "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"-", "1"}], "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{
+             RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"envelopeLastZeroPos", "=", 
+          RowBox[{"Length", "[", "rawTwoToneNorm", "]"}]}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"outputSignal", "=", 
+       RowBox[{"rawTwoToneNorm", "[", 
+        RowBox[{"[", 
+         RowBox[{"envelopeFirstZeroPos", ";;", "envelopeLastZeroPos"}], "]"}],
+         "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Options", "[", "UniformWhiteNoise", "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"\"\<Duration\>\"", "\[Rule]", "1"}], ",", " ", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"UniformWhiteNoise", "[", 
+   RowBox[{"OptionsPattern", "[", "]"}], "]"}], ":=", 
+  RowBox[{"Module", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "WNP", ",", "signalDuration", ",", "samplingRate", ",", "WNRawData", ",",
+       "outputSignal"}], "}"}], "\[IndentingNewLine]", ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"WNP", "=", 
+      RowBox[{"WhiteNoiseProcess", "[", 
+       RowBox[{"UniformDistribution", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1"}], ",", "1"}], "}"}], "]"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"signalDuration", "=", 
+      RowBox[{"OptionValue", "[", "\"\<Duration\>\"", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"samplingRate", "=", 
+      RowBox[{"OptionValue", "[", "\"\<Sampling Rate\>\"", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"WNRawData", "=", 
+      RowBox[{"Normal", "[", 
+       RowBox[{"RandomFunction", "[", 
+        RowBox[{"WNP", ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", 
+           RowBox[{
+            RowBox[{"IntegerPart", "[", 
+             RowBox[{"signalDuration", " ", "samplingRate"}], "]"}], "-", 
+            "1"}]}], "}"}]}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"outputSignal", "=", 
+      RowBox[{
+       RowBox[{"WNRawData", "[", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", "All", ",", "2"}], "]"}], "]"}], "/", 
+       RowBox[{"Max", "[", 
+        RowBox[{"Abs", "[", 
+         RowBox[{"WNRawData", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "All", ",", "2"}], "]"}], "]"}], "]"}], 
+        "]"}]}]}]}]}], "\[IndentingNewLine]", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.7108864756370363`*^9, 3.710886516289948*^9}, {
+  3.710979870862686*^9, 3.7109798846750526`*^9}, {3.710980181349164*^9, 
+  3.7109801964292393`*^9}},ExpressionUUID->"a495c3aa-f548-4163-9ab5-\
+2e221dcf12ba"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the `Private context", "Section",ExpressionUUID->"d6a57e50-0870-4c1f-90bd-41c4e865018d"],
+
+Cell[BoxData[
+ RowBox[{"End", "[", "]"}]], "Input",ExpressionUUID->"0e8545e2-da81-41dd-b3f6-8769b624dac4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["End the package context", "Section",ExpressionUUID->"4d2ef65e-2aa8-4f0c-97d4-6e009dca36e9"],
+
+Cell[BoxData[
+ RowBox[{"EndPackage", "[", "]"}]], "Input",ExpressionUUID->"b4242dad-37d6-4278-a957-796e71539535"]
+}, Open  ]]
+}, Open  ]]
+},
+AutoGeneratedPackage->Automatic,
+WindowSize->{808, 751},
+WindowMargins->{{316, Automatic}, {Automatic, 50}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["Code"], PageWidth -> WindowWidth, AutoIndent -> Automatic, 
+    AutoSpacing -> True, LineBreakWithin -> Automatic, LineIndent -> 1, 
+    LinebreakAdjustments -> {0.85, 2, 10, 0, 1}], 
+   Cell[
+    StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
+  FrontEndVersion -> 
+  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, 2017)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 113, 1, 92, "Title", "ExpressionUUID" -> \
+"bb6e937c-05c5-45a2-97d4-6d5ca881e4f7"],
+Cell[696, 25, 1773, 38, 600, "Text", "ExpressionUUID" -> \
+"d7fd2aaf-7d87-45c3-8299-2c2fcd33da80"],
+Cell[CellGroupData[{
+Cell[2494, 67, 91, 0, 64, "Section", "ExpressionUUID" -> \
+"d56681c9-1576-4401-abb0-aeaf7bc4d3bb"],
+Cell[2588, 69, 316, 7, 48, "Input", "ExpressionUUID" -> \
+"e6567692-c001-410f-81d9-a1e2f83f3617"],
+Cell[CellGroupData[{
+Cell[2929, 80, 116, 0, 44, "Subsection", "ExpressionUUID" -> \
+"6a0979f1-b17d-45cd-b03e-d5a41bd35552"],
+Cell[3048, 82, 3022, 48, 994, "Input", "ExpressionUUID" -> \
+"d870aace-0e83-458a-8dfb-9dcf387958de"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6119, 136, 100, 0, 64, "Section", "ExpressionUUID" -> \
+"77dcb852-0463-4a65-a9cf-81aefdeccdf9"],
+Cell[6222, 138, 129, 1, 48, "Input", "ExpressionUUID" -> \
+"464b90f6-6d90-4e30-938d-73bfb85aee58"],
+Cell[CellGroupData[{
+Cell[6376, 143, 97, 0, 44, "Subsection", "ExpressionUUID" -> \
+"63c8b1a0-e010-4cff-8a32-dc57e8a2ff0e"],
+Cell[6476, 145, 13522, 333, 1888, "Input", "ExpressionUUID" -> \
+"a495c3aa-f548-4163-9ab5-2e221dcf12ba"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20047, 484, 98, 0, 64, "Section", "ExpressionUUID" -> \
+"d6a57e50-0870-4c1f-90bd-41c4e865018d"],
+Cell[20148, 486, 106, 1, 48, "Input", "ExpressionUUID" -> \
+"0e8545e2-da81-41dd-b3f6-8769b624dac4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20291, 492, 97, 0, 64, "Section", "ExpressionUUID" -> \
+"4d2ef65e-2aa8-4f0c-97d4-6e009dca36e9"],
+Cell[20391, 494, 113, 1, 48, "Input", "ExpressionUUID" -> \
+"b4242dad-37d6-4278-a957-796e71539535"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,157 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5508,        149]
+NotebookOptionsPosition[      4954,        128]
+NotebookOutlinePosition[      5310,        144]
+CellTagsIndexPosition[      5267,        141]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \
+\[OpenCurlyDoubleQuote]Software\[CloseCurlyDoubleQuote]), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \[OpenCurlyDoubleQuote]AS \
+IS\[CloseCurlyDoubleQuote], WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{
+  3.741092228073048*^9},ExpressionUUID->"ce996125-98c6-4376-8b8b-\
+6fc044ad24e2"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Update package directory\n",
+ StyleBox["Execute the following cell to update all packages. This notebook \
+must be in the same folder as your package folders.", "Subsubsection"]
+}], "Subsection",
+ CellChangeTimes->{{3.6961807855533237`*^9, 3.696180793175329*^9}, {
+  3.696181522169651*^9, 3.696181544957788*^9}, {3.6961816663487463`*^9, 
+  3.696181684813562*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"packageDir", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"$UserBaseDirectory", ",", "\"\<Applications\>\""}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"packageNameList", "=", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.m\>\"", ",", "packageDir"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fileNameList", "=", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.m\>\"", ",", 
+     RowBox[{"NotebookDirectory", "[", "]"}], ",", "2"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"numFiles", "=", 
+   RowBox[{"Length", "[", "fileNameList", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DeleteFile", "[", "packageNameList", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Do", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"packageFileName", "=", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{"packageDir", ",", 
+        RowBox[{"FileNameTake", "[", 
+         RowBox[{"fileNameList", "[", 
+          RowBox[{"[", "ii", "]"}], "]"}], "]"}]}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"CopyFile", "[", 
+     RowBox[{
+      RowBox[{"fileNameList", "[", 
+       RowBox[{"[", "ii", "]"}], "]"}], ",", "packageFileName"}], "]"}], 
+    ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"ii", ",", "1", ",", "numFiles"}], "}"}]}], "\[IndentingNewLine]",
+   "]"}]}], "Input",
+ CellChangeTimes->{{3.696180807868168*^9, 3.696180814465207*^9}, {
+   3.696181104431192*^9, 3.6961811121822567`*^9}, {3.696181182107985*^9, 
+   3.696181288773148*^9}, {3.696181372288336*^9, 3.696181375678616*^9}, {
+   3.696181413437904*^9, 3.696181442380577*^9}, {3.696181486560178*^9, 
+   3.696181499929542*^9}, 3.6961816430193253`*^9, {3.696181729285576*^9, 
+   3.696181733705948*^9}, {3.696426011454906*^9, 3.6964260421758213`*^9}, {
+   3.696426094700899*^9, 3.696426142428549*^9}, {3.6967764960164833`*^9, 
+   3.6967765055518312`*^9}, {3.741089249810329*^9, 3.741089276579587*^9}, 
+   3.7410893172821827`*^9},ExpressionUUID->"5e47adaa-7001-4efb-81cf-\
+f5d992f44191"]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{207, Automatic}, {44, Automatic}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
+2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1776, 39, 600, "Text", "ExpressionUUID" -> \
+"ce996125-98c6-4376-8b8b-6fc044ad24e2"],
+Cell[CellGroupData[{
+Cell[2359, 63, 381, 7, 92, "Subsection", "ExpressionUUID" -> \
+"f2ed5403-5043-406d-ab17-edc184c90017"],
+Cell[2743, 72, 2195, 53, 243, "Input", "ExpressionUUID" -> \
+"5e47adaa-7001-4efb-81cf-f5d992f44191"]
+}, Open  ]]
+}
+]
+*)
+
