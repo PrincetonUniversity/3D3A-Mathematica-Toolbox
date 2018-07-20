@@ -1,0 +1,194 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6855,        186]
+NotebookOptionsPosition[      6487,        168]
+NotebookOutlinePosition[      6842,        184]
+CellTagsIndexPosition[      6799,        181]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+==============================================================================\
+
+This file is part of the 3D3A Mathematica Toolbox.
+   
+Contributing author(s), listed alphabetically by last name:
+Rahulram Sridhar <rahulram@princeton.edu>
+Joseph G. Tylka <josephgt@princeton.edu>
+3D Audio and Applied Acoustics (3D3A) Laboratory
+Princeton University, Princeton, New Jersey 08544, USA
+   
+MIT License
+   
+Copyright (c) 2018 Princeton University
+   
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \
+\[OpenCurlyDoubleQuote]Software\[CloseCurlyDoubleQuote]), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+   
+The above copyright notice and this permission notice shall be included in \
+all
+copies or substantial portions of the Software.
+   
+THE SOFTWARE IS PROVIDED \[OpenCurlyDoubleQuote]AS \
+IS\[CloseCurlyDoubleQuote], WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+==============================================================================\
+\>", "Text",
+ CellChangeTimes->{
+  3.741092228073048*^9},ExpressionUUID->"ce996125-98c6-4376-8b8b-\
+6fc044ad24e2"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Update MathLink executables\n",
+ StyleBox["Execute the following cell to copy all compiled MathLink \
+executables into a centralized location for easy reference from Mathematica. \
+This notebook must be in the same folder as your MathLink function folders.", 
+  "Subsubsection"]
+}], "Subsection",
+ CellChangeTimes->{{3.6961807855533237`*^9, 3.696180793175329*^9}, {
+  3.696181522169651*^9, 3.696181544957788*^9}, {3.6961816663487463`*^9, 
+  3.696181684813562*^9}, {3.741095198341395*^9, 3.741095224024466*^9}, {
+  3.741102734471908*^9, 3.741102754060268*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"MLexecDir", "=", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{"$UserBaseDirectory", ",", "\"\<Applications\>\""}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"cFileNameList", "=", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.c\>\"", ",", 
+     RowBox[{"NotebookDirectory", "[", "]"}], ",", "2"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"numCfiles", " ", "=", " ", 
+   RowBox[{"Length", "[", "cFileNameList", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"MLexecFileNameList", " ", "=", " ", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"tempFileName", "=", " ", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"Join", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"FileNameSplit", "[", 
+           RowBox[{"cFileNameList", "[", 
+            RowBox[{"[", "ii", "]"}], "]"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ";;", 
+            RowBox[{"-", "2"}]}], "]"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"FileBaseName", "[", 
+           RowBox[{
+            RowBox[{"FileNameSplit", "[", 
+             RowBox[{"cFileNameList", "[", 
+              RowBox[{"[", "ii", "]"}], "]"}], "]"}], "[", 
+            RowBox[{"[", 
+             RowBox[{"-", "1"}], "]"}], "]"}], "]"}], "}"}]}], "]"}], "]"}]}],
+      ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"FileExistsQ", "[", "tempFileName", "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"MLexecFileNameList", " ", "=", " ", 
+         RowBox[{"Join", "[", 
+          RowBox[{"MLexecFileNameList", ",", 
+           RowBox[{"{", "tempFileName", "}"}]}], "]"}]}], ";"}]}], "]"}], 
+     ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{"ii", ",", "1", ",", "numCfiles"}], "}"}]}], 
+   "\[IndentingNewLine]", "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"numMLexecFiles", " ", "=", " ", 
+   RowBox[{"Length", "[", "MLexecFileNameList", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Do", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"tempFileName", " ", "=", " ", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{"MLexecDir", ",", 
+        RowBox[{"FileNameTake", "[", 
+         RowBox[{"MLexecFileNameList", "[", 
+          RowBox[{"[", "ii", "]"}], "]"}], "]"}]}], "}"}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"FileExistsQ", "[", "tempFileName", "]"}], ",", 
+      RowBox[{"DeleteFile", "[", "tempFileName", "]"}]}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"CopyFile", "[", 
+     RowBox[{
+      RowBox[{"MLexecFileNameList", "[", 
+       RowBox[{"[", "ii", "]"}], "]"}], ",", "tempFileName"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"ii", ",", "1", ",", "numMLexecFiles"}], "}"}]}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.741095247506398*^9, 3.741095319078121*^9}, {
+  3.741095446716568*^9, 3.741095614309937*^9}, {3.741095667958556*^9, 
+  3.741095685748069*^9}, {3.741095728471867*^9, 3.741095739557479*^9}, {
+  3.7410957753625097`*^9, 3.7410957939374743`*^9}, {3.7410958966408243`*^9, 
+  3.741095925975606*^9}, {3.74109597348697*^9, 3.741096025751275*^9}}]
+}, Open  ]]
+},
+WindowSize->{808, 751},
+WindowMargins->{{Automatic, 107}, {Automatic, 5}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1776, 39, 476, "Text"],
+Cell[CellGroupData[{
+Cell[2359, 63, 577, 10, 67, "Subsection"],
+Cell[2939, 75, 3532, 90, 359, "Input"]
+}, Open  ]]
+}
+]
+*)
+

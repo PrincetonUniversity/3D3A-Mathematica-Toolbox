@@ -1,0 +1,4 @@
+
+Compiling oscsend (successful, with some warnings):
+
+/Users/...filepath.../oscsend/mcc -o oscsend oscsend.tm oscsend.c htmsocket.c OSC-client.c OSC-timetag.c

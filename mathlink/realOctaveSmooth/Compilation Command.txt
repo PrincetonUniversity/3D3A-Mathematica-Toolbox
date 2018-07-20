@@ -1,0 +1,4 @@
+
+Compiling realOctaveSmooth (successful):
+
+/Users/...filepath.../realOctaveSmooth/mcc realOctaveSmooth.tm realOctaveSmooth.c -o realOctaveSmooth
