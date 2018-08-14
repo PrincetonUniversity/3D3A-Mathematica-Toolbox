@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    121894,       2952]
-NotebookOptionsPosition[    119434,       2884]
-NotebookOutlinePosition[    120367,       2913]
-CellTagsIndexPosition[    120324,       2910]
+NotebookDataLength[     99737,       2419]
+NotebookOptionsPosition[     97382,       2365]
+NotebookOutlinePosition[     98313,       2394]
+CellTagsIndexPosition[     98270,       2391]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -337,33 +337,6 @@ Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An \
 Algorithm Based on Balanced Model Reduction.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"logCompensatedWeightsMatrix", "::", "usage"}], "=", 
-   "\[IndentingNewLine]", 
-   "\"\<logCompensatedWeightsMatrix[FullLen,Frac,WinType] returns the \
-log-compensated weights matrix required to perform fractional-octave \
-smoothing of transfer functions that preserves log-frequency symmetry.\n\n\
-REF:\n\t1. Tylka et al. (2017) - A Generalized Method for Fractional-Octave \
-Smoothing of Transfer Functions that Preserves Log-Frequency Symmetry.\>\""}],
-   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"centerAlignedWindowMatrix", "::", "usage"}], "=", 
-   "\[IndentingNewLine]", 
-   "\"\<centerAlignedWindowMatrix[FullLen,Frac,WinType] returns the window \
-matrix required to perform generalized fractional-octave smoothing that may \
-not preserve log-frequency symmetry.\n\nREF:\n\t1. Hatziantoniou and \
-Mourjopoulos (2000) - Generalized Fractional-Octave Smoothing of Audio and \
-Acoustic Responses.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"getSmoothedTF", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<getSmoothedTF[IR,SmoothingMatrix,SmoothingScale] returns a transfer \
-function that has been smoothed using the smoothing matrix provided. The \
-input must be an impulse response. A smoothing scale must also be specified. \
-The options for smoothing scale are: \\\"Power\\\" and \\\"dB\\\".\>\""}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
   RowBox[{"getSPLNorm", "::", "usage"}], "=", "\[IndentingNewLine]", 
   "\"\<getSPLNorm[refSPL] returns the normalization factor required to \
 normalize transfer functions to represent magnitude responses in dB SPL. The \
@@ -425,7 +398,8 @@ dB. If refSPL is not specified, 105 dB is assumed.\>\""}]}], "Input",
    3.7306435766050177`*^9, 3.730643687696537*^9}, {3.730665343812908*^9, 
    3.7306655112616158`*^9}, {3.7306665585689993`*^9, 3.730666650101592*^9}, {
    3.730666681477236*^9, 3.730666845265204*^9}, {3.730666947230304*^9, 
-   3.73066695682969*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+   3.73066695682969*^9}, {3.7432773418826027`*^9, 
+   3.74327734313927*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
 4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
@@ -2280,500 +2254,6 @@ Cell[BoxData[{
     "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"logCompensatedWeightsMatrix", "[", 
-    RowBox[{"FullLen_", ",", "Frac_", ",", "WinType_"}], "]"}], ":=", " ", 
-   RowBox[{"Module", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{
-      "SpecLen", ",", "Output", ",", "n", ",", "fL", ",", "nL", ",", "fH", 
-       ",", "nH", ",", "WinLen", ",", "WinVec", ",", "TempWinVec", ",", "m", 
-       ",", "mL", ",", "mH"}], "}"}], ",", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"SpecLen", " ", "=", " ", 
-       RowBox[{
-        FractionBox["FullLen", "2"], "+", "1"}]}], ";", "\[IndentingNewLine]",
-       "\[IndentingNewLine]", 
-      RowBox[{"Output", " ", "=", " ", 
-       RowBox[{"ConstantArray", "[", 
-        RowBox[{"0.", ",", 
-         RowBox[{"{", 
-          RowBox[{"SpecLen", ",", "FullLen"}], "}"}]}], "]"}]}], ";", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{"For", "[", 
-       RowBox[{
-        RowBox[{"n", "=", "0"}], ",", 
-        RowBox[{"n", "<", 
-         RowBox[{"SpecLen", "-", "1"}]}], ",", 
-        RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"fL", " ", "=", " ", 
-          RowBox[{"N", "[", 
-           RowBox[{"n", " ", 
-            SuperscriptBox["2", 
-             FractionBox[
-              RowBox[{"-", "1"}], 
-              RowBox[{"2", " ", "Frac"}]]]}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"nL", " ", "=", " ", 
-          RowBox[{"Floor", "[", "fL", "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"fH", " ", "=", " ", 
-          RowBox[{"N", "[", 
-           RowBox[{"n", " ", 
-            SuperscriptBox["2", 
-             FractionBox["1", 
-              RowBox[{"2", " ", "Frac"}]]]}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"nH", " ", "=", " ", 
-          RowBox[{"Ceiling", "[", "fH", "]"}]}], ";", "\[IndentingNewLine]", 
-         "\[IndentingNewLine]", 
-         RowBox[{"(*", " ", 
-          RowBox[{"Upper", " ", "limit", " ", "correction"}], " ", "*)"}], 
-         "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"nH", ">", 
-            RowBox[{"SpecLen", "-", "1"}]}], ",", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"nH", "=", 
-             RowBox[{"SpecLen", "-", "1"}]}], ";", "\[IndentingNewLine]", 
-            RowBox[{"nL", "=", 
-             RowBox[{"Floor", "[", 
-              FractionBox[
-               SuperscriptBox["n", "2"], "nH"], "]"}]}], ";"}]}], 
-          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"fH", ">", 
-            RowBox[{"SpecLen", "-", "1"}]}], ",", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"fH", "=", 
-             RowBox[{"SpecLen", "-", "1"}]}], ";", "\[IndentingNewLine]", 
-            RowBox[{"fL", "=", 
-             FractionBox[
-              SuperscriptBox["n", "2"], "fH"]}], ";"}]}], 
-          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-         "\[IndentingNewLine]", 
-         RowBox[{"(*", " ", 
-          RowBox[{"Window", " ", "function", " ", "computation"}], " ", 
-          "*)"}], "\[IndentingNewLine]", 
-         RowBox[{"WinLen", " ", "=", " ", 
-          RowBox[{"nH", "-", "nL", "+", "1"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"WinVec", " ", "=", " ", 
-          RowBox[{"ConstantArray", "[", 
-           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"TempWinVec", " ", "=", " ", 
-          RowBox[{"ConstantArray", "[", 
-           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"WinLen", "\[Equal]", "1"}], ",", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"WinVec", " ", "=", " ", "1"}], ";"}], 
-           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"m", " ", "=", " ", 
-             RowBox[{"Range", "[", 
-              RowBox[{"nL", ",", "nH"}], "]"}]}], ";", "\[IndentingNewLine]", 
-            
-            RowBox[{"mL", " ", "=", " ", 
-             RowBox[{"m", "-", "0.5"}]}], ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{"Lower", " ", "limit", " ", "of", " ", "integral"}], " ",
-              "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"mL", " ", "=", " ", 
-             RowBox[{
-              RowBox[{"mL", " ", 
-               RowBox[{"Unitize", "[", 
-                RowBox[{"Threshold", "[", 
-                 RowBox[{"mL", ",", "fL"}], "]"}], "]"}]}], "+", 
-              RowBox[{"fL", 
-               RowBox[{"(", 
-                RowBox[{"1", "-", 
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"Threshold", "[", 
-                   RowBox[{"mL", ",", "fL"}], "]"}], "]"}]}], ")"}]}]}]}], 
-            ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{
-             "Lower", " ", "limit", " ", "cannot", " ", "be", " ", "smaller", 
-              " ", "than", " ", "fL"}], " ", "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"mL", " ", "=", " ", 
-             RowBox[{
-              RowBox[{"mL", 
-               RowBox[{"(", 
-                RowBox[{"1", "-", 
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"Threshold", "[", 
-                   RowBox[{"mL", ",", "fH"}], "]"}], "]"}]}], ")"}]}], "+", 
-              " ", 
-              RowBox[{"fH", " ", 
-               RowBox[{"Unitize", "[", 
-                RowBox[{"Threshold", "[", 
-                 RowBox[{"mL", ",", "fH"}], "]"}], "]"}]}]}]}], ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{
-             "Lower", " ", "limit", " ", "cannot", " ", "be", " ", "greater", 
-              " ", "than", " ", "fH"}], " ", "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"mH", " ", "=", " ", 
-             RowBox[{"m", "+", "0.5"}]}], ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{"Upper", " ", "limit", " ", "of", " ", "integral"}], " ",
-              "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"mH", " ", "=", " ", 
-             RowBox[{
-              RowBox[{"mH", " ", 
-               RowBox[{"Unitize", "[", 
-                RowBox[{"Threshold", "[", 
-                 RowBox[{"mH", ",", "fL"}], "]"}], "]"}]}], "+", 
-              RowBox[{"fL", 
-               RowBox[{"(", 
-                RowBox[{"1", "-", 
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"Threshold", "[", 
-                   RowBox[{"mH", ",", "fL"}], "]"}], "]"}]}], ")"}]}]}]}], 
-            ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{
-             "Upper", " ", "limit", " ", "cannot", " ", "be", " ", "smaller", 
-              " ", "than", " ", "fL"}], " ", "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"mH", " ", "=", " ", 
-             RowBox[{
-              RowBox[{"mH", 
-               RowBox[{"(", 
-                RowBox[{"1", "-", 
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"Threshold", "[", 
-                   RowBox[{"mH", ",", "fH"}], "]"}], "]"}]}], ")"}]}], "+", 
-              " ", 
-              RowBox[{"fH", " ", 
-               RowBox[{"Unitize", "[", 
-                RowBox[{"Threshold", "[", 
-                 RowBox[{"mH", ",", "fH"}], "]"}], "]"}]}]}]}], ";", " ", 
-            RowBox[{"(*", " ", 
-             RowBox[{
-             "Upper", " ", "limit", " ", "cannot", " ", "be", " ", "greater", 
-              " ", "than", " ", "fH"}], " ", "*)"}], "\[IndentingNewLine]", 
-            RowBox[{"Switch", "[", 
-             RowBox[{
-             "WinType", ",", "\[IndentingNewLine]", "\"\<Rectangular\>\"", 
-              ",", "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"TempWinVec", " ", "=", " ", 
-                RowBox[{
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"mL", "-", "mH"}], "]"}], " ", 
-                 RowBox[{"N", "[", 
-                  RowBox[{"(", 
-                   RowBox[{
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mH", "/", "n"}]}], "]"}], "-", 
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mL", "/", "n"}]}], "]"}]}], ")"}], "]"}]}]}], 
-               ";"}], ",", "\[IndentingNewLine]", "\"\<Hanning\>\"", ",", 
-              "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"TempWinVec", " ", "=", " ", 
-                RowBox[{
-                 RowBox[{"Unitize", "[", 
-                  RowBox[{"mL", "-", "mH"}], "]"}], " ", 
-                 RowBox[{"N", "[", 
-                  RowBox[{
-                   RowBox[{
-                    RowBox[{"(", 
-                    RowBox[{
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mH", "/", "n"}]}], "]"}], "-", 
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mL", "/", "n"}]}], "]"}]}], ")"}], "/", "2"}], 
-                   "+", 
-                   RowBox[{
-                    RowBox[{"(", 
-                    RowBox[{
-                    RowBox[{"Sin", "[", 
-                    RowBox[{"2", "\[Pi]", " ", "Frac", " ", 
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mH", "/", "n"}]}], "]"}]}], "]"}], "-", 
-                    RowBox[{"Sin", "[", 
-                    RowBox[{"2", "\[Pi]", " ", "Frac", " ", 
-                    RowBox[{"Log", "[", 
-                    RowBox[{"2", ",", 
-                    RowBox[{"mL", "/", "n"}]}], "]"}]}], "]"}]}], ")"}], "/", 
-                    
-                    RowBox[{"(", 
-                    RowBox[{"4", " ", "\[Pi]", " ", "Frac"}], ")"}]}]}], 
-                  "]"}]}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-            "\[IndentingNewLine]", 
-            RowBox[{"WinVec", " ", "=", " ", 
-             RowBox[{"TempWinVec", "/", 
-              RowBox[{"Total", "[", "TempWinVec", "]"}]}]}], ";"}]}], 
-          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-         "\[IndentingNewLine]", 
-         RowBox[{"(*", " ", 
-          RowBox[{"Smoothing", " ", "matrix", " ", "computation"}], " ", 
-          "*)"}], "\[IndentingNewLine]", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"Output", "[", 
-            RowBox[{"[", 
-             RowBox[{"n", "+", "1"}], "]"}], "]"}], "[", 
-           RowBox[{"[", 
-            RowBox[{
-             RowBox[{"nL", "+", "1"}], ";;", 
-             RowBox[{"nH", "+", "1"}]}], "]"}], "]"}], " ", "=", " ", 
-          "WinVec"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"Output", "[", 
-        RowBox[{"[", "SpecLen", "]"}], "]"}], " ", "=", " ", 
-       RowBox[{"Output", "[", 
-        RowBox[{"[", 
-         RowBox[{"SpecLen", "-", "1"}], "]"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", "Output"}]}], "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"centerAlignedWindowMatrix", "[", 
-    RowBox[{"FullLen_", ",", "Frac_", ",", "WinType_"}], "]"}], ":=", 
-   RowBox[{"Module", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{
-      "SpecLen", ",", "Output", ",", "M", ",", "Q", ",", "m", ",", "y", ",", 
-       "n", ",", "WinLen", ",", "WinVec", ",", "TempWinVec", ",", "b"}], 
-      "}"}], ",", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"SpecLen", " ", "=", " ", 
-       RowBox[{
-        FractionBox["FullLen", "2"], "+", "1"}]}], ";", "\[IndentingNewLine]",
-       "\[IndentingNewLine]", 
-      RowBox[{"Output", " ", "=", " ", 
-       RowBox[{"ConstantArray", "[", 
-        RowBox[{"0.", ",", 
-         RowBox[{"{", 
-          RowBox[{"SpecLen", ",", "FullLen"}], "}"}]}], "]"}]}], ";", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{"M", " ", "=", " ", 
-       RowBox[{
-        FractionBox["FullLen", "2"], "-", "1"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"Q", " ", "=", " ", 
-       RowBox[{"N", "[", 
-        FractionBox["1", 
-         RowBox[{
-          SuperscriptBox["2", 
-           FractionBox["1", 
-            RowBox[{"2", " ", "Frac"}]]], "-", 
-          SuperscriptBox["2", 
-           FractionBox[
-            RowBox[{"-", "1"}], 
-            RowBox[{"2", " ", "Frac"}]]]}]], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"m", " ", "=", " ", 
-       RowBox[{"Floor", "[", 
-        RowBox[{
-         FractionBox["1", "2"], 
-         FractionBox[
-          RowBox[{"Range", "[", 
-           RowBox[{"0", ",", 
-            RowBox[{"SpecLen", "-", "1"}]}], "]"}], "Q"]}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"m", " ", "=", " ", 
-       RowBox[{"m", "+", 
-        RowBox[{"(", 
-         RowBox[{"1", "-", 
-          RowBox[{"Unitize", "[", "m", "]"}]}], ")"}]}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"Make", " ", "sure", " ", "m"}], " ", "\[NotEqual]", " ", 
-        "0"}], " ", "*)"}], "\[IndentingNewLine]", 
-      RowBox[{"y", " ", "=", " ", 
-       RowBox[{"m", " ", "-", " ", 
-        RowBox[{"Threshold", "[", 
-         RowBox[{"m", ",", 
-          RowBox[{
-           FractionBox["FullLen", "2"], "-", "2"}]}], "]"}]}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"m", " ", "=", " ", 
-       RowBox[{"y", " ", "+", " ", 
-        RowBox[{"M", 
-         RowBox[{"(", 
-          RowBox[{"1", "-", 
-           RowBox[{"Unitize", "[", "y", "]"}]}], ")"}]}]}]}], ";", " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{"Make", " ", "sure", " ", "m"}], " ", "\[LessEqual]", " ", 
-        "M"}], " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
-      RowBox[{"For", "[", 
-       RowBox[{
-        RowBox[{"n", "=", "0"}], ",", 
-        RowBox[{"n", "<", "SpecLen"}], ",", 
-        RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
-        RowBox[{"(*", " ", 
-         RowBox[{"Window", " ", "function", " ", "computation"}], " ", "*)"}],
-         "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"WinLen", " ", "=", " ", 
-          RowBox[{
-           RowBox[{"2", 
-            RowBox[{"m", "[", 
-             RowBox[{"[", 
-              RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "+", "1"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"WinVec", " ", "=", " ", 
-          RowBox[{"ConstantArray", "[", 
-           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"TempWinVec", " ", "=", " ", 
-          RowBox[{"ConstantArray", "[", 
-           RowBox[{"0.", ",", "WinLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"Switch", "[", 
-          RowBox[{
-          "WinType", ",", "\[IndentingNewLine]", "\"\<Rectangular\>\"", ",", 
-           "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"TempWinVec", " ", "=", 
-             FractionBox[
-              RowBox[{"ConstantArray", "[", 
-               RowBox[{"1.", ",", "WinLen"}], "]"}], "WinLen"]}], ";"}], ",", 
-           "\[IndentingNewLine]", "\"\<Hanning\>\"", ",", 
-           "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"b", " ", "=", " ", "0.5"}], ";", "\[IndentingNewLine]", 
-            RowBox[{"TempWinVec", " ", "=", 
-             RowBox[{"N", "[", 
-              FractionBox[
-               RowBox[{"b", "-", 
-                RowBox[{
-                 RowBox[{"(", 
-                  RowBox[{"b", "-", "1"}], ")"}], " ", 
-                 RowBox[{"Cos", "[", 
-                  RowBox[{
-                   FractionBox["\[Pi]", 
-                    RowBox[{"m", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"n", "+", "1"}], "]"}], "]"}]], 
-                   RowBox[{"Range", "[", 
-                    RowBox[{
-                    RowBox[{"-", 
-                    RowBox[{"m", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"n", "+", "1"}], "]"}], "]"}]}], ",", 
-                    RowBox[{"m", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "]"}]}], 
-                  "]"}]}]}], 
-               RowBox[{
-                RowBox[{"2", "b", " ", 
-                 RowBox[{"(", 
-                  RowBox[{
-                   RowBox[{"m", "[", 
-                    RowBox[{"[", 
-                    RowBox[{"n", "+", "1"}], "]"}], "]"}], "+", "1"}], 
-                  ")"}]}], "-", "1"}]], "]"}]}], ";"}]}], 
-          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-         RowBox[{"WinVec", " ", "=", " ", 
-          RowBox[{"TempWinVec", "/", 
-           RowBox[{"Total", "[", "TempWinVec", "]"}]}]}], ";", 
-         "\[IndentingNewLine]", "\[IndentingNewLine]", 
-         RowBox[{"(*", " ", 
-          RowBox[{"Smoothing", " ", "matrix", " ", "computation"}], " ", 
-          "*)"}], "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"n", "-", 
-             RowBox[{"m", "[", 
-              RowBox[{"[", 
-               RowBox[{"n", "+", "1"}], "]"}], "]"}]}], "<", "0"}], ",", 
-           "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"Output", "[", 
-             RowBox[{"[", 
-              RowBox[{"n", "+", "1"}], "]"}], "]"}], " ", "=", " ", 
-            RowBox[{"RotateLeft", "[", 
-             RowBox[{
-              RowBox[{"PadRight", "[", 
-               RowBox[{"WinVec", " ", ",", "FullLen"}], "]"}], ",", 
-              RowBox[{
-               RowBox[{"m", "[", 
-                RowBox[{"[", 
-                 RowBox[{"n", "+", "1"}], "]"}], "]"}], "-", "n"}]}], "]"}]}],
-            "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{
-             RowBox[{"Output", "[", 
-              RowBox[{"[", 
-               RowBox[{"n", "+", "1"}], "]"}], "]"}], "[", 
-             RowBox[{"[", 
-              RowBox[{
-               RowBox[{"n", "+", "1", "-", 
-                RowBox[{"m", "[", 
-                 RowBox[{"[", 
-                  RowBox[{"n", "+", "1"}], "]"}], "]"}]}], ";;", 
-               RowBox[{"n", "+", "1", "+", 
-                RowBox[{"m", "[", 
-                 RowBox[{"[", 
-                  RowBox[{"n", "+", "1"}], "]"}], "]"}]}]}], "]"}], "]"}], 
-            " ", "=", " ", "WinVec"}]}], "\[IndentingNewLine]", "]"}], 
-         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-      "Output"}]}], "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"getSmoothedTF", "[", 
-    RowBox[{"IR_", ",", "SmoothingMatrix_", ",", "SmoothingScale_"}], "]"}], ":=", 
-   RowBox[{"Module", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{
-      "FullIR", ",", "FullTF", ",", "FullPS", ",", "SmoothPSHalf", ",", 
-       "SmoothTF", ",", "SPLnorm", ",", "MagnitudeResponse"}], "}"}], ",", 
-     "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"FullIR", " ", "=", " ", 
-       RowBox[{"PadRight", "[", 
-        RowBox[{"IR", ",", "FFTLength"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"FullTF", " ", "=", " ", 
-       RowBox[{"IRtoTF", "[", "FullIR", "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"FullPS", " ", "=", " ", 
-       SuperscriptBox[
-        RowBox[{"Abs", "[", "FullTF", "]"}], "2"]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"SmoothPSHalf", " ", "=", " ", 
-       RowBox[{"SmoothingMatrix", ".", "FullPS"}]}], ";", 
-      "\[IndentingNewLine]", 
-      RowBox[{"Switch", "[", 
-       RowBox[{
-       "SmoothingScale", ",", "\[IndentingNewLine]", "\"\<Power\>\"", ",", 
-        RowBox[{
-         RowBox[{"SmoothPSHalf", " ", "=", " ", 
-          RowBox[{"SmoothingMatrix", ".", "FullPS"}]}], ";"}], ",", 
-        "\[IndentingNewLine]", "\"\<dB\>\"", ",", 
-        RowBox[{
-         RowBox[{"SmoothPSHalf", " ", "=", " ", 
-          RowBox[{"10", "^", 
-           RowBox[{"(", 
-            RowBox[{"SmoothingMatrix", ".", 
-             RowBox[{"Log", "[", 
-              RowBox[{"10", ",", "FullPS"}], "]"}]}], ")"}]}]}], ";"}]}], 
-       "]"}], ";", "\[IndentingNewLine]", 
-      RowBox[{"SmoothTF", " ", "=", " ", 
-       RowBox[{"Sqrt", "[", 
-        RowBox[{"Join", "[", 
-         RowBox[{"SmoothPSHalf", ",", 
-          RowBox[{"Reverse", "[", 
-           RowBox[{"SmoothPSHalf", "[", 
-            RowBox[{"[", 
-             RowBox[{"2", ";;", 
-              RowBox[{"-", "2"}]}], "]"}], "]"}], "]"}]}], "]"}], "]"}]}]}]}],
-     "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
   RowBox[{"getSPLNorm", "[", 
    RowBox[{"refSPL_:", " ", "105"}], "]"}], ":=", 
   RowBox[{"10", "^", 
@@ -2860,7 +2340,8 @@ Cell[BoxData[{
    3.740246779605422*^9}, {3.740247065802297*^9, 3.740247072352274*^9}, {
    3.7402479173547583`*^9, 3.740247922036078*^9}, {3.740248024877022*^9, 
    3.740248047943358*^9}, 3.740248378946838*^9, {3.740248581084365*^9, 
-   3.740248582920545*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+   3.740248582920545*^9}, {3.743277377156024*^9, 
+   3.743277378095203*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
 50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -2886,8 +2367,8 @@ AutoGeneratedPackage->Automatic,
 WindowSize->{945, 750},
 WindowMargins->{{239, Automatic}, {Automatic, 30}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
-2017)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2898,7 +2379,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, 2017)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2913,45 +2394,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 92, "Title", "ExpressionUUID" -> \
-"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
-Cell[758, 26, 1776, 39, 600, "Text", "ExpressionUUID" -> \
-"dca19e92-ab53-460e-aff2-921c62d34d07"],
+Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
 Cell[CellGroupData[{
-Cell[2559, 69, 36, 0, 64, "Section", "ExpressionUUID" -> \
-"38c1865a-3c49-47bf-80d2-18f70c86ad6c"],
-Cell[2598, 71, 317, 7, 48, "Input", "ExpressionUUID" -> \
-"71729209-1ef9-4b73-8904-8ce8c08cb755"],
+Cell[2559, 69, 36, 0, 67, "Section",ExpressionUUID->"38c1865a-3c49-47bf-80d2-18f70c86ad6c"],
+Cell[2598, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
-Cell[2940, 82, 116, 0, 44, "Subsection", "ExpressionUUID" -> \
-"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3059, 84, 18369, 344, 4228, "Input", "ExpressionUUID" -> \
-"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[2940, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+Cell[3059, 84, 16934, 318, 3743, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[21477, 434, 45, 0, 64, "Section", "ExpressionUUID" -> \
-"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
-Cell[21525, 436, 253, 5, 48, "Input", "ExpressionUUID" -> \
-"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[20042, 408, 45, 0, 67, "Section",ExpressionUUID->"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
+Cell[20090, 410, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[21803, 445, 42, 0, 44, "Subsection", "ExpressionUUID" -> \
-"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
-Cell[21848, 447, 97162, 2416, 11849, "Input", "ExpressionUUID" -> \
-"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[20368, 419, 42, 0, 54, "Subsection",ExpressionUUID->"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
+Cell[20413, 421, 76545, 1923, 9245, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[119059, 2869, 43, 0, 64, "Section", "ExpressionUUID" -> \
-"93737186-8317-4603-9248-c252d9c69474"],
-Cell[119105, 2871, 106, 1, 48, "Input", "ExpressionUUID" -> \
-"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[97007, 2350, 43, 0, 67, "Section",ExpressionUUID->"93737186-8317-4603-9248-c252d9c69474"],
+Cell[97053, 2352, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[119248, 2877, 42, 0, 64, "Section", "ExpressionUUID" -> \
-"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
-Cell[119293, 2879, 113, 1, 48, "Input", "ExpressionUUID" -> \
-"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[97196, 2358, 42, 0, 67, "Section",ExpressionUUID->"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
+Cell[97241, 2360, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }

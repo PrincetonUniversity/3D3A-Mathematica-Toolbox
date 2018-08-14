@@ -153,21 +153,6 @@ OPTIONAL INPUTS:
 REF:
 	1. Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An Algorithm Based on Balanced Model Reduction."
 
-logCompensatedWeightsMatrix::usage=
-"logCompensatedWeightsMatrix[FullLen,Frac,WinType] returns the log-compensated weights matrix required to perform fractional-octave smoothing of transfer functions that preserves log-frequency symmetry.
-
-REF:
-	1. Tylka et al. (2017) - A Generalized Method for Fractional-Octave Smoothing of Transfer Functions that Preserves Log-Frequency Symmetry."
-
-centerAlignedWindowMatrix::usage=
-"centerAlignedWindowMatrix[FullLen,Frac,WinType] returns the window matrix required to perform generalized fractional-octave smoothing that may not preserve log-frequency symmetry.
-
-REF:
-	1. Hatziantoniou and Mourjopoulos (2000) - Generalized Fractional-Octave Smoothing of Audio and Acoustic Responses."
-
-getSmoothedTF::usage=
-"getSmoothedTF[IR,SmoothingMatrix,SmoothingScale] returns a transfer function that has been smoothed using the smoothing matrix provided. The input must be an impulse response. A smoothing scale must also be specified. The options for smoothing scale are: \"Power\" and \"dB\"."
-
 getSPLNorm::usage=
 "getSPLNorm[refSPL] returns the normalization factor required to normalize transfer functions to represent magnitude responses in dB SPL. The required input to the function, refSPL, must specify the SPL corresponding to 0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 dB. If refSPL is not specified, 105 dB is assumed."
 
@@ -565,104 +550,6 @@ hatC={iR.vMat[[1;;irLen,1;;order]]};
 hatD={{0}};
 sys=StateSpaceModel[{hatA,hatB,hatC,hatD},SamplingPeriod->1/fS];
 sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[inputIR]-1]]]]]]
-]
-
-logCompensatedWeightsMatrix[FullLen_,Frac_,WinType_]:= Module[{SpecLen,Output,n,fL,nL,fH,nH,WinLen,WinVec,TempWinVec,m,mL,mH},
-SpecLen = FullLen/2+1;
-
-Output = ConstantArray[0.,{SpecLen,FullLen}];
-
-For[n=0,n<SpecLen-1,n++,
-fL = N[n 2^(-1/(2 Frac))];
-nL = Floor[fL];
-fH = N[n 2^(1/(2 Frac))];
-nH = Ceiling[fH];
-
-(* Upper limit correction *)
-If[nH>SpecLen-1,
-nH=SpecLen-1;
-nL=Floor[n^2/nH];
-];
-If[fH>SpecLen-1,
-fH=SpecLen-1;
-fL=n^2/fH;
-];
-
-(* Window function computation *)
-WinLen = nH-nL+1;
-WinVec = ConstantArray[0.,WinLen];
-TempWinVec = ConstantArray[0.,WinLen];
-If[WinLen==1,
-WinVec = 1;
-,
-m = Range[nL,nH];
-mL = m-0.5; (* Lower limit of integral *)
-mL = mL Unitize[Threshold[mL,fL]]+fL(1-Unitize[Threshold[mL,fL]]); (* Lower limit cannot be smaller than fL *)
-mL = mL(1-Unitize[Threshold[mL,fH]])+ fH Unitize[Threshold[mL,fH]]; (* Lower limit cannot be greater than fH *)
-mH = m+0.5; (* Upper limit of integral *)
-mH = mH Unitize[Threshold[mH,fL]]+fL(1-Unitize[Threshold[mH,fL]]); (* Upper limit cannot be smaller than fL *)
-mH = mH(1-Unitize[Threshold[mH,fH]])+ fH Unitize[Threshold[mH,fH]]; (* Upper limit cannot be greater than fH *)
-Switch[WinType,
-"Rectangular",
-TempWinVec = Unitize[mL-mH] N[(Log[2,mH/n]-Log[2,mL/n])];,
-"Hanning",
-TempWinVec = Unitize[mL-mH] N[(Log[2,mH/n]-Log[2,mL/n])/2+(Sin[2\[Pi] Frac Log[2,mH/n]]-Sin[2\[Pi] Frac Log[2,mL/n]])/(4 \[Pi] Frac)];
-];
-WinVec = TempWinVec/Total[TempWinVec];
-];
-
-(* Smoothing matrix computation *)
-Output[[n+1]][[nL+1;;nH+1]] = WinVec;
-];
-Output[[SpecLen]] = Output[[SpecLen-1]];
-Output
-]
-
-centerAlignedWindowMatrix[FullLen_,Frac_,WinType_]:=Module[{SpecLen,Output,M,Q,m,y,n,WinLen,WinVec,TempWinVec,b},
-SpecLen = FullLen/2+1;
-
-Output = ConstantArray[0.,{SpecLen,FullLen}];
-
-M = FullLen/2-1;
-Q = N[1/(2^(1/(2 Frac))-2^(-1/(2 Frac)))];
-m = Floor[1/2 Range[0,SpecLen-1]/Q];
-m = m+(1-Unitize[m]); (* Make sure m \[NotEqual] 0 *)
-y = m - Threshold[m,FullLen/2-2];
-m = y + M(1-Unitize[y]); (* Make sure m \[LessEqual] M *)
-
-For[n=0,n<SpecLen,n++,
-(* Window function computation *)
-WinLen = 2m[[n+1]]+1;
-WinVec = ConstantArray[0.,WinLen];
-TempWinVec = ConstantArray[0.,WinLen];
-Switch[WinType,
-"Rectangular",
-TempWinVec =ConstantArray[1.,WinLen]/WinLen;,
-"Hanning",
-b = 0.5;
-TempWinVec =N[(b-(b-1) Cos[\[Pi]/m[[n+1]] Range[-m[[n+1]],m[[n+1]]]])/(2b (m[[n+1]]+1)-1)];
-];
-WinVec = TempWinVec/Total[TempWinVec];
-
-(* Smoothing matrix computation *)
-If[n-m[[n+1]]<0,
-Output[[n+1]] = RotateLeft[PadRight[WinVec ,FullLen],m[[n+1]]-n]
-,
-Output[[n+1]][[n+1-m[[n+1]];;n+1+m[[n+1]]]] = WinVec
-];
-];
-Output
-]
-
-getSmoothedTF[IR_,SmoothingMatrix_,SmoothingScale_]:=Module[{FullIR,FullTF,FullPS,SmoothPSHalf,SmoothTF,SPLnorm,MagnitudeResponse},
-FullIR = PadRight[IR,FFTLength];
-FullTF = IRtoTF[FullIR];
-FullPS = Abs[FullTF]^2;
-SmoothPSHalf = SmoothingMatrix.FullPS;
-Switch[SmoothingScale,
-"Power",SmoothPSHalf = SmoothingMatrix.FullPS;,
-"dB",SmoothPSHalf = 10^(SmoothingMatrix.Log[10,FullPS]);];
-SmoothTF = Sqrt[Join[SmoothPSHalf,Reverse[SmoothPSHalf[[2;;-2]]]]]
 ]
 
 getSPLNorm[refSPL_: 105]:=10^(-refSPL/20.)
