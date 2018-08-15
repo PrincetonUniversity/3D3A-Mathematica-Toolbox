@@ -32,7 +32,7 @@ freqList::usage=
 "freqList[vecLen,fS] generates a frequency vector of length vecLen assuming a sampling rate of fS."
 
 magTodB::usage=
-"dbToMag[db] converts magnitude to dB."
+"magTodB[mag] converts magnitude to dB."
 
 nextPowTwo::usage=
 "nextPow2[input] outputs the smallest power of 2 that is greater than or equal to input."
