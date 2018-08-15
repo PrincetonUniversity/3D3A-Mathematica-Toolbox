@@ -218,7 +218,7 @@ yLen=Length[y];
 xLen=Length[x];
 If[type=="circ",
 If[xLen==yLen,
-output=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[x]]/.ComplexInfinity->(0.+0. I)];
+output=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[x]]/.ComplexInfinity->0.];
 ,
 MessageDialog["Sequences must be of the same length."];
 Abort[];
@@ -227,7 +227,7 @@ Abort[];
 padLen=nextPowTwo[xLen+yLen-1];
 yPad=PadRight[y,padLen];
 xPad=PadRight[x,padLen];
-outputPad=TFtoIR[Quiet[IRtoTF[yPad]/IRtoTF[xPad]]/.ComplexInfinity->(0.+0. I)];
+outputPad=TFtoIR[Quiet[IRtoTF[yPad]/IRtoTF[xPad]]/.ComplexInfinity->0.];
 output=outputPad[[;;yLen]]
 ];
 output
@@ -238,7 +238,7 @@ groupDelaySpec[inputIR_]:=Module[
 ,
 inputIRLen=Length[inputIR];
 ramp=Range[0.,inputIRLen-1];
-grpDSpec=Re[Quiet[IRtoTF[inputIR ramp]/IRtoTF[inputIR]]/.ComplexInfinity->(0.+0. I)]
+grpDSpec=Re[Quiet[IRtoTF[inputIR ramp]/IRtoTF[inputIR]]/.ComplexInfinity->0.]
 ]
 
 IRtoTF[IR_]:=Fourier[IR,FourierParameters->{1,-1}]
@@ -472,7 +472,7 @@ inputIRLen=Length[inputIR];
 inputIRHalfLen=Ceiling[inputIRLen/2];
 inputTFMag=Abs[IRtoTF[inputIR]];
 inputTFPhase=Arg[IRtoTF[inputIR]];
-evenPartIR=Re[TFtoIR[Log[inputTFMag]]];
+evenPartIR=TFtoIR[Log[inputTFMag]];
 oddPartIR=ConstantArray[0,inputIRLen];
 oddPartIR[[2;;inputIRHalfLen]]=evenPartIR[[2;;inputIRHalfLen]];
 If[EvenQ[inputIRLen],
@@ -481,7 +481,7 @@ oddPartIR[[inputIRHalfLen+2;;]]=-evenPartIR[[inputIRHalfLen+2;;]];
 oddPartIR[[inputIRHalfLen+1;;]]=-evenPartIR[[inputIRHalfLen+1;;]];
 ];
 minPhaseResponse=Im[IRtoTF[oddPartIR]];
-outputIR=Re[TFtoIR[Exp[\[ImaginaryJ] (inputTFPhase-minPhaseResponse)]]]
+outputIR=TFtoIR[Exp[\[ImaginaryJ] (inputTFPhase-minPhaseResponse)]]
 ]
 
 getMinimumPhaseIR[inputIR_] := Module[
@@ -490,7 +490,7 @@ getMinimumPhaseIR[inputIR_] := Module[
 inputIRLen=Length[inputIR];
 inputIRHalfLen=Ceiling[inputIRLen/2];
 inputTFMag=Abs[IRtoTF[inputIR]];
-evenPartIR=Re[TFtoIR[Log[inputTFMag]]];
+evenPartIR=TFtoIR[Log[inputTFMag]];
 oddPartIR=ConstantArray[0,inputIRLen];
 oddPartIR[[2;;inputIRHalfLen]]=evenPartIR[[2;;inputIRHalfLen]];
 If[EvenQ[inputIRLen],
@@ -499,7 +499,7 @@ oddPartIR[[inputIRHalfLen+2;;]]=-evenPartIR[[inputIRHalfLen+2;;]];
 oddPartIR[[inputIRHalfLen+1;;]]=-evenPartIR[[inputIRHalfLen+1;;]];
 ];
 minPhaseResponse=Im[IRtoTF[oddPartIR]];
-outputIR=Re[TFtoIR[inputTFMag Exp[\[ImaginaryJ] minPhaseResponse]]]
+outputIR=TFtoIR[inputTFMag Exp[\[ImaginaryJ] minPhaseResponse]]
 ]
 
 realCepstrum[inputSignal_]:=Re[TFtoIR[Log[Abs[IRtoTF[inputSignal]]]]]

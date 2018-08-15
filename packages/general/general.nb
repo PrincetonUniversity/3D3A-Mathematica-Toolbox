@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     48845,       1215]
-NotebookOptionsPosition[     46551,       1162]
-NotebookOutlinePosition[     47433,       1190]
-CellTagsIndexPosition[     47390,       1187]
+NotebookDataLength[     49522,       1228]
+NotebookOptionsPosition[     47228,       1175]
+NotebookOutlinePosition[     48108,       1203]
+CellTagsIndexPosition[     48065,       1200]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -80,6 +80,7 @@ Cell[BoxData[{
    StyleBox[
     RowBox[{"CIPICToSOFAC", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<CIPICToSOFAC[az,el,rad] converts from CIPIC's interaural coordinates \
 to SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ",
    "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -88,14 +89,16 @@ to SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ",
    StyleBox[
     RowBox[{"dbToMag", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<dbToMag[db] converts a dB to magnitude.\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<dbToMag[db] converts dB to magnitude.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"freqList", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<freqList[vecLen, fS] generates a frequency vector of length vecLen \
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<freqList[vecLen,fS] generates a frequency vector of length vecLen \
 assuming a sampling rate of fS.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -103,13 +106,15 @@ assuming a sampling rate of fS.\>\""}],
    StyleBox[
     RowBox[{"magTodB", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<dbToMag[db] converts a magnitude to dB.\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<dbToMag[db] converts magnitude to dB.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"nextPowTwo", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<nextPow2[input] outputs the smallest power of 2 that is greater than \
 or equal to input.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -117,6 +122,7 @@ or equal to input.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
    StyleBox[
     RowBox[{"SOFACToCIPIC", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<SOFACToCIPIC[x,y,z] converts from SOFA's cartesian coordinates to \
 CIPIC's interaural coordinates. Output angles are in degrees.\>\""}], " ", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -125,6 +131,7 @@ CIPIC's interaural coordinates. Output angles are in degrees.\>\""}], " ",
    StyleBox[
     RowBox[{"SOFACToSOFAS", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<SOFACToSOFAS[x,y,z] converts from SOFA's cartesian coordinates to \
 SOFA's spherical coordinates. Output angles are in degrees.\>\""}], " ", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -133,6 +140,7 @@ SOFA's spherical coordinates. Output angles are in degrees.\>\""}], " ",
    StyleBox[
     RowBox[{"SOFASToSOFAC", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<SOFASToSOFAC[az,el,rad] converts from SOFA's spherical coordinates to \
 SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -141,6 +149,7 @@ SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ",
    StyleBox[
     RowBox[{"squeeze", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<squeeze[input] removes any singleton dimensions in input.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -148,14 +157,15 @@ SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ",
    StyleBox[
     RowBox[{"timeList", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<timeList[vecLen, fS] generates a time vector of length vecLen \
-assuming a sampling rate of fS.\>\""}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<timeList[vecLen,fS] generates a time vector of length vecLen assuming \
+a sampling rate of fS.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"transpose", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<transpose[x] returns the transpose of x irrespective of whether or \
 not x is a one-dimensional or multi-dimensional list.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -167,10 +177,10 @@ mm/dd/yyyy at hh:mm.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
  RowBox[{
   RowBox[{
    RowBox[{"exportWAV", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<exportWAV[fileName, data, samplingRate, commentString] exports the \
+   "\"\<exportWAV[fileName,data,samplingRate,commentString] exports the \
 information stored in data as a .wav file to the file specified by fileName \
-at a sampling rate of 44100 Hz. Optionally, sampling rate can for export can \
-be specified in Hz. A comment string to be added as metadata may also be \
+at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be \
+specified in Hz. A comment string to be added as metadata may also be \
 specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -181,10 +191,10 @@ data as well as the number of channels as a two-row list.\>\""}],
  RowBox[{
   RowBox[{
    RowBox[{"exportAIFF", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<exportAIFF[fileName, data, samplingRate, commentString] exports the \
+   "\"\<exportAIFF[fileName,data,samplingRate,commentString] exports the \
 information stored in data as a .aiff file to the file specified by fileName \
-at a sampling rate of 44100 Hz. Optionally, sampling rate can for export can \
-be specified in Hz. A comment string to be added as metadata may also be \
+at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be \
+specified in Hz. A comment string to be added as metadata may also be \
 specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -213,7 +223,9 @@ file specified by fileName.\>\""}]}], "Input",
    3.740768306105516*^9, 3.740768318968711*^9}, {3.740770600367722*^9, 
    3.740770619028515*^9}, {3.7407706699370613`*^9, 3.74077067514119*^9}, {
    3.740770894607707*^9, 3.740770917364154*^9}, {3.7432653762621517`*^9, 
-   3.7432654041323013`*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
+   3.7432654041323013`*^9}, {3.743289584566028*^9, 3.7432897791576223`*^9}, {
+   3.743289809232705*^9, 
+   3.743289819798214*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
 14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
@@ -1138,7 +1150,8 @@ Cell[BoxData[{
    3.7407663748821907`*^9, 3.740766389863636*^9}, {3.740767809715763*^9, 
    3.740767933531839*^9}, {3.7407730585133543`*^9, 3.74077312735929*^9}, {
    3.740773533572723*^9, 3.740773536080982*^9}, {3.743265266815983*^9, 
-   3.743265364403027*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.743265364403027*^9}, 
+   3.743289893118685*^9},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1161,8 +1174,8 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{808, 751},
-WindowMargins->{{243, Automatic}, {Automatic, 32}},
+WindowSize->{1440, 851},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
 2018)",
 StyleDefinitions->Notebook[{
@@ -1197,24 +1210,24 @@ Cell[2439, 67, 36, 0, 67, "Section",ExpressionUUID->"9a727e61-87a1-4c21-8600-466
 Cell[2478, 69, 80, 1, 46, "Input",ExpressionUUID->"a1678b66-e129-4fc3-9374-cc983ffb1b36"],
 Cell[CellGroupData[{
 Cell[2583, 74, 61, 0, 54, "Subsection",ExpressionUUID->"b167258d-d10e-4a4d-b8f3-6d24e9ce28a1"],
-Cell[2647, 76, 6569, 140, 1433, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
+Cell[2647, 76, 7220, 152, 1118, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9265, 222, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
-Cell[9313, 224, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
+Cell[9916, 234, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
+Cell[9964, 236, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
-Cell[9412, 229, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[9457, 231, 36780, 910, 4856, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[10063, 241, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
+Cell[10108, 243, 36806, 911, 4709, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[46286, 1147, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[46332, 1149, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[46963, 1160, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[47009, 1162, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[46420, 1155, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[46465, 1157, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[47097, 1168, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[47142, 1170, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

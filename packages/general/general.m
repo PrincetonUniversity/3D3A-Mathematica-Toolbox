@@ -22,39 +22,50 @@
 BeginPackage["general`"]
 
 
-CIPICToSOFAC::usage="CIPICToSOFAC[az,el,rad] converts from CIPIC's interaural coordinates to SOFA's cartesian coordinates. Input angles must be in degrees." 
+CIPICToSOFAC::usage=
+"CIPICToSOFAC[az,el,rad] converts from CIPIC's interaural coordinates to SOFA's cartesian coordinates. Input angles must be in degrees." 
 
-dbToMag::usage="dbToMag[db] converts a dB to magnitude."
+dbToMag::usage=
+"dbToMag[db] converts dB to magnitude."
 
-freqList::usage="freqList[vecLen, fS] generates a frequency vector of length vecLen assuming a sampling rate of fS."
+freqList::usage=
+"freqList[vecLen,fS] generates a frequency vector of length vecLen assuming a sampling rate of fS."
 
-magTodB::usage="dbToMag[db] converts a magnitude to dB."
+magTodB::usage=
+"dbToMag[db] converts magnitude to dB."
 
-nextPowTwo::usage="nextPow2[input] outputs the smallest power of 2 that is greater than or equal to input."
+nextPowTwo::usage=
+"nextPow2[input] outputs the smallest power of 2 that is greater than or equal to input."
 
-SOFACToCIPIC::usage="SOFACToCIPIC[x,y,z] converts from SOFA's cartesian coordinates to CIPIC's interaural coordinates. Output angles are in degrees." 
+SOFACToCIPIC::usage=
+"SOFACToCIPIC[x,y,z] converts from SOFA's cartesian coordinates to CIPIC's interaural coordinates. Output angles are in degrees." 
 
-SOFACToSOFAS::usage="SOFACToSOFAS[x,y,z] converts from SOFA's cartesian coordinates to SOFA's spherical coordinates. Output angles are in degrees." 
+SOFACToSOFAS::usage=
+"SOFACToSOFAS[x,y,z] converts from SOFA's cartesian coordinates to SOFA's spherical coordinates. Output angles are in degrees." 
 
-SOFASToSOFAC::usage="SOFASToSOFAC[az,el,rad] converts from SOFA's spherical coordinates to SOFA's cartesian coordinates. Input angles must be in degrees." 
+SOFASToSOFAC::usage=
+"SOFASToSOFAC[az,el,rad] converts from SOFA's spherical coordinates to SOFA's cartesian coordinates. Input angles must be in degrees." 
 
-squeeze::usage="squeeze[input] removes any singleton dimensions in input."
+squeeze::usage=
+"squeeze[input] removes any singleton dimensions in input."
 
-timeList::usage="timeList[vecLen, fS] generates a time vector of length vecLen assuming a sampling rate of fS."
+timeList::usage=
+"timeList[vecLen,fS] generates a time vector of length vecLen assuming a sampling rate of fS."
 
-transpose::usage="transpose[x] returns the transpose of x irrespective of whether or not x is a one-dimensional or multi-dimensional list."
+transpose::usage=
+"transpose[x] returns the transpose of x irrespective of whether or not x is a one-dimensional or multi-dimensional list."
 
 getCurrentDate::usage=
 "getCurrentDate[] returns the current date and time in the format mm/dd/yyyy at hh:mm."
 
 exportWAV::usage=
-"exportWAV[fileName, data, samplingRate, commentString] exports the information stored in data as a .wav file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate can for export can be specified in Hz. A comment string to be added as metadata may also be specified."
+"exportWAV[fileName,data,samplingRate,commentString] exports the information stored in data as a .wav file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
 
 importWAV::usage=
 "importWAV[fileName] imports a *.wav file and returns the imported data as well as the number of channels as a two-row list."
 
 exportAIFF::usage=
-"exportAIFF[fileName, data, samplingRate, commentString] exports the information stored in data as a .aiff file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate can for export can be specified in Hz. A comment string to be added as metadata may also be specified."
+"exportAIFF[fileName,data,samplingRate,commentString] exports the information stored in data as a .aiff file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
 
 importAIFF::usage=
 "importAIFF[fileName] imports a *.aiff file and returns the imported data as well as the number of channels as a two-row list."

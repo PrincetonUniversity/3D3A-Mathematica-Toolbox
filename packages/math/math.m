@@ -22,15 +22,11 @@
 BeginPackage["math`"]
 
 
-listDifferentiate::usage="listDifferentiate[listData] computes the numerical derivative of listData using a central difference scheme, except at the end points where either a forward or backward difference scheme is used as appropriate.
+listDifferentiate::usage=
+"listDifferentiate[listData] computes the numerical derivative of listData using a central difference scheme, except at the end points where either a forward or backward difference scheme is used as appropriate. listData must be a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
 
-DATA FORMAT:
-	1. listData \[RightArrow] a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
-
-listIntegrate::usage="listIntegrate[listData] computes the numerical integral of listData using the trapezoidal rule.
-
-DATA FORMAT:
-	1. listData \[RightArrow] a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
+listIntegrate::usage=
+"listIntegrate[listData] computes the numerical integral of listData using the trapezoidal rule. listData must be a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
 
 logMean::usage=
 "logMean[f,df,Q] computes the logarithmically-weighted mean of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."

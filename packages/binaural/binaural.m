@@ -19,20 +19,14 @@
 
 
 
-BeginPackage["binaural`",{"dsp`"}]
+BeginPackage["binaural`",{"dsp`","general`"}]
 
 
-lowFreqSHMITD::usage="lowFreqSHMITD[azimuthAngle,headRadius] computes ITD applicable at low frequencies using an analytical formula derived from the low-frequency limiting solution to scattering of sound from a rigid sphere of radius 0.0875 m.
+lowFreqSHMITD::usage=
+"lowFreqSHMITD[azimuthAngle] computes ITD applicable at low frequencies using an analytical formula derived from the low-frequency limiting solution to scattering of sound from a rigid sphere of radius 0.0875 m. lowFreqSHMITD[azimuthAngle,headRadius] optionally specifies a spherical head radius in meters for computing ITD. For more on the approach, see Kuhn (1977) - Model for the interaural time differences in the azimuthal plane."
 
-OPTIONAL INPUTS:
-	1. headRadius \[RightArrow] specifies the spherical head radius in metres.
-REF:
-	Kuhn (1977) - Model for the interaural time differences in the azimuthal plane."
-
-highFreqSHMITD::usage="highFreqSHMITD[azimuthAngle,headRadius] computes ITD applicable at high frequencies using the Woodworth and Schlosberg formula for a rigid sphere of radius 0.0875 m.
-
-OPTIONAL INPUTS:
-	1. headRadius \[RightArrow] specifies the spherical head radius in metres."
+highFreqSHMITD::usage=
+"highFreqSHMITD[azimuthAngle] computes ITD applicable at high frequencies using the Woodworth and Schlosberg formula for a rigid sphere of radius 0.0875 m. highFreqSHMITD[azimuthAngle,headRadius] optionally specifies a spherical head radius in meters for computing ITD."
 
 onsetITD::usage=
 "onsetITD[inputHRIRLeft,inputHRIRRight] estimates ITD using a 20 percent threshold and returns ITD in seconds assuming a sampling rate of 44100 Hz.
@@ -67,25 +61,18 @@ OPTIONAL INPUTS:
 	1. \"Resampling\" \[RightArrow] specifies the factor by which to resample the input IRs prior to estimating ITD.
 	2. \"Sampling Rate\" \[RightArrow] specifies the sampling rate of the input IRs in Hz."
 
-
 pinnaSpectralNotches::usage=
-"pinnaSpectralNotches[inputHRIR] identifies notches caused by the pinna in the magnitude spectrum corresponding to inputHRIR and returns the notch frequencies and their sample positions.
+"pinnaSpectralNotches[inputHRIR] identifies notches caused by the pinna in the magnitude spectrum corresponding to inputHRIR and returns the notch frequencies and their sample positions. For more on the algorithm used, see Raykar et al. (2005) - Extracting the frequencies of the pinna spectral notches in measured HRIRs.
 
 OPTIONAL INPUTS:
-	1. \"Order\" \[RightArrow] specifies linear prediction residual order. (default = 12)
-	2. \"Sampling Rate\" \[RightArrow] specifies the sampling rate in Hz. (default = 44100)
-
-REF:
-	1. Raykar et al. (2005) - Extracting the frequencies of the pinna spectral notches in measured HRIRs."
+	1. \"Order\" \[RightArrow] specifies linear prediction residual order (default = 12).
+	2. \"Sampling Rate\" \[RightArrow] specifies the sampling rate in Hz (default = 44100)."
 
 smoothHRTFLogMagSpec::usage=
-"smoothHRTFLogMagSpec[inputHRIR] smooths the log-magnitude spectrum corresponding to inputHRIR and returns the smoothed, minimum-phase version of inputHRIR.
+"smoothHRTFLogMagSpec[inputHRIR] smooths the log-magnitude spectrum corresponding to inputHRIR and returns the smoothed, minimum-phase version of inputHRIR. For more on the algorithm used, see Kulkarni and Colburn (1998) - Role of spectral detail in sound localization.
 
 OPTIONAL INPUTS:
-	1. \"Smoothing Factor\" \[RightArrow] specifies the smoothing factor to use. Values range between 0 (max. smoothing) and 1 (no smoothing). (default = 0.2)
-
-REF:
-	1. Kulkarni and Colburn (1998) - Role of spectral detail in sound localization."
+	1. \"Smoothing Factor\" \[RightArrow] specifies the smoothing factor to use. Values range between 0 (max. smoothing) and 1 (no smoothing). The default value is 0.2."
 
 
 Begin["`Private`"]
@@ -148,9 +135,9 @@ averageRange=OptionValue["Averaging Range"];
 interpolatedHRIRLeft=resample[inputHRIRLeft,1,resampleFactor];
 interpolatedHRIRRight=resample[inputHRIRRight,1,resampleFactor];
 interpolatedHRIRLen=Length[interpolatedHRIRLeft];
-phaseLeftRad=unwrapPhase[Arg[Fourier[interpolatedHRIRLeft,FourierParameters->{1, -1}]]];
-phaseRightRad=unwrapPhase[Arg[Fourier[interpolatedHRIRRight,FourierParameters->{1, -1}]]];
-freqListHz=Range[1./interpolatedHRIRLen,1.,1./interpolatedHRIRLen] resampleFactor samplingRate;
+phaseLeftRad=unwrapPhase[Arg[IRtoTF[interpolatedHRIRLeft]]];
+phaseRightRad=unwrapPhase[Arg[IRtoTF[interpolatedHRIRRight]]];
+freqListHz=freqList[interpolatedHRIRLen,resampleFactor samplingRate];
 If[averageITDFlag,
 averagingFreqIndex=IntegerPart[(2./interpolatedHRIRLen+(averageRange 1000.)/(resampleFactor samplingRate)) interpolatedHRIRLen];
 lfSampleIndex=averagingFreqIndex[[1]];
@@ -174,8 +161,8 @@ averagingFreqRangekHz=OptionValue["Averaging Range"];
 interpolatedHRIRLeft=resample[inputHRIRLeft,1,resampleFactor];
 interpolatedHRIRRight=resample[inputHRIRRight,1,resampleFactor];
 interpolatedHRIRLen=Length[interpolatedHRIRLeft];
-groupDelayLeftSample=Re[Quiet[Fourier[Range[interpolatedHRIRLen] interpolatedHRIRLeft,FourierParameters->{1, -1}]/Fourier[interpolatedHRIRLeft,FourierParameters->{1, -1}]]/.ComplexInfinity->0];
-groupDelayRightSample=Re[Quiet[Fourier[Range[interpolatedHRIRLen] interpolatedHRIRRight,FourierParameters->{1, -1}]/Fourier[interpolatedHRIRRight,FourierParameters->{1, -1}]]/.ComplexInfinity->0];
+groupDelayLeftSample=groupDelaySpec[interpolatedHRIRLeft];
+groupDelayRightSample=groupDelaySpec[interpolatedHRIRRight];
 If[averageITD,
 averagingFreqSampleIndex=IntegerPart[(1./interpolatedHRIRLen+(averagingFreqRangekHz 1000.)/(resampleFactor sampleRateHz))interpolatedHRIRLen];
 lfSampleIndex=averagingFreqSampleIndex[[1]];
@@ -201,8 +188,8 @@ rightHRIREnergy = ListCorrelate[interpolatedHRIRRight,interpolatedHRIRRight,{1,1
 normalizationFactor=Sqrt[leftHRIREnergy rightHRIREnergy];
 normalizedCrossCorrelationLRList = ListCorrelate[interpolatedHRIRLeft,interpolatedHRIRRight,{1,1}]/normalizationFactor;
 normalizedCrossCorrelationRLList = ListCorrelate[interpolatedHRIRRight,interpolatedHRIRLeft,{1,1}]/normalizationFactor;
-maxPosLR = FirstPosition[normalizedCrossCorrelationLRList,Max[normalizedCrossCorrelationLRList]][[1]];
-maxPosRL = FirstPosition[normalizedCrossCorrelationRLList,Max[normalizedCrossCorrelationRLList]][[1]];
+maxPosLR = Position[normalizedCrossCorrelationLRList,Max[normalizedCrossCorrelationLRList]][[1,1]];
+maxPosRL = Position[normalizedCrossCorrelationRLList,Max[normalizedCrossCorrelationRLList]][[1,1]];
 samplesITD=Min[maxPosLR,maxPosRL];
 If[maxPosLR>=maxPosRL,maxCrossCorrelationITDSec=1./(resampleFactor sampleRateHz) (samplesITD-1.);
 , (* ELSE *)
@@ -239,7 +226,7 @@ Options[smoothHRTFLogMagSpec]={"Smoothing Factor"->0.2};
 smoothHRTFLogMagSpec[inputHRIR_]:=Module[
 {inputHRTF,inputHRTFLen,inputHRTFNyqLen, logMagHRTF,alpha,fourierSeriesCoeffs,smoothingFactor,smoothingIndex,smoothedHRTFHalf,smoothedHRTF,zeroPhIR,minPhIR}
 ,
-inputHRTF=Fourier[inputHRIR,FourierParameters->{1,-1}];
+inputHRTF=IRtoTF[inputHRIR];
 inputHRTFLen=Length[inputHRTF];
 inputHRTFNyqLen = Ceiling[(inputHRTFLen+1)/2];
 logMagHRTF=Log10[Abs[inputHRTF]];
@@ -250,7 +237,7 @@ smoothingIndex=IntegerPart[smoothingFactor inputHRTFNyqLen];
 smoothingIndex=Clip[smoothingIndex,{1,inputHRTFNyqLen}];
 smoothedHRTFHalf=Table[Total[fourierSeriesCoeffs[[;;smoothingIndex]] Cos[(2\[Pi] (ii-1))/inputHRTFLen Range[0,smoothingIndex-1]]],{ii,inputHRTFNyqLen}];
 smoothedHRTF=10^(Join[smoothedHRTFHalf,Drop[Reverse[Drop[smoothedHRTFHalf,1]],1]]);
-zeroPhIR=Re[InverseFourier[smoothedHRTF,FourierParameters->{1,-1}]];
+zeroPhIR=TFtoIR[smoothedHRTF];
 minPhIR=PadRight[minPhaseIR[zeroPhIR],Length[inputHRIR]]
 ]
 

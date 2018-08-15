@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     47579,       1109]
-NotebookOptionsPosition[     45178,       1042]
-NotebookOutlinePosition[     46061,       1070]
-CellTagsIndexPosition[     46018,       1067]
+NotebookDataLength[     45712,       1046]
+NotebookOptionsPosition[     43413,        993]
+NotebookOutlinePosition[     44293,       1021]
+CellTagsIndexPosition[     44250,       1018]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -71,9 +71,12 @@ Cell["Begin the package", "Section",ExpressionUUID->"e371b406-fb30-458d-b28d-9ea
 Cell[BoxData[
  RowBox[{"BeginPackage", "[", 
   RowBox[{"\"\<binaural`\>\"", ",", 
-   RowBox[{"{", "\"\<dsp`\>\"", "}"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.710990621754817*^9, 
-  3.710990624666346*^9}},ExpressionUUID->"196d0058-1373-4e37-b875-\
+   RowBox[{"{", 
+    RowBox[{"\"\<dsp`\>\"", ",", "\"\<general`\>\""}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.710990621754817*^9, 3.710990624666346*^9}, {
+  3.743291240812736*^9, 
+  3.7432912438724957`*^9}},ExpressionUUID->"196d0058-1373-4e37-b875-\
 c8829e99827a"],
 
 Cell[CellGroupData[{
@@ -86,22 +89,24 @@ Cell[BoxData[{
    StyleBox[
     RowBox[{"lowFreqSHMITD", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<lowFreqSHMITD[azimuthAngle,headRadius] computes ITD applicable at low \
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<lowFreqSHMITD[azimuthAngle] computes ITD applicable at low \
 frequencies using an analytical formula derived from the low-frequency \
 limiting solution to scattering of sound from a rigid sphere of radius 0.0875 \
-m.\n\nOPTIONAL INPUTS:\n\t1. headRadius \[RightArrow] specifies the spherical \
-head radius in metres.\nREF:\n\tKuhn (1977) - Model for the interaural time \
-differences in the azimuthal plane.\>\""}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+m. lowFreqSHMITD[azimuthAngle,headRadius] optionally specifies a spherical \
+head radius in meters for computing ITD. For more on the approach, see Kuhn \
+(1977) - Model for the interaural time differences in the azimuthal \
+plane.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"highFreqSHMITD", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<highFreqSHMITD[azimuthAngle,headRadius] computes ITD applicable at \
-high frequencies using the Woodworth and Schlosberg formula for a rigid \
-sphere of radius 0.0875 m.\n\nOPTIONAL INPUTS:\n\t1. headRadius \[RightArrow] \
-specifies the spherical head radius in metres.\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<highFreqSHMITD[azimuthAngle] computes ITD applicable at high \
+frequencies using the Woodworth and Schlosberg formula for a rigid sphere of \
+radius 0.0875 m. highFreqSHMITD[azimuthAngle,headRadius] optionally specifies \
+a spherical head radius in meters for computing ITD.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -163,36 +168,36 @@ HRIRs occurs assuming a sampling rate of 44.1 kHz.\n\nOPTIONAL INPUTS:\n\t1. \
 \\\"Resampling\\\" \[RightArrow] specifies the factor by which to resample \
 the input IRs prior to estimating ITD.\n\t2. \\\"Sampling Rate\\\" \
 \[RightArrow] specifies the sampling rate of the input IRs in Hz.\>\""}], 
-  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"pinnaSpectralNotches", "::", "usage"}], "=", 
    "\[IndentingNewLine]", 
    "\"\<pinnaSpectralNotches[inputHRIR] identifies notches caused by the \
 pinna in the magnitude spectrum corresponding to inputHRIR and returns the \
-notch frequencies and their sample positions.\n\nOPTIONAL INPUTS:\n\t1. \
-\\\"Order\\\" \[RightArrow] specifies linear prediction residual order. \
-(default = 12)\n\t2. \\\"Sampling Rate\\\" \[RightArrow] specifies the \
-sampling rate in Hz. (default = 44100)\n\nREF:\n\t1. Raykar et al. (2005) - \
-Extracting the frequencies of the pinna spectral notches in measured HRIRs.\>\
-\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+notch frequencies and their sample positions. For more on the algorithm used, \
+see Raykar et al. (2005) - Extracting the frequencies of the pinna spectral \
+notches in measured HRIRs.\n\nOPTIONAL INPUTS:\n\t1. \\\"Order\\\" \
+\[RightArrow] specifies linear prediction residual order (default = 12).\n\t\
+2. \\\"Sampling Rate\\\" \[RightArrow] specifies the sampling rate in Hz \
+(default = 44100).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"smoothHRTFLogMagSpec", "::", "usage"}], "=", 
   "\[IndentingNewLine]", 
   "\"\<smoothHRTFLogMagSpec[inputHRIR] smooths the log-magnitude spectrum \
 corresponding to inputHRIR and returns the smoothed, minimum-phase version of \
-inputHRIR.\n\nOPTIONAL INPUTS:\n\t1. \\\"Smoothing Factor\\\" \[RightArrow] \
-specifies the smoothing factor to use. Values range between 0 (max. \
-smoothing) and 1 (no smoothing). (default = 0.2)\n\nREF:\n\t1. Kulkarni and \
-Colburn (1998) - Role of spectral detail in sound localization.\>\""}]}], \
-"Input",
+inputHRIR. For more on the algorithm used, see Kulkarni and Colburn (1998) - \
+Role of spectral detail in sound localization.\n\nOPTIONAL INPUTS:\n\t1. \
+\\\"Smoothing Factor\\\" \[RightArrow] specifies the smoothing factor to use. \
+Values range between 0 (max. smoothing) and 1 (no smoothing). The default \
+value is 0.2.\>\""}]}], "Input",
  CellChangeTimes->CompressedData["
-1:eJxTTMoPSmViYGAQBmIQfZnd5oDasteO06ZPvQait6RtvAWi5zh8BtNhOvPf
+1:eJxTTMoPSmViYGAQAWIQfZnd5oDasteO06ZPvQait6RtvAWi5zh8BtNhOvPf
 g+hij1+fQfQs85yfIDr3v9VvEF1gsYVVHUjrPddmA9GcRxT1QbTA3mQnEL2t
 tHWRF5CO+aa+CkTfl/DfAKLzPSC0x9XYLSA6blHgORD9Tb38IYh+ZLf3MYhW
 mj7/qB+QXvVp9TEQfYT74ikQveBexRkQXVVZ+h1E64uJ/gLRM769+AuiNcTt
 GP1B5hRdidgGpM/8fwimuzUYYkH0IbFzaSD6Uuyh8yD6m7LWaxCdUv3dceJ9
-oLtl/riA6D3Xir1A9A75eWAaAMchpsk=
+oLtl/riA6D3Xir1A9A75eWBaJef//EOPXzumtT86DaIBinOxNA==
   
   "],ExpressionUUID->"4e634d45-df15-4109-95e9-699461665307"]
 }, Open  ]]
@@ -411,30 +416,18 @@ Cell[BoxData[{
       RowBox[{"phaseLeftRad", "=", 
        RowBox[{"unwrapPhase", "[", 
         RowBox[{"Arg", "[", 
-         RowBox[{"Fourier", "[", 
-          RowBox[{"interpolatedHRIRLeft", ",", 
-           RowBox[{"FourierParameters", "\[Rule]", 
-            RowBox[{"{", 
-             RowBox[{"1", ",", " ", 
-              RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
+         RowBox[{"IRtoTF", "[", "interpolatedHRIRLeft", "]"}], "]"}], "]"}]}],
+       ";", "\[IndentingNewLine]", 
       RowBox[{"phaseRightRad", "=", 
        RowBox[{"unwrapPhase", "[", 
         RowBox[{"Arg", "[", 
-         RowBox[{"Fourier", "[", 
-          RowBox[{"interpolatedHRIRRight", ",", 
-           RowBox[{"FourierParameters", "\[Rule]", 
-            RowBox[{"{", 
-             RowBox[{"1", ",", " ", 
-              RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
+         RowBox[{"IRtoTF", "[", "interpolatedHRIRRight", "]"}], "]"}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"freqListHz", "=", 
-       RowBox[{
-        RowBox[{"Range", "[", 
-         RowBox[{
-          RowBox[{"1.", "/", "interpolatedHRIRLen"}], ",", "1.", ",", 
-          RowBox[{"1.", "/", "interpolatedHRIRLen"}]}], "]"}], " ", 
-        "resampleFactor", " ", "samplingRate"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"freqList", "[", 
+        RowBox[{"interpolatedHRIRLen", ",", 
+         RowBox[{"resampleFactor", " ", "samplingRate"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{"averageITDFlag", ",", "\[IndentingNewLine]", 
         RowBox[{
@@ -556,48 +549,10 @@ Cell[BoxData[{
        RowBox[{"Length", "[", "interpolatedHRIRLeft", "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"groupDelayLeftSample", "=", 
-       RowBox[{"Re", "[", 
-        RowBox[{
-         RowBox[{"Quiet", "[", 
-          RowBox[{
-           RowBox[{"Fourier", "[", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"Range", "[", "interpolatedHRIRLen", "]"}], " ", 
-              "interpolatedHRIRLeft"}], ",", 
-             RowBox[{"FourierParameters", "\[Rule]", 
-              RowBox[{"{", 
-               RowBox[{"1", ",", " ", 
-                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "/", 
-           RowBox[{"Fourier", "[", 
-            RowBox[{"interpolatedHRIRLeft", ",", 
-             RowBox[{"FourierParameters", "\[Rule]", 
-              RowBox[{"{", 
-               RowBox[{"1", ",", " ", 
-                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], "]"}], "/.", 
-         RowBox[{"ComplexInfinity", "\[Rule]", "0"}]}], "]"}]}], ";", 
+       RowBox[{"groupDelaySpec", "[", "interpolatedHRIRLeft", "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"groupDelayRightSample", "=", 
-       RowBox[{"Re", "[", 
-        RowBox[{
-         RowBox[{"Quiet", "[", 
-          RowBox[{
-           RowBox[{"Fourier", "[", 
-            RowBox[{
-             RowBox[{
-              RowBox[{"Range", "[", "interpolatedHRIRLen", "]"}], " ", 
-              "interpolatedHRIRRight"}], ",", 
-             RowBox[{"FourierParameters", "\[Rule]", 
-              RowBox[{"{", 
-               RowBox[{"1", ",", " ", 
-                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "/", 
-           RowBox[{"Fourier", "[", 
-            RowBox[{"interpolatedHRIRRight", ",", 
-             RowBox[{"FourierParameters", "\[Rule]", 
-              RowBox[{"{", 
-               RowBox[{"1", ",", " ", 
-                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], "]"}], "/.", 
-         RowBox[{"ComplexInfinity", "\[Rule]", "0"}]}], "]"}]}], ";", 
+       RowBox[{"groupDelaySpec", "[", "interpolatedHRIRRight", "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{"averageITD", ",", "\[IndentingNewLine]", 
@@ -735,18 +690,22 @@ Cell[BoxData[{
         "normalizationFactor"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"maxPosLR", " ", "=", " ", 
        RowBox[{
-        RowBox[{"FirstPosition", "[", 
+        RowBox[{"Position", "[", 
          RowBox[{"normalizedCrossCorrelationLRList", ",", 
           RowBox[{"Max", "[", "normalizedCrossCorrelationLRList", "]"}]}], 
          "]"}], "[", 
-        RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
       RowBox[{"maxPosRL", " ", "=", " ", 
        RowBox[{
-        RowBox[{"FirstPosition", "[", 
+        RowBox[{"Position", "[", 
          RowBox[{"normalizedCrossCorrelationRLList", ",", 
           RowBox[{"Max", "[", "normalizedCrossCorrelationRLList", "]"}]}], 
          "]"}], "[", 
-        RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"[", 
+         RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      
       RowBox[{"samplesITD", "=", 
        RowBox[{"Min", "[", 
         RowBox[{"maxPosLR", ",", "maxPosRL"}], "]"}]}], ";", 
@@ -900,13 +859,7 @@ Cell[BoxData[{
     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"inputHRTF", "=", 
-      RowBox[{"Fourier", "[", 
-       RowBox[{"inputHRIR", ",", 
-        RowBox[{"FourierParameters", "\[Rule]", 
-         RowBox[{"{", 
-          RowBox[{"1", ",", 
-           RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], ";", 
-     "\[IndentingNewLine]", 
+      RowBox[{"IRtoTF", "[", "inputHRIR", "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"inputHRTFLen", "=", 
       RowBox[{"Length", "[", "inputHRTF", "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"inputHRTFNyqLen", " ", "=", " ", 
@@ -988,13 +941,7 @@ Cell[BoxData[{
               RowBox[{"smoothedHRTFHalf", ",", "1"}], "]"}], "]"}], ",", 
             "1"}], "]"}]}], "]"}], ")"}]}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"zeroPhIR", "=", 
-      RowBox[{"Re", "[", 
-       RowBox[{"InverseFourier", "[", 
-        RowBox[{"smoothedHRTF", ",", 
-         RowBox[{"FourierParameters", "\[Rule]", 
-          RowBox[{"{", 
-           RowBox[{"1", ",", 
-            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+      RowBox[{"TFtoIR", "[", "smoothedHRTF", "]"}]}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"minPhIR", "=", 
       RowBox[{"PadRight", "[", 
@@ -1018,7 +965,11 @@ Cell[BoxData[{
    3.711284545809862*^9}, {3.711284648540647*^9, 3.711284660775207*^9}, 
    3.7112846964999857`*^9, {3.711285179740913*^9, 3.7112852177574873`*^9}, {
    3.741092278884205*^9, 3.7410922859246817`*^9}, {3.741092441181519*^9, 
-   3.7410924423330307`*^9}},ExpressionUUID->"2407b313-0b30-4b6e-b58a-\
+   3.7410924423330307`*^9}, {3.743291146502768*^9, 3.743291164953197*^9}, {
+   3.743291211445526*^9, 3.7432912343227053`*^9}, {3.743291345224334*^9, 
+   3.7432913881874437`*^9}, {3.7432915530473824`*^9, 3.743291562247843*^9}, {
+   3.743291687897369*^9, 
+   3.7432917166184397`*^9}},ExpressionUUID->"2407b313-0b30-4b6e-b58a-\
 ebd810a157f5"]
 }, Open  ]]
 }, Open  ]],
@@ -1041,10 +992,10 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{808, 751},
-WindowMargins->{{Automatic, 296}, {Automatic, 0}},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
-2017)",
+WindowSize->{1440, 851},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -1055,7 +1006,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, 2017)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -1070,45 +1021,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 114, 1, 92, "Title", "ExpressionUUID" -> \
-"cffa2c6e-05b2-4387-b50c-5578134fe4fb"],
-Cell[697, 25, 1798, 39, 600, "Text", "ExpressionUUID" -> \
-"462d6d2b-e340-4d90-ba20-620a1d4f0bc5"],
+Cell[580, 22, 114, 1, 98, "Title",ExpressionUUID->"cffa2c6e-05b2-4387-b50c-5578134fe4fb"],
+Cell[697, 25, 1798, 39, 725, "Text",ExpressionUUID->"462d6d2b-e340-4d90-ba20-620a1d4f0bc5"],
 Cell[CellGroupData[{
-Cell[2520, 68, 91, 0, 64, "Section", "ExpressionUUID" -> \
-"e371b406-fb30-458d-b28d-9eaa70205868"],
-Cell[2614, 70, 265, 6, 48, "Input", "ExpressionUUID" -> \
-"196d0058-1373-4e37-b875-c8829e99827a"],
+Cell[2520, 68, 91, 0, 67, "Section",ExpressionUUID->"e371b406-fb30-458d-b28d-9eaa70205868"],
+Cell[2614, 70, 359, 9, 46, "Input",ExpressionUUID->"196d0058-1373-4e37-b875-c8829e99827a"],
 Cell[CellGroupData[{
-Cell[2904, 80, 116, 0, 44, "Subsection", "ExpressionUUID" -> \
-"bbae9061-d700-4502-96d5-320d86caeec9"],
-Cell[3023, 82, 6652, 114, 2233, "Input", "ExpressionUUID" -> \
-"4e634d45-df15-4109-95e9-699461665307"]
+Cell[2998, 83, 116, 0, 54, "Subsection",ExpressionUUID->"bbae9061-d700-4502-96d5-320d86caeec9"],
+Cell[3117, 85, 6836, 116, 1391, "Input",ExpressionUUID->"4e634d45-df15-4109-95e9-699461665307"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9724, 202, 100, 0, 64, "Section", "ExpressionUUID" -> \
-"70a8cda1-88aa-45f6-8913-6866abbc2872"],
-Cell[9827, 204, 129, 1, 48, "Input", "ExpressionUUID" -> \
-"c2d24128-e3c3-4e1d-8d70-aed82f757708"],
+Cell[10002, 207, 100, 0, 67, "Section",ExpressionUUID->"70a8cda1-88aa-45f6-8913-6866abbc2872"],
+Cell[10105, 209, 129, 1, 46, "Input",ExpressionUUID->"c2d24128-e3c3-4e1d-8d70-aed82f757708"],
 Cell[CellGroupData[{
-Cell[9981, 209, 97, 0, 44, "Subsection", "ExpressionUUID" -> \
-"33cff6a0-6fe0-4db5-9516-0816a603b5b4"],
-Cell[10081, 211, 34563, 810, 4964, "Input", "ExpressionUUID" -> \
-"2407b313-0b30-4b6e-b58a-ebd810a157f5"]
+Cell[10259, 214, 97, 0, 54, "Subsection",ExpressionUUID->"33cff6a0-6fe0-4db5-9516-0816a603b5b4"],
+Cell[10359, 216, 32520, 756, 3632, "Input",ExpressionUUID->"2407b313-0b30-4b6e-b58a-ebd810a157f5"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[44693, 1027, 98, 0, 64, "Section", "ExpressionUUID" -> \
-"60e802f5-bbfe-4156-a0b1-1ba8a0dac580"],
-Cell[44794, 1029, 106, 1, 48, "Input", "ExpressionUUID" -> \
-"e2de492f-1d15-4925-ada8-2a0ab2d04105"]
+Cell[42928, 978, 98, 0, 67, "Section",ExpressionUUID->"60e802f5-bbfe-4156-a0b1-1ba8a0dac580"],
+Cell[43029, 980, 106, 1, 46, "Input",ExpressionUUID->"e2de492f-1d15-4925-ada8-2a0ab2d04105"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[44937, 1035, 97, 0, 64, "Section", "ExpressionUUID" -> \
-"dab44ca7-516f-473b-b024-a7aed70c4b91"],
-Cell[45037, 1037, 113, 1, 48, "Input", "ExpressionUUID" -> \
-"0b4c9e34-6ba4-47c1-a06f-7e397cef1e15"]
+Cell[43172, 986, 97, 0, 67, "Section",ExpressionUUID->"dab44ca7-516f-473b-b024-a7aed70c4b91"],
+Cell[43272, 988, 113, 1, 46, "Input",ExpressionUUID->"0b4c9e34-6ba4-47c1-a06f-7e397cef1e15"]
 }, Open  ]]
 }, Open  ]]
 }
