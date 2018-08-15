@@ -22,43 +22,32 @@
 BeginPackage["dsp`",{"general`"}]
 
 
-applyButterHPF::usage="applyButterHPF[x,filterOrder,Wn] applies a Butterworth high-pass filter of order filterOrder and cut-off frequency Wn to the input signal x. The output is the filtered signal."
+applyButterHPF::usage=
+"applyButterHPF[x,filterOrder,Wn] applies a Butterworth high-pass filter of order filterOrder and cut-off frequency Wn to the input signal x. The output is the filtered signal."
 
-applyButterLPF::usage="applyButterLPF[x,filterOrder,Wn] applies a Butterworth low-pass filter of order filterOrder and cut-off frequency Wn to the input signal x. The output is the filtered signal."
+applyButterLPF::usage=
+"applyButterLPF[x,filterOrder,Wn] applies a Butterworth low-pass filter of order filterOrder and cut-off frequency Wn to the input signal x. The output is the filtered signal."
 
-autoCorrFunc::usage="autoCorrFunc[signal] computes the autocorrelation function of signal.
+autoCorrFunc::usage=
+"autoCorrFunc[signal] computes the autocorrelation function of signal. autoCorrFunc[signal,rectWinLen] optionally specifies the length, in samples, of the rectangular window to apply to signal prior to computing the autocorrelation function. The default length of the window is the length of signal itself (i.e. no windowing). For more on the algorithm, see Makhoul (1975) - Linear Prediction: A Tutorial Review."
 
-OPTIONAL INPUTS:
-	1. rectWinLen \[RightArrow] Sample length of the rectangular window to apply to signal.
-	Default - Length[signal].
-EXAMPLE: 
-	output = autoCorrFunc[signal,100];
-REF:
-	Makhoul (1975) - Linear Prediction: A Tutorial Review."
+avgGroupDelay::usage=
+"avgGroupDelay[inputIR,fS] computes the DC group delay, in samples, of inputIR sampled at a rate fS. avgGroupDelay[inputIR,fS,avgRange] computes the group delay averaged over the frequency range provided in avgRange. avgRange must be specified as a two-element list specifying the lower and upper frequency bounds, in Hz, for averaging. For example, to compute the group delay averaged from 0 to 500 Hz, the syntax will be grpDel = avgGroupDelay[inputIR,fS,{0,500}];. By default, avgRange takes the value {0,0}, indicating that the DC group delay value is returned."
 
-avgGroupDelay::usage="avgGroupDelay[inputIR,fS] computes the DC group delay, in samples, of inputIR sampled at a rate fS.
+conv::usage=
+"conv[x,y] circularly convolves x with y, both of which must have the same length. conv[x,y,\"lin\"] performs linear convolution, returning a signal of length = Length[x]+Length[y]-1. All convolutions are performed in the frequency domain. For linear convolution, it is assumed that the signals being convolved are causal."
 
-OPTIONAL INPUTS:
-	1. avgRange \[RightArrow] Frequencies over which group delay is averaged; {0,0} - default.
-EXAMPLE: 
-	grpDel = avgGroupDelay[inputIR,44100,{0, 500}];"
+deconv::usage=
+"deconv[y,x] circularly deconvolves y by x and outputs a signal with the same length as y. deconv[y,x,\"lin\"] performs linear deconvolution, returning a signal with the same length as y. All deconvolutions are performed in the frequency domain. For linear deconvolution, it is assumed that the signals being deconvolved are causal."
 
-conv::usage="conv[x,y] convolves x with y.
+groupDelaySpec::usage=
+"groupDelaySpec[inputIR] returns the group delay spectrum of inputIR."
 
-OPTIONAL INPUTS:
-	1. type \[RightArrow] specifies the type of convolution to perform.
-	\"circ\" (default) - circular convolution; input sequences must be of same length.
-	\"lin\" - linear convolution; output length = Length[x+y-1].
-EXAMPLE:
-	output = conv[x,y,\"circ\"];"
+IRtoTF::usage=
+"IRtoTF[IR] outputs the transfer function corresponding to the input impulse response (IR)."
 
-deconv::usage="deconv[y,x] deconvolves y by x and outputs a signal with the same length as y."
-
-groupDelaySpec::usage="groupDelaySpec[inputIR] returns the group delay spectrum of inputIR."
-
-IRtoTF::usage="IRtoTF[IR] outputs the transfer function corresponding to the input impulse response (IR)."
-
-KaiserLPFIR::usage="KaiserLPFIR[irLen,pbCutoff,sbCutoff] generates a Kaiser window low-pass filter IR of length irLen and with passband and stopband normalized cutoff frequencies pbCutoff and sbCutoff specified in rad, respectively.
+KaiserLPFIR::usage=
+"KaiserLPFIR[irLen,pbCutoff,sbCutoff] generates a Kaiser window low-pass filter IR of length irLen and with passband and stopband normalized cutoff frequencies pbCutoff and sbCutoff specified in rad, respectively.
 
 OPTIONAL INPUTS:
 	1. \"PB Gain\" \[RightArrow] minimum passband gain in dB (default -1).
@@ -66,60 +55,52 @@ OPTIONAL INPUTS:
 EXAMPLE:
 	lpfIR = KaiserLPFIR[1024,0.5\[Pi],0.6\[Pi],\"SB Gain\" \[RightArrow] -40];"
 
-lpResidual::usage="lpResidual[signal,p] computes the linear prediction residual of signal. The order of the predictor is specified by p.
+lpResidual::usage=
+"lpResidual[signal,p] computes the linear prediction residual of signal. The order of the predictor is specified by p. For more on the algorithm, see Makhoul (1975) - Linear Prediction: A Tutorial Review."
 
-REF:
-	Makhoul (1975) - Linear Prediction: A Tutorial Review."
+minPhaseIR::usage=
+"minPhaseIR[inputIR] computes the minimum-phase component of inputIR."
 
-minPhaseIR::usage="minPhaseIR[inputIR] computes the minimum-phase component of inputIR."
+raisedCosWin::usage=
+"raisedCosWin[winLen] generates a raised-cosine window of length winLen. raisedCosWin[winLen,r] allows control over the shape of the window, where r is an ordered pair of fractions of samples equal to parts of an attack and decay cosine with the following restrictions:
+0 \[LessEqual] r(i) \[LessEqual] 1, i = 1,2; r = {0,0} - rect.; r = {0.5,0.5} - hann.; r = {0.25,0.25} - default."
 
-raisedCosWin::usage="raisedCosWin[winLen] generates a raised-cosine window of length winLen.
+resample::usage=
+"resample[inputSignal,inputSR,outputSR] uses bandlimited interpolation to generate an output signal with outputSR/inputSR times the number of samples as inputSignal. A Kaiser window low-pass anti-aliasing filter is applied."
 
-OPTIONAL INPUTS:
-	1. r \[RightArrow] Ordered pair of fractions of samples equal to parts of an attack and decay cosine;
-	0 \[LessEqual] r(i) \[LessEqual] 1, i = 1,2; r = {0,0} - rect.; r = {0.5,0.5} - hann.; r = {0.25,0.25} - default.
-EXAMPLE: 
-	winList = raisedCosWin[100,{0.2,0.3}];"
-
-resample::usage="resample[inputSignal,inputSR,outputSR] uses bandlimited interpolation to generate an output signal with outputSR/inputSR times the number of samples as inputSignal. A Kaiser window low-pass anti-aliasing filter is applied."
-
-signalOnset::usage="signalOnset[inputSignal] computes the onset sample of inputSignal as the first sample value at which inputSignal is at least 20% of its absolute maximum.
+signalOnset::usage=
+"signalOnset[inputSignal] computes the onset sample of inputSignal as the first sample value at which inputSignal is at least 20% of its absolute maximum.
 
 OPTIONAL INPUTS:
 	1. \"Threshold\" \[RightArrow] specifies the threshold percentage to use instead of the default 20%.
 	2. \"Resampling\" \[RightArrow] resampling factor by which inputSignal is first resampled.
 EXAMPLE:
-	onsetSample = signalOnset[inputSignal,\"Threshold\" \[RightArrow] 10,\"Resampling\" \[RightArrow] 4];"
+	onsetSample = signalOnset[inputSignal,\"Threshold\" \[RightArrow] 10,\"Resampling\" \[RightArrow] 4];."
 
-TFtoIR::usage="TFtoIR[TF] outputs the impulse response corresponding to the input transfer function (TF)."
+TFtoIR::usage=
+"TFtoIR[TF] outputs the impulse response corresponding to the input transfer function (TF)."
 
-tukeyWin::usage="tukeyWin[winLen] generates a Tukey window of length winLen.
+tukeyWin::usage=
+"tukeyWin[winLen] generates a Tukey window of length winLen. tukeyWin[winLen,r] allows control over the shape of the window, where r is the fraction of samples that correspond to parts of a cosine function with the following restrictions:
+0 \[LessEqual] r \[LessEqual] 1; r = 0 (rect.); r = 1 (hann.); r = 0.5 (default)."
 
-OPTIONAL INPUTS:
-	1. r \[RightArrow] Fraction of samples equal to parts of a cosine.
-	0 \[LessEqual] r \[LessEqual] 1; r = 0 (rect.); r = 1 (hann.); r = 0.5 (default)
-EXAMPLE:
-	winList = tukeyWin[100,1];"
+unwrapPhase::usage=
+"unwrapPhase[inputPhase] unwraps inputPhase. unwrapPhase[inputPhase,tol] optionally specifies a phase wrapping tolerance. The default value is \[Pi]."
 
-unwrapPhase::usage="unwrapPhase[inputPhase] unwraps inputPhase.
-
-OPTIONAL INPUTS:
-	1. tol \[RightArrow] phase wrapping tolerance; default - \[Pi].
-EXAMPLE: 
-	unwrappedPhase = unwrapPhase[inputPhase,2\[Pi]];"
-
-inverseFilter::usage="inverseFilter[h] computes the impulse response of the inverse filter corresponding to the input impulse response, h.
+inverseFilter::usage=
+"inverseFilter[h] computes the impulse response of the inverse filter corresponding to the input impulse response, h.
 
 OPTIONAL INPUTS:
 	1. \"Regularization\" \[RightArrow] specifies the type of regularization to apply with \"None\" (default) and \"Piecewise\" being the two options.
-	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the range {W1, W2}.
+	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the range {W1, W2}. 
 EXAMPLE:
-	invFilt = inverseFilter[filt,\"Regularization\"\[Rule]\"Piecewise\",\"Regularization Ranges\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];"
+	invFilt = inverseFilter[filt,\"Regularization\"\[Rule]\"Piecewise\",\"Regularization Ranges\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];."
 
-piecewiseRegularization::usage="piecewiseRegularization[N,\[Epsilon]List] returns a piecewise regularization profile of length N and regularization ranges specifed by \[Epsilon]List. For more about \[Epsilon]List, see the function description for inverseFilter[]."
+piecewiseRegularization::usage=
+"piecewiseRegularization[N,\[Epsilon]List] returns a piecewise regularization profile of length N and with regularization ranges specifed by a list of triples, more details of which may be found in the function description for the inverseFilter[] function."
 
 HatzOctaveSmoothPS::usage=
-"HatzOctaveSmoothPS[inputPowerSpectrum] returns a one-third octave smoothed version of the input power spectrum using a Hanning window for smoothing. The input must be a power spectrum. The algorithm used is described in Hatziantoniou, Panagiotis D., and John N. Mourjopoulos. \"Generalized fractional-octave smoothing of audio and acoustic responses.\" Journal of the Audio Engineering Society 48.4 (2000): 259-280.
+"HatzOctaveSmoothPS[inputPowerSpectrum] returns a one-third octave smoothed version of the input power spectrum using a Hanning window for smoothing. The input must be a power spectrum. The algorithm used is described in Hatziantoniou and Mourjopoulos (2000) - Generalized fractional-octave smoothing of audio and acoustic responses.
 
 OPTIONAL INPUTS:
 	1. \"Smoothing Factor\" \[RightArrow] specifies the denominator of the fraction used to specify the amount of smoothing to apply. For example, specifying 3 performs one-third octave smoothing.
@@ -144,14 +125,11 @@ realCepstrum::usage=
 "realCepstrum[inputSignal] accepts a one-dimensional list and computes its real cepstrum. The output is a one-dimensional list of real numbers of the same length as the input."
 
 getBalancedIR::usage=
-"getBalancedIR[inputIR] returns the balanced realization of inputIR.
+"getBalancedIR[inputIR] returns the balanced realization of inputIR based on the algorithm described by Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An Algorithm Based on Balanced Model Reduction.
 
 OPTIONAL INPUTS:
 	1. \"Order\" \[RightArrow] specifies the order of the balanced IR. This must be between 1 and the length of inputIR in samples. (default = length of inputIR)
-	2. \"Sampling Rate\" \[RightArrow] specifies the sampling rate in Hz. (default = 44100)
-
-REF:
-	1. Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An Algorithm Based on Balanced Model Reduction."
+	2. \"Sampling Rate\" \[RightArrow] specifies the sampling rate in Hz. (default = 44100)."
 
 getSPLNorm::usage=
 "getSPLNorm[refSPL] returns the normalization factor required to normalize transfer functions to represent magnitude responses in dB SPL. The required input to the function, refSPL, must specify the SPL corresponding to 0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 dB. If refSPL is not specified, 105 dB is assumed."
@@ -259,8 +237,8 @@ groupDelaySpec[inputIR_]:=Module[
 {inputIRLen,ramp,grpDSpec}
 ,
 inputIRLen=Length[inputIR];
-ramp=Range[0,inputIRLen-1];
-grpDSpec=Re[IRtoTF[inputIR ramp]/(Chop[N[IRtoTF[inputIR]]]/.{0->\[Infinity]})]
+ramp=Range[0.,inputIRLen-1];
+grpDSpec=Re[Quiet[IRtoTF[inputIR ramp]/IRtoTF[inputIR]]/.ComplexInfinity->(0.+0. I)]
 ]
 
 IRtoTF[IR_]:=Fourier[IR,FourierParameters->{1,-1}]
@@ -462,14 +440,14 @@ smoothedPS=Join[smoothedPSHalf,Reverse[Conjugate[smoothedPSHalf[[2;;-2]]]]]
 discreteAnalyticSignal[inputSignal_] := Module[
 {inputSignalReal,inputSignalRealDFT,inputSignalRealLength,inputSignalRealHalfLength,hilbertDFT,outputSignal}
 ,
-inputSignalReal=Re[inputSignal];inputSignalRealDFT=Fourier[inputSignalReal,FourierParameters->{1, -1}];inputSignalRealLength=Length[inputSignalReal];inputSignalRealHalfLength=Ceiling[(inputSignalRealLength+1)/2];hilbertDFT=ConstantArray[0,inputSignalRealLength];If[EvenQ[inputSignalRealLength],
+inputSignalReal=Re[inputSignal];inputSignalRealDFT=IRtoTF[inputSignalReal];inputSignalRealLength=Length[inputSignalReal];inputSignalRealHalfLength=Ceiling[(inputSignalRealLength+1)/2];hilbertDFT=ConstantArray[0,inputSignalRealLength];If[EvenQ[inputSignalRealLength],
 hilbertDFT[[1]]=1;
 hilbertDFT[[2;;inputSignalRealHalfLength-1]]=2;hilbertDFT[[inputSignalRealHalfLength]]=1;
 , 
 hilbertDFT[[1]]=1;
 hilbertDFT[[2;;inputSignalRealHalfLength]]=2;
 ];
-outputSignal=InverseFourier[inputSignalRealDFT hilbertDFT,FourierParameters->{1, -1}]
+outputSignal=TFtoIR[inputSignalRealDFT hilbertDFT]
 ]
 
 envelopeSignal[inputSignal_]:=Module[
@@ -492,9 +470,9 @@ getAllPassIR[inputIR_] := Module[
 ,
 inputIRLen=Length[inputIR];
 inputIRHalfLen=Ceiling[inputIRLen/2];
-inputTFMag=Abs[Fourier[inputIR,FourierParameters->{1, -1}]];
-inputTFPhase=Arg[Fourier[inputIR,FourierParameters->{1, -1}]];
-evenPartIR=Re[InverseFourier[Log[inputTFMag],FourierParameters->{1, -1}]];
+inputTFMag=Abs[IRtoTF[inputIR]];
+inputTFPhase=Arg[IRtoTF[inputIR]];
+evenPartIR=Re[TFtoIR[Log[inputTFMag]]];
 oddPartIR=ConstantArray[0,inputIRLen];
 oddPartIR[[2;;inputIRHalfLen]]=evenPartIR[[2;;inputIRHalfLen]];
 If[EvenQ[inputIRLen],
@@ -502,8 +480,8 @@ oddPartIR[[inputIRHalfLen+2;;]]=-evenPartIR[[inputIRHalfLen+2;;]];
 ,
 oddPartIR[[inputIRHalfLen+1;;]]=-evenPartIR[[inputIRHalfLen+1;;]];
 ];
-minPhaseResponse=Im[Fourier[oddPartIR,FourierParameters->{1, -1}]];
-outputIR=Re[InverseFourier[E^(\[ImaginaryJ] (inputTFPhase-minPhaseResponse)),FourierParameters->{1, -1}]]
+minPhaseResponse=Im[IRtoTF[oddPartIR]];
+outputIR=Re[TFtoIR[Exp[\[ImaginaryJ] (inputTFPhase-minPhaseResponse)]]]
 ]
 
 getMinimumPhaseIR[inputIR_] := Module[
@@ -511,8 +489,8 @@ getMinimumPhaseIR[inputIR_] := Module[
 ,
 inputIRLen=Length[inputIR];
 inputIRHalfLen=Ceiling[inputIRLen/2];
-inputTFMag=Abs[Fourier[inputIR,FourierParameters->{1, -1}]];
-evenPartIR=Re[InverseFourier[Log[inputTFMag],FourierParameters->{1, -1}]];
+inputTFMag=Abs[IRtoTF[inputIR]];
+evenPartIR=Re[TFtoIR[Log[inputTFMag]]];
 oddPartIR=ConstantArray[0,inputIRLen];
 oddPartIR[[2;;inputIRHalfLen]]=evenPartIR[[2;;inputIRHalfLen]];
 If[EvenQ[inputIRLen],
@@ -520,15 +498,11 @@ oddPartIR[[inputIRHalfLen+2;;]]=-evenPartIR[[inputIRHalfLen+2;;]];
 ,
 oddPartIR[[inputIRHalfLen+1;;]]=-evenPartIR[[inputIRHalfLen+1;;]];
 ];
-minPhaseResponse=Im[Fourier[oddPartIR,FourierParameters->{1, -1}]];
-outputIR=Re[InverseFourier[inputTFMag E^(\[ImaginaryJ] minPhaseResponse),FourierParameters->{1, -1}]]
+minPhaseResponse=Im[IRtoTF[oddPartIR]];
+outputIR=Re[TFtoIR[inputTFMag Exp[\[ImaginaryJ] minPhaseResponse]]]
 ]
 
-realCepstrum[inputSignal_] := Module[
-{outputSignal}
-,
-outputSignal=Re[InverseFourier[Log[Abs[Fourier[inputSignal,FourierParameters->{1, -1}]]],FourierParameters->{1, -1}]]
-]
+realCepstrum[inputSignal_]:=Re[TFtoIR[Log[Abs[IRtoTF[inputSignal]]]]]
 
 Options[getBalancedIR]={"Order"->0,"Sampling Rate"->44100};
 getBalancedIR[inputIR_,OptionsPattern[]]:=Module[
@@ -552,7 +526,7 @@ sys=StateSpaceModel[{hatA,hatB,hatC,hatD},SamplingPeriod->1/fS];
 sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[inputIR]-1]]]]]]
 ]
 
-getSPLNorm[refSPL_: 105]:=10^(-refSPL/20.)
+getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
 
 End[]

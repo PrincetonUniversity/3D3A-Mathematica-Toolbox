@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     99737,       2419]
-NotebookOptionsPosition[     97382,       2365]
-NotebookOutlinePosition[     98313,       2394]
-CellTagsIndexPosition[     98270,       2391]
+NotebookDataLength[     99639,       2387]
+NotebookOptionsPosition[     97284,       2333]
+NotebookOutlinePosition[     98215,       2362]
+CellTagsIndexPosition[     98172,       2359]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -88,6 +88,7 @@ Cell[BoxData[{
    StyleBox[
     RowBox[{"applyButterHPF", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<applyButterHPF[x,filterOrder,Wn] applies a Butterworth high-pass \
 filter of order filterOrder and cut-off frequency Wn to the input signal x. \
 The output is the filtered signal.\>\""}], 
@@ -97,6 +98,7 @@ The output is the filtered signal.\>\""}],
    StyleBox[
     RowBox[{"applyButterLPF", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<applyButterLPF[x,filterOrder,Wn] applies a Butterworth low-pass \
 filter of order filterOrder and cut-off frequency Wn to the input signal x. \
 The output is the filtered signal.\>\""}], 
@@ -106,44 +108,57 @@ The output is the filtered signal.\>\""}],
    StyleBox[
     RowBox[{"autoCorrFunc", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<autoCorrFunc[signal] computes the autocorrelation function of signal.\
-\n\nOPTIONAL INPUTS:\n\t1. rectWinLen \[RightArrow] Sample length of the \
-rectangular window to apply to signal.\n\tDefault - Length[signal].\nEXAMPLE: \
-\n\toutput = autoCorrFunc[signal,100];\nREF:\n\tMakhoul (1975) - Linear \
-Prediction: A Tutorial Review.\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<autoCorrFunc[signal] computes the autocorrelation function of signal. \
+autoCorrFunc[signal,rectWinLen] optionally specifies the length, in samples, \
+of the rectangular window to apply to signal prior to computing the \
+autocorrelation function. The default length of the window is the length of \
+signal itself (i.e. no windowing). For more on the algorithm, see Makhoul \
+(1975) - Linear Prediction: A Tutorial Review.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"avgGroupDelay", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<avgGroupDelay[inputIR,fS] computes the DC group delay, in samples, of \
-inputIR sampled at a rate fS.\n\nOPTIONAL INPUTS:\n\t1. avgRange \
-\[RightArrow] Frequencies over which group delay is averaged; {0,0} - \
-default.\nEXAMPLE: \n\tgrpDel = avgGroupDelay[inputIR,44100,{0, 500}];\>\""}],
-   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+inputIR sampled at a rate fS. avgGroupDelay[inputIR,fS,avgRange] computes the \
+group delay averaged over the frequency range provided in avgRange. avgRange \
+must be specified as a two-element list specifying the lower and upper \
+frequency bounds, in Hz, for averaging. For example, to compute the group \
+delay averaged from 0 to 500 Hz, the syntax will be grpDel = \
+avgGroupDelay[inputIR,fS,{0,500}];. By default, avgRange takes the value \
+{0,0}, indicating that the DC group delay value is returned.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"conv", "::", 
-    StyleBox["usage", "MessageName"]}], "=", 
-   "\"\<conv[x,y] convolves x with y.\n\nOPTIONAL INPUTS:\n\t1. type \
-\[RightArrow] specifies the type of convolution to perform.\n\t\\\"circ\\\" \
-(default) - circular convolution; input sequences must be of same length.\n\t\
-\\\"lin\\\" - linear convolution; output length = Length[x+y-1].\nEXAMPLE:\n\t\
-output = conv[x,y,\\\"circ\\\"];\>\""}], 
+    StyleBox["usage", "MessageName"]}], "=", "\[IndentingNewLine]", 
+   "\"\<conv[x,y] circularly convolves x with y, both of which must have the \
+same length. conv[x,y,\\\"lin\\\"] performs linear convolution, returning a \
+signal of length = Length[x]+Length[y]-1. All convolutions are performed in \
+the frequency domain. For linear convolution, it is assumed that the signals \
+being convolved are causal.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"deconv", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
-   "\"\<deconv[y,x] deconvolves y by x and outputs a signal with the same \
-length as y.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<deconv[y,x] circularly deconvolves y by x and outputs a signal with \
+the same length as y. deconv[y,x,\\\"lin\\\"] performs linear deconvolution, \
+returning a signal with the same length as y. All deconvolutions are \
+performed in the frequency domain. For linear deconvolution, it is assumed \
+that the signals being deconvolved are causal.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"groupDelaySpec", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<groupDelaySpec[inputIR] returns the group delay spectrum of \
 inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -151,6 +166,7 @@ inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
    RowBox[{"IRtoTF", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<IRtoTF[IR] outputs the transfer function corresponding to the input \
 impulse response (IR).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -158,6 +174,7 @@ impulse response (IR).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
    StyleBox[
     RowBox[{"KaiserLPFIR", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<KaiserLPFIR[irLen,pbCutoff,sbCutoff] generates a Kaiser window \
 low-pass filter IR of length irLen and with passband and stopband normalized \
 cutoff frequencies pbCutoff and sbCutoff specified in rad, respectively.\n\n\
@@ -171,15 +188,17 @@ KaiserLPFIR[1024,0.5\[Pi],0.6\[Pi],\\\"SB Gain\\\" \[RightArrow] -40];\>\""}],
    RowBox[{"lpResidual", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<lpResidual[signal,p] computes the linear prediction residual of \
-signal. The order of the predictor is specified by p.\n\nREF:\n\tMakhoul \
-(1975) - Linear Prediction: A Tutorial Review.\>\""}], 
+signal. The order of the predictor is specified by p. For more on the \
+algorithm, see Makhoul (1975) - Linear Prediction: A Tutorial Review.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"minPhaseIR", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<minPhaseIR[inputIR] computes the minimum-phase component of \
 inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -187,17 +206,19 @@ inputIR.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
    StyleBox[
     RowBox[{"raisedCosWin", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<raisedCosWin[winLen] generates a raised-cosine window of length \
-winLen.\n\nOPTIONAL INPUTS:\n\t1. r \[RightArrow] Ordered pair of fractions \
-of samples equal to parts of an attack and decay cosine;\n\t0 \[LessEqual] \
-r(i) \[LessEqual] 1, i = 1,2; r = {0,0} - rect.; r = {0.5,0.5} - hann.; r = \
-{0.25,0.25} - default.\nEXAMPLE: \n\twinList = raisedCosWin[100,{0.2,0.3}];\>\
-\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+winLen. raisedCosWin[winLen,r] allows control over the shape of the window, \
+where r is an ordered pair of fractions of samples equal to parts of an \
+attack and decay cosine with the following restrictions:\n0 \[LessEqual] r(i) \
+\[LessEqual] 1, i = 1,2; r = {0,0} - rect.; r = {0.5,0.5} - hann.; r = \
+{0.25,0.25} - default.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"resample", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    StyleBox[
     "\"\<resample[inputSignal,inputSR,outputSR] uses bandlimited \
 interpolation to generate an output signal with outputSR/inputSR times the \
@@ -209,6 +230,7 @@ filter is applied.\>\"", "MessageName"]}],
    RowBox[{"signalOnset", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<signalOnset[inputSignal] computes the onset sample of inputSignal as \
 the first sample value at which inputSignal is at least 20% of its absolute \
 maximum.\n\nOPTIONAL INPUTS:\n\t1. \\\"Threshold\\\" \[RightArrow] specifies \
@@ -216,12 +238,13 @@ the threshold percentage to use instead of the default 20%.\n\t2. \
 \\\"Resampling\\\" \[RightArrow] resampling factor by which inputSignal is \
 first resampled.\nEXAMPLE:\n\tonsetSample = \
 signalOnset[inputSignal,\\\"Threshold\\\" \[RightArrow] 10,\\\"Resampling\\\" \
-\[RightArrow] 4];\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+\[RightArrow] 4];.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"TFtoIR", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<TFtoIR[TF] outputs the impulse response corresponding to the input \
 transfer function (TF).\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -230,56 +253,61 @@ transfer function (TF).\>\""}],
    StyleBox[
     RowBox[{"tukeyWin", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<tukeyWin[winLen] generates a Tukey window of length winLen.\n\n\
-OPTIONAL INPUTS:\n\t1. r \[RightArrow] Fraction of samples equal to parts of \
-a cosine.\n\t0 \[LessEqual] r \[LessEqual] 1; r = 0 (rect.); r = 1 (hann.); r \
-= 0.5 (default)\nEXAMPLE:\n\twinList = tukeyWin[100,1];\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<tukeyWin[winLen] generates a Tukey window of length winLen. \
+tukeyWin[winLen,r] allows control over the shape of the window, where r is \
+the fraction of samples that correspond to parts of a cosine function with \
+the following restrictions:\n0 \[LessEqual] r \[LessEqual] 1; r = 0 (rect.); \
+r = 1 (hann.); r = 0.5 (default).\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"unwrapPhase", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
-   "\"\<unwrapPhase[inputPhase] unwraps inputPhase.\n\nOPTIONAL INPUTS:\n\t1. \
-tol \[RightArrow] phase wrapping tolerance; default - \[Pi].\nEXAMPLE: \n\t\
-unwrappedPhase = unwrapPhase[inputPhase,2\[Pi]];\>\""}], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
+   "\"\<unwrapPhase[inputPhase] unwraps inputPhase. \
+unwrapPhase[inputPhase,tol] optionally specifies a phase wrapping tolerance. \
+The default value is \[Pi].\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"inverseFilter", "::", 
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<inverseFilter[h] computes the impulse response of the inverse filter \
 corresponding to the input impulse response, h.\n\nOPTIONAL INPUTS:\n\t1. \
 \\\"Regularization\\\" \[RightArrow] specifies the type of regularization to \
 apply with \\\"None\\\" (default) and \\\"Piecewise\\\" being the two \
 options.\n\t2. \\\"Regularization Ranges\\\" \[RightArrow] list of triples \
 {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] \
-in the range {W1, W2}.\nEXAMPLE:\n\tinvFilt = \
+in the range {W1, W2}. \nEXAMPLE:\n\tinvFilt = \
 inverseFilter[filt,\\\"Regularization\\\"\[Rule]\\\"Piecewise\\\",\\\"\
-Regularization Ranges\\\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];\>\""}], 
+Regularization Ranges\\\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    StyleBox[
     RowBox[{"piecewiseRegularization", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
+   StyleBox["\[IndentingNewLine]", "MessageName"], 
    "\"\<piecewiseRegularization[N,\[Epsilon]List] returns a piecewise \
-regularization profile of length N and regularization ranges specifed by \
-\[Epsilon]List. For more about \[Epsilon]List, see the function description \
-for inverseFilter[].\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+regularization profile of length N and with regularization ranges specifed by \
+a list of triples, more details of which may be found in the function \
+description for the inverseFilter[] function.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"HatzOctaveSmoothPS", "::", "usage"}], "=", "\[IndentingNewLine]", 
    "\"\<HatzOctaveSmoothPS[inputPowerSpectrum] returns a one-third octave \
 smoothed version of the input power spectrum using a Hanning window for \
 smoothing. The input must be a power spectrum. The algorithm used is \
-described in Hatziantoniou, Panagiotis D., and John N. Mourjopoulos. \
-\\\"Generalized fractional-octave smoothing of audio and acoustic \
-responses.\\\" Journal of the Audio Engineering Society 48.4 (2000): 259-280.\
-\n\nOPTIONAL INPUTS:\n\t1. \\\"Smoothing Factor\\\" \[RightArrow] specifies \
-the denominator of the fraction used to specify the amount of smoothing to \
-apply. For example, specifying 3 performs one-third octave smoothing.\n\t2. \
+described in Hatziantoniou and Mourjopoulos (2000) - Generalized \
+fractional-octave smoothing of audio and acoustic responses.\n\nOPTIONAL \
+INPUTS:\n\t1. \\\"Smoothing Factor\\\" \[RightArrow] specifies the \
+denominator of the fraction used to specify the amount of smoothing to apply. \
+For example, specifying 3 performs one-third octave smoothing.\n\t2. \
 \\\"Window\\\" \[RightArrow] specifies the type of smoothing window to use. \
 The options are \\\"Rectangular\\\", \\\"Hanning\\\", and \
 \\\"Hamming\\\".\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -328,13 +356,13 @@ the same length as the input.\>\""}],
  RowBox[{
   RowBox[{
    RowBox[{"getBalancedIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<getBalancedIR[inputIR] returns the balanced realization of inputIR.\n\
-\nOPTIONAL INPUTS:\n\t1. \\\"Order\\\" \[RightArrow] specifies the order of \
-the balanced IR. This must be between 1 and the length of inputIR in samples. \
-(default = length of inputIR)\n\t2. \\\"Sampling Rate\\\" \[RightArrow] \
-specifies the sampling rate in Hz. (default = 44100)\n\nREF:\n\t1. \
-Beliczynski et al. (1992) - Approximation of FIR by IIR Digital Filters: An \
-Algorithm Based on Balanced Model Reduction.\>\""}], 
+   "\"\<getBalancedIR[inputIR] returns the balanced realization of inputIR \
+based on the algorithm described by Beliczynski et al. (1992) - Approximation \
+of FIR by IIR Digital Filters: An Algorithm Based on Balanced Model \
+Reduction.\n\nOPTIONAL INPUTS:\n\t1. \\\"Order\\\" \[RightArrow] specifies \
+the order of the balanced IR. This must be between 1 and the length of \
+inputIR in samples. (default = length of inputIR)\n\t2. \\\"Sampling Rate\\\" \
+\[RightArrow] specifies the sampling rate in Hz. (default = 44100).\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"getSPLNorm", "::", "usage"}], "=", "\[IndentingNewLine]", 
@@ -398,8 +426,15 @@ dB. If refSPL is not specified, 105 dB is assumed.\>\""}]}], "Input",
    3.7306435766050177`*^9, 3.730643687696537*^9}, {3.730665343812908*^9, 
    3.7306655112616158`*^9}, {3.7306665585689993`*^9, 3.730666650101592*^9}, {
    3.730666681477236*^9, 3.730666845265204*^9}, {3.730666947230304*^9, 
-   3.73066695682969*^9}, {3.7432773418826027`*^9, 
-   3.74327734313927*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+   3.73066695682969*^9}, {3.7432773418826027`*^9, 3.74327734313927*^9}, {
+   3.7432775157830677`*^9, 3.7432776271005077`*^9}, {3.7432776600197287`*^9, 
+   3.743277894832162*^9}, {3.743277935728097*^9, 3.743278023351735*^9}, {
+   3.743278068363559*^9, 3.743278101707802*^9}, {3.7432783156466417`*^9, 
+   3.743278346287772*^9}, {3.743278385268585*^9, 3.743278500466249*^9}, {
+   3.74327871727204*^9, 3.74327872327495*^9}, {3.743278795397004*^9, 
+   3.7432788161993847`*^9}, {3.7432788902044697`*^9, 3.743278901369925*^9}, {
+   3.743278962296001*^9, 3.7432793735570498`*^9}, {3.7432794296504173`*^9, 
+   3.743279737573584*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
 4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
@@ -805,22 +840,22 @@ Cell[BoxData[{
       
       RowBox[{"ramp", "=", 
        RowBox[{"Range", "[", 
-        RowBox[{"0", ",", 
+        RowBox[{"0.", ",", 
          RowBox[{"inputIRLen", "-", "1"}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"grpDSpec", "=", 
        RowBox[{"Re", "[", 
         RowBox[{
-         RowBox[{"IRtoTF", "[", 
-          RowBox[{"inputIR", " ", "ramp"}], "]"}], "/", 
-         RowBox[{"(", 
+         RowBox[{"Quiet", "[", 
           RowBox[{
-           RowBox[{"Chop", "[", 
-            RowBox[{"N", "[", 
-             RowBox[{"IRtoTF", "[", "inputIR", "]"}], "]"}], "]"}], "/.", 
-           RowBox[{"{", 
-            RowBox[{"0", "\[Rule]", "\[Infinity]"}], "}"}]}], ")"}]}], 
-        "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
+           RowBox[{"IRtoTF", "[", 
+            RowBox[{"inputIR", " ", "ramp"}], "]"}], "/", 
+           RowBox[{"IRtoTF", "[", "inputIR", "]"}]}], "]"}], "/.", 
+         RowBox[{"ComplexInfinity", "\[Rule]", 
+          RowBox[{"(", 
+           RowBox[{"0.", "+", 
+            RowBox[{"0.", " ", "\[ImaginaryI]"}]}], ")"}]}]}], "]"}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1813,12 +1848,7 @@ Cell[BoxData[{
       RowBox[{"inputSignalReal", "=", 
        RowBox[{"Re", "[", "inputSignal", "]"}]}], ";", 
       RowBox[{"inputSignalRealDFT", "=", 
-       RowBox[{"Fourier", "[", 
-        RowBox[{"inputSignalReal", ",", 
-         RowBox[{"FourierParameters", "\[Rule]", 
-          RowBox[{"{", 
-           RowBox[{"1", ",", " ", 
-            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}], ";", 
+       RowBox[{"IRtoTF", "[", "inputSignalReal", "]"}]}], ";", 
       RowBox[{"inputSignalRealLength", "=", 
        RowBox[{"Length", "[", "inputSignalReal", "]"}]}], ";", 
       RowBox[{"inputSignalRealHalfLength", "=", 
@@ -1861,13 +1891,8 @@ Cell[BoxData[{
           "=", "2"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"outputSignal", "=", 
-       RowBox[{"InverseFourier", "[", 
-        RowBox[{
-         RowBox[{"inputSignalRealDFT", " ", "hilbertDFT"}], ",", 
-         RowBox[{"FourierParameters", "\[Rule]", 
-          RowBox[{"{", 
-           RowBox[{"1", ",", " ", 
-            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}]}]}]}], 
+       RowBox[{"TFtoIR", "[", 
+        RowBox[{"inputSignalRealDFT", " ", "hilbertDFT"}], "]"}]}]}]}], 
     "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -1928,31 +1953,16 @@ Cell[BoxData[{
         RowBox[{"inputIRLen", "/", "2"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"inputTFMag", "=", 
        RowBox[{"Abs", "[", 
-        RowBox[{"Fourier", "[", 
-         RowBox[{"inputIR", ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"IRtoTF", "[", "inputIR", "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"inputTFPhase", "=", 
        RowBox[{"Arg", "[", 
-        RowBox[{"Fourier", "[", 
-         RowBox[{"inputIR", ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"IRtoTF", "[", "inputIR", "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"evenPartIR", "=", 
        RowBox[{"Re", "[", 
-        RowBox[{"InverseFourier", "[", 
-         RowBox[{
-          RowBox[{"Log", "[", "inputTFMag", "]"}], ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"TFtoIR", "[", 
+         RowBox[{"Log", "[", "inputTFMag", "]"}], "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"oddPartIR", "=", 
        RowBox[{"ConstantArray", "[", 
@@ -1996,28 +2006,17 @@ Cell[BoxData[{
          ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"minPhaseResponse", "=", 
        RowBox[{"Im", "[", 
-        RowBox[{"Fourier", "[", 
-         RowBox[{"oddPartIR", ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"IRtoTF", "[", "oddPartIR", "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"outputIR", "=", 
        RowBox[{"Re", "[", 
-        RowBox[{"InverseFourier", "[", 
-         RowBox[{
-          RowBox[{"E", "^", 
+        RowBox[{"TFtoIR", "[", 
+         RowBox[{"Exp", "[", 
+          RowBox[{"\[ImaginaryJ]", " ", 
            RowBox[{"(", 
-            RowBox[{"\[ImaginaryJ]", " ", 
-             RowBox[{"(", 
-              RowBox[{"inputTFPhase", "-", "minPhaseResponse"}], ")"}]}], 
-            ")"}]}], ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}]}], "\n", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+            RowBox[{"inputTFPhase", "-", "minPhaseResponse"}], ")"}]}], "]"}],
+          "]"}], "]"}]}]}]}], "\n", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"getMinimumPhaseIR", "[", "inputIR_", "]"}], " ", ":=", " ", 
@@ -2037,22 +2036,12 @@ Cell[BoxData[{
         RowBox[{"inputIRLen", "/", "2"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"inputTFMag", "=", 
        RowBox[{"Abs", "[", 
-        RowBox[{"Fourier", "[", 
-         RowBox[{"inputIR", ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"IRtoTF", "[", "inputIR", "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"evenPartIR", "=", 
        RowBox[{"Re", "[", 
-        RowBox[{"InverseFourier", "[", 
-         RowBox[{
-          RowBox[{"Log", "[", "inputTFMag", "]"}], ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"TFtoIR", "[", 
+         RowBox[{"Log", "[", "inputTFMag", "]"}], "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"oddPartIR", "=", 
        RowBox[{"ConstantArray", "[", 
@@ -2096,51 +2085,25 @@ Cell[BoxData[{
          ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"minPhaseResponse", "=", 
        RowBox[{"Im", "[", 
-        RowBox[{"Fourier", "[", 
-         RowBox[{"oddPartIR", ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}], ";", 
+        RowBox[{"IRtoTF", "[", "oddPartIR", "]"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"outputIR", "=", 
        RowBox[{"Re", "[", 
-        RowBox[{"InverseFourier", "[", 
-         RowBox[{
-          RowBox[{"inputTFMag", " ", 
-           RowBox[{"E", "^", 
-            RowBox[{"(", 
-             RowBox[{"\[ImaginaryJ]", " ", "minPhaseResponse"}], ")"}]}]}], 
-          ",", 
-          RowBox[{"FourierParameters", "->", 
-           RowBox[{"{", 
-            RowBox[{"1", ",", " ", 
-             RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}]}], "\n", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+        RowBox[{"TFtoIR", "[", 
+         RowBox[{"inputTFMag", " ", 
+          RowBox[{"Exp", "[", 
+           RowBox[{"\[ImaginaryJ]", " ", "minPhaseResponse"}], "]"}]}], "]"}],
+         "]"}]}]}]}], "\n", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"realCepstrum", "[", "inputSignal_", "]"}], " ", ":=", " ", 
-   RowBox[{"Module", "[", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"{", "outputSignal", "}"}], "\[IndentingNewLine]", ",", 
-     "\[IndentingNewLine]", 
-     RowBox[{"outputSignal", "=", 
-      RowBox[{"Re", "[", 
-       RowBox[{"InverseFourier", "[", 
-        RowBox[{
-         RowBox[{"Log", "[", 
-          RowBox[{"Abs", "[", 
-           RowBox[{"Fourier", "[", 
-            RowBox[{"inputSignal", ",", 
-             RowBox[{"FourierParameters", "->", 
-              RowBox[{"{", 
-               RowBox[{"1", ",", " ", 
-                RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}], "]"}], ",", 
-         RowBox[{"FourierParameters", "->", 
-          RowBox[{"{", 
-           RowBox[{"1", ",", " ", 
-            RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "]"}]}]}], "\n", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+   RowBox[{"realCepstrum", "[", "inputSignal_", "]"}], ":=", 
+   RowBox[{"Re", "[", 
+    RowBox[{"TFtoIR", "[", 
+     RowBox[{"Log", "[", 
+      RowBox[{"Abs", "[", 
+       RowBox[{"IRtoTF", "[", "inputSignal", "]"}], "]"}], "]"}], "]"}], 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"Options", "[", "getBalancedIR", "]"}], "=", 
@@ -2255,8 +2218,8 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"getSPLNorm", "[", 
-   RowBox[{"refSPL_:", " ", "105"}], "]"}], ":=", 
-  RowBox[{"10", "^", 
+   RowBox[{"refSPL_:", " ", "105."}], "]"}], ":=", 
+  RowBox[{"10.", "^", 
    RowBox[{"(", 
     RowBox[{
      RowBox[{"-", "refSPL"}], "/", "20."}], ")"}]}]}]}], "Input",
@@ -2340,8 +2303,13 @@ Cell[BoxData[{
    3.740246779605422*^9}, {3.740247065802297*^9, 3.740247072352274*^9}, {
    3.7402479173547583`*^9, 3.740247922036078*^9}, {3.740248024877022*^9, 
    3.740248047943358*^9}, 3.740248378946838*^9, {3.740248581084365*^9, 
-   3.740248582920545*^9}, {3.743277377156024*^9, 
-   3.743277378095203*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+   3.740248582920545*^9}, {3.743277377156024*^9, 3.743277378095203*^9}, {
+   3.743278530450495*^9, 3.7432785539783573`*^9}, {3.7432786052446404`*^9, 
+   3.743278631088324*^9}, {3.743279755597451*^9, 3.7432797581547117`*^9}, {
+   3.7432797911886683`*^9, 3.7432798437875023`*^9}, {3.7432798910278797`*^9, 
+   3.743279895908081*^9}, {3.7432799309063396`*^9, 3.74327999373451*^9}, {
+   3.743280039526237*^9, 3.7432801680073137`*^9}, {3.743280210533908*^9, 
+   3.7432802347597523`*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
 50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -2401,24 +2369,24 @@ Cell[2559, 69, 36, 0, 67, "Section",ExpressionUUID->"38c1865a-3c49-47bf-80d2-18f
 Cell[2598, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
 Cell[2940, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3059, 84, 16934, 318, 3743, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[3059, 84, 19100, 353, 3533, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[20042, 408, 45, 0, 67, "Section",ExpressionUUID->"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
-Cell[20090, 410, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[22208, 443, 45, 0, 67, "Section",ExpressionUUID->"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
+Cell[22256, 445, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[20368, 419, 42, 0, 54, "Subsection",ExpressionUUID->"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
-Cell[20413, 421, 76545, 1923, 9245, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[22534, 454, 42, 0, 54, "Subsection",ExpressionUUID->"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
+Cell[22579, 456, 74281, 1856, 9140, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[97007, 2350, 43, 0, 67, "Section",ExpressionUUID->"93737186-8317-4603-9248-c252d9c69474"],
-Cell[97053, 2352, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[96909, 2318, 43, 0, 67, "Section",ExpressionUUID->"93737186-8317-4603-9248-c252d9c69474"],
+Cell[96955, 2320, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[97196, 2358, 42, 0, 67, "Section",ExpressionUUID->"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
-Cell[97241, 2360, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[97098, 2326, 42, 0, 67, "Section",ExpressionUUID->"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
+Cell[97143, 2328, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }
