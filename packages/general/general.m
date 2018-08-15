@@ -35,7 +35,7 @@ magTodB::usage=
 "magTodB[mag] converts magnitude to dB."
 
 nextPowTwo::usage=
-"nextPow2[input] outputs the smallest power of 2 that is greater than or equal to input."
+"nextPowTwo[input] outputs the smallest power of 2 that is greater than or equal to input."
 
 SOFACToCIPIC::usage=
 "SOFACToCIPIC[x,y,z] converts from SOFA's cartesian coordinates to CIPIC's interaural coordinates. Output angles are in degrees." 
