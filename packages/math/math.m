@@ -60,14 +60,12 @@ totalIntegral=N[Total[((Drop[ydata,-1]+ydataShift)/2) (xdataShift-Drop[xdata,-1]
 ]
 
 logMean[f_,df_,Q_]:=Module[{W},
-W=Log[10,(f+df/2)/(f-df/2)];
-Total[W Q]/Total[W]
+Total[Q/f]/Total[1/f]
 ]
 
 logSTD[f_,df_,Q_]:=Module[{W,Qbar},
-W=Log[10,(f+df/2)/(f-df/2)];
 Qbar = logMean[f,df,Q];
-Sqrt[Total[W (Q-Qbar)^2]/Total[W]]
+Sqrt[Total[((Q-Qbar)/f)^2]/Total[1/f]]
 ]
 
 
