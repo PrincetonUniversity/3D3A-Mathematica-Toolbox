@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     49628,       1230]
-NotebookOptionsPosition[     47332,       1177]
-NotebookOutlinePosition[     48212,       1205]
-CellTagsIndexPosition[     48169,       1202]
+NotebookDataLength[     50126,       1239]
+NotebookOptionsPosition[     47830,       1186]
+NotebookOutlinePosition[     48710,       1214]
+CellTagsIndexPosition[     48667,       1211]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -895,7 +895,11 @@ Cell[BoxData[{
            RowBox[{"(", 
             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
            RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
+            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
+           RowBox[{"(", 
+            RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
+           RowBox[{"(", 
+            RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
           "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{"outputData", "=", 
@@ -914,7 +918,7 @@ Cell[BoxData[{
           RowBox[{
            RowBox[{
            "MessageDialog", "[", 
-            "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
+            "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
            ";", "\[IndentingNewLine]", 
            RowBox[{"outputData", "=", 
             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
@@ -1093,7 +1097,11 @@ Cell[BoxData[{
            RowBox[{"(", 
             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
            RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
+            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
+           RowBox[{"(", 
+            RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
+           RowBox[{"(", 
+            RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
           "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{"numChannels", "=", 
@@ -1118,7 +1126,7 @@ Cell[BoxData[{
           RowBox[{
            RowBox[{
            "MessageDialog", "[", 
-            "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
+            "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
            ";", "\[IndentingNewLine]", 
            RowBox[{"outputData", "=", 
             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
@@ -1152,8 +1160,9 @@ Cell[BoxData[{
    3.7407663748821907`*^9, 3.740766389863636*^9}, {3.740767809715763*^9, 
    3.740767933531839*^9}, {3.7407730585133543`*^9, 3.74077312735929*^9}, {
    3.740773533572723*^9, 3.740773536080982*^9}, {3.743265266815983*^9, 
-   3.743265364403027*^9}, 
-   3.743289893118685*^9},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.743265364403027*^9}, 3.743289893118685*^9, {3.7444632667000313`*^9, 
+   3.744463340405095*^9}, {3.744463507707114*^9, 
+   3.744463516000353*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1220,16 +1229,16 @@ Cell[10020, 236, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7
 Cell[10068, 238, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
 Cell[10167, 243, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[10212, 245, 36806, 911, 4709, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[10212, 245, 37304, 920, 4709, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47067, 1162, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[47113, 1164, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[47565, 1171, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[47611, 1173, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47201, 1170, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[47246, 1172, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[47699, 1179, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[47744, 1181, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

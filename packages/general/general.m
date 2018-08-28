@@ -227,11 +227,11 @@ importAIFF[fileName_]:=Module[
 {readExt,outputData,numChannels}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF"),
+If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF"),
 outputData=Import[fileName,"AudioEncoding"->"Integer24"][[1,1]];
 numChannels=Length[outputData];
 ,
-MessageDialog["Specified file for import is not a WAV file."];
+MessageDialog["Specified file for import is not an AIFF file."];
 outputData={};
 numChannels=0;
 ];
@@ -283,7 +283,7 @@ importAIFF[fileName_]:=Module[
 {readExt,numChannels,outputData}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF"),
+If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF"),
 numChannels=Import[fileName,"AudioChannels"];
 If[numChannels<2,
 outputData=List[Import[fileName,"Data"]];
@@ -291,7 +291,7 @@ outputData=List[Import[fileName,"Data"]];
 outputData=Import[fileName,"Data"];
 ];
 ,
-MessageDialog["Specified file for import is not a WAV file."];
+MessageDialog["Specified file for import is not an AIFF file."];
 outputData={};
 numChannels=0;
 ];
