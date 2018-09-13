@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     50126,       1239]
-NotebookOptionsPosition[     47830,       1186]
-NotebookOutlinePosition[     48710,       1214]
-CellTagsIndexPosition[     48667,       1211]
+NotebookDataLength[     53193,       1300]
+NotebookOptionsPosition[     50896,       1247]
+NotebookOutlinePosition[     51776,       1275]
+CellTagsIndexPosition[     51733,       1272]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -68,7 +68,11 @@ Cell[CellGroupData[{
 Cell["Begin the package", "Section"],
 
 Cell[BoxData[
- RowBox[{"BeginPackage", "[", "\"\<general`\>\"", "]"}]], "Input"],
+ RowBox[{"BeginPackage", "[", "\"\<general`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.745771030976554*^9, 3.7457710351959*^9}, {
+  3.745776400041972*^9, 
+  3.745776400192225*^9}},ExpressionUUID->"a1678b66-e129-4fc3-9374-\
+cc983ffb1b36"],
 
 Cell[CellGroupData[{
 
@@ -226,8 +230,10 @@ file specified by fileName.\>\""}]}], "Input",
    3.740770894607707*^9, 3.740770917364154*^9}, {3.7432653762621517`*^9, 
    3.7432654041323013`*^9}, {3.743289584566028*^9, 3.7432897791576223`*^9}, {
    3.743289809232705*^9, 3.743289819798214*^9}, {3.743292051154018*^9, 
-   3.743292071596291*^9}, {3.7432922988240967`*^9, 
-   3.743292300334474*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
+   3.743292071596291*^9}, {3.7432922988240967`*^9, 3.743292300334474*^9}, {
+   3.74577225588579*^9, 3.745772444600774*^9}, {3.7457724889175253`*^9, 
+   3.745772728808929*^9}, {3.7457763659511538`*^9, 
+   3.745776366506022*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
 14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
@@ -743,403 +749,451 @@ Cell[BoxData[{
            RowBox[{"[", "5", "]"}], "]"}], ",", "10", ",", "2"}], "]"}], 
         "]"}]}]}]}], "\n", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{"If", "[", 
-  RowBox[{
-   RowBox[{"$VersionNumber", "<", "10"}], ",", "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"If", "[", 
    RowBox[{
+    RowBox[{"$VersionNumber", "<", "10"}], ",", "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"exportWAV", "[", 
-      RowBox[{"fileName_", ",", "data_", ",", 
-       RowBox[{"samplingRate_:", " ", "44100"}], ",", 
-       RowBox[{"commentString_:", "\"\< \>\""}]}], "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"Output", ",", "readExt", ",", "ext"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
-          ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<.wav\>\""}], ";"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"Output", "=", 
-         RowBox[{"Sound", "[", 
-          RowBox[{"SampledSoundList", "[", 
-           RowBox[{"data", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"Export", "[", 
-         RowBox[{
-          RowBox[{"fileName", "<>", "ext"}], ",", "Output", ",", 
-          RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
-          ",", 
-          RowBox[{"MetaInformation", "\[Rule]", 
-           RowBox[{"{", 
-            RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
-            "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"importWAV", "[", "fileName_", "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"readExt", ",", "outputData", ",", "numChannels"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"outputData", "=", 
-            RowBox[{
-             RowBox[{"Import", "[", 
-              RowBox[{"fileName", ",", 
-               RowBox[{
-               "\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}]}], 
-              "]"}], "[", 
-             RowBox[{"[", 
-              RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", 
-            RowBox[{"Length", "[", "outputData", "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
-           ";", "\[IndentingNewLine]", 
-           RowBox[{"outputData", "=", 
-            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
-      "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"exportAIFF", "[", 
-      RowBox[{"fileName_", ",", "data_", ",", 
-       RowBox[{"samplingRate_:", " ", "44100"}], ",", 
-       RowBox[{"commentString_:", "\"\< \>\""}]}], "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"Output", ",", "readExt", ",", "ext"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
-          ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"Output", "=", 
-         RowBox[{"Sound", "[", 
-          RowBox[{"SampledSoundList", "[", 
-           RowBox[{"data", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"Export", "[", 
-         RowBox[{
-          RowBox[{"fileName", "<>", "ext"}], ",", "Output", ",", 
-          RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
-          ",", 
-          RowBox[{"MetaInformation", "\[Rule]", 
-           RowBox[{"{", 
-            RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
-            "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"importAIFF", "[", "fileName_", "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"readExt", ",", "outputData", ",", "numChannels"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"outputData", "=", 
-            RowBox[{
-             RowBox[{"Import", "[", 
-              RowBox[{"fileName", ",", 
-               RowBox[{
-               "\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}]}], 
-              "]"}], "[", 
-             RowBox[{"[", 
-              RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", 
-            RowBox[{"Length", "[", "outputData", "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
-           ";", "\[IndentingNewLine]", 
-           RowBox[{"outputData", "=", 
-            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
-      "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"getSamplingRate", "[", "fileName_", "]"}], ":=", 
      RowBox[{
-      RowBox[{"Import", "[", "fileName", "]"}], "[", 
-      RowBox[{"[", 
-       RowBox[{"1", ",", "2"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
-   ",", "\[IndentingNewLine]", 
+      RowBox[{"exportWAV", "[", 
+       RowBox[{"fileName_", ",", "data_", ",", 
+        RowBox[{"samplingRate_:", " ", "44100"}], ",", 
+        RowBox[{"commentString_:", "\"\< \>\""}]}], "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Output", ",", "readExt", ",", "ext"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<.wav\>\""}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Output", "=", 
+          RowBox[{"Sound", "[", 
+           RowBox[{"SampledSoundList", "[", 
+            RowBox[{"data", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Export", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", "Output", ",", 
+           RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
+           ",", 
+           RowBox[{"MetaInformation", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
+             "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"importWAV", "[", "fileName_", "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"readExt", ",", "outputData", ",", "numChannels"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"outputData", "=", 
+             RowBox[{
+              RowBox[{"Import", "[", 
+               RowBox[{"fileName", ",", 
+                RowBox[{
+                "\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}]}], 
+               "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", 
+             RowBox[{"Length", "[", "outputData", "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"outputData", "=", 
+             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]",
+           "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"exportAIFF", "[", 
+       RowBox[{"fileName_", ",", "data_", ",", 
+        RowBox[{"samplingRate_:", " ", "44100"}], ",", 
+        RowBox[{"commentString_:", "\"\< \>\""}]}], "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Output", ",", "readExt", ",", "ext"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Output", "=", 
+          RowBox[{"Sound", "[", 
+           RowBox[{"SampledSoundList", "[", 
+            RowBox[{"data", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Export", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", "Output", ",", 
+           RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
+           ",", 
+           RowBox[{"MetaInformation", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
+             "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"importAIFF", "[", "fileName_", "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"readExt", ",", "outputData", ",", "numChannels"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"outputData", "=", 
+             RowBox[{
+              RowBox[{"Import", "[", 
+               RowBox[{"fileName", ",", 
+                RowBox[{
+                "\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}]}], 
+               "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", 
+             RowBox[{"Length", "[", "outputData", "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"outputData", "=", 
+             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]",
+           "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"getSamplingRate", "[", "fileName_", "]"}], ":=", 
+      RowBox[{
+       RowBox[{"Import", "[", "fileName", "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"1", ",", "2"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]",
+     ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"exportWAV", "[", 
+       RowBox[{"fileName_", ",", "data_", ",", 
+        RowBox[{"samplingRate_:", " ", "44100"}], ",", 
+        RowBox[{"commentString_:", " ", "\"\< \>\""}]}], "]"}], ":=", 
+      RowBox[{"Block", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Rescale", "=", 
+           RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<.wav\>\""}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Export", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", 
+           RowBox[{"ListPlay", "[", 
+            RowBox[{"data", ",", 
+             RowBox[{"PlayRange", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+             RowBox[{"SampleRate", "\[Rule]", "samplingRate"}]}], "]"}], ",", 
+           
+           RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
+           ",", 
+           RowBox[{"MetaInformation", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
+             "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"importWAV", "[", "fileName_", "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"readExt", ",", "numChannels", ",", "outputData"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"numChannels", "=", 
+             RowBox[{"Import", "[", 
+              RowBox[{"fileName", ",", "\"\<AudioChannels\>\""}], "]"}]}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"outputData", "=", 
+                RowBox[{"List", "[", 
+                 RowBox[{"Import", "[", 
+                  RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}], 
+               ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"outputData", "=", 
+                RowBox[{"Import", "[", 
+                 RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}]}], 
+             "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"outputData", "=", 
+             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]",
+           "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"exportAIFF", "[", 
+       RowBox[{"fileName_", ",", "data_", ",", 
+        RowBox[{"samplingRate_:", " ", "44100"}], ",", 
+        RowBox[{"commentString_:", " ", "\"\< \>\""}]}], "]"}], ":=", 
+      RowBox[{"Block", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Rescale", "=", 
+           RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Export", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", 
+           RowBox[{"ListPlay", "[", 
+            RowBox[{"data", ",", 
+             RowBox[{"PlayRange", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+             RowBox[{"SampleRate", "\[Rule]", "samplingRate"}]}], "]"}], ",", 
+           
+           RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
+           ",", 
+           RowBox[{"MetaInformation", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
+             "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"importAIFF", "[", "fileName_", "]"}], ":=", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"readExt", ",", "numChannels", ",", "outputData"}], "}"}], 
+        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
+            RowBox[{"(", 
+             RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"numChannels", "=", 
+             RowBox[{"Import", "[", 
+              RowBox[{"fileName", ",", "\"\<AudioChannels\>\""}], "]"}]}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"outputData", "=", 
+                RowBox[{"List", "[", 
+                 RowBox[{"Import", "[", 
+                  RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}], 
+               ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"outputData", "=", 
+                RowBox[{"Import", "[", 
+                 RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}]}], 
+             "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
+            ";", "\[IndentingNewLine]", 
+            RowBox[{"outputData", "=", 
+             RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]",
+           "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"{", 
+          RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
+       "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"getSamplingRate", "[", "fileName_", "]"}], ":=", 
+      RowBox[{"Import", "[", 
+       RowBox[{"fileName", ",", "\"\<SampleRate\>\""}], "]"}]}], ";"}]}], 
+   "\[IndentingNewLine]", "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"findNearest", "[", 
+   RowBox[{"inputList_", ",", "value_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", "\[IndentingNewLine]", 
    RowBox[{
+    RowBox[{"{", 
+     RowBox[{"nearestValue", ",", "nearestIndx"}], "}"}], 
+    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"exportWAV", "[", 
-      RowBox[{"fileName_", ",", "data_", ",", 
-       RowBox[{"samplingRate_:", " ", "44100"}], ",", 
-       RowBox[{"commentString_:", " ", "\"\< \>\""}]}], "]"}], ":=", 
-     RowBox[{"Block", "[", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
       RowBox[{
-       RowBox[{"{", 
+       RowBox[{
         RowBox[{
-         RowBox[{"Rescale", "=", 
-          RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
-          ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<.wav\>\""}], ";"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"Export", "[", 
-         RowBox[{
-          RowBox[{"fileName", "<>", "ext"}], ",", 
-          RowBox[{"ListPlay", "[", 
-           RowBox[{"data", ",", 
-            RowBox[{"PlayRange", "\[Rule]", 
-             RowBox[{"{", 
-              RowBox[{
-               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
-            RowBox[{"SampleRate", "\[Rule]", "samplingRate"}]}], "]"}], ",", 
-          RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
-          ",", 
-          RowBox[{"MetaInformation", "\[Rule]", 
-           RowBox[{"{", 
-            RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
-            "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"importWAV", "[", "fileName_", "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"readExt", ",", "numChannels", ",", "outputData"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<wav\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<WAV\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"numChannels", "=", 
-            RowBox[{"Import", "[", 
-             RowBox[{"fileName", ",", "\"\<AudioChannels\>\""}], "]"}]}], ";",
-            "\[IndentingNewLine]", 
-           RowBox[{"If", "[", 
-            RowBox[{
-             RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
-             RowBox[{
-              RowBox[{"outputData", "=", 
-               RowBox[{"List", "[", 
-                RowBox[{"Import", "[", 
-                 RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}], 
-              ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-             RowBox[{
-              RowBox[{"outputData", "=", 
-               RowBox[{"Import", "[", 
-                RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}]}], 
-            "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Specified file for import is not a WAV file.\>\"", "]"}], 
-           ";", "\[IndentingNewLine]", 
-           RowBox[{"outputData", "=", 
-            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
-      "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"exportAIFF", "[", 
-      RowBox[{"fileName_", ",", "data_", ",", 
-       RowBox[{"samplingRate_:", " ", "44100"}], ",", 
-       RowBox[{"commentString_:", " ", "\"\< \>\""}]}], "]"}], ":=", 
-     RowBox[{"Block", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
+         RowBox[{"Dimensions", "[", "inputList", "]"}], "[", 
+         RowBox[{"[", "2", "]"}], "]"}], "\[Equal]", 
         RowBox[{
-         RowBox[{"Rescale", "=", 
-          RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext"}], "}"}], 
+         RowBox[{"Dimensions", "[", "value", "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"nearestValue", "=", 
+         RowBox[{
+          RowBox[{"Nearest", "[", 
+           RowBox[{"inputList", ",", "value"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"nearestIndx", "=", 
+         RowBox[{
+          RowBox[{"Position", "[", 
+           RowBox[{"inputList", ",", "nearestValue"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], 
        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
        RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
-          ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"Export", "[", 
-         RowBox[{
-          RowBox[{"fileName", "<>", "ext"}], ",", 
-          RowBox[{"ListPlay", "[", 
-           RowBox[{"data", ",", 
-            RowBox[{"PlayRange", "\[Rule]", 
-             RowBox[{"{", 
-              RowBox[{
-               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
-            RowBox[{"SampleRate", "\[Rule]", "samplingRate"}]}], "]"}], ",", 
-          RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
-          ",", 
-          RowBox[{"MetaInformation", "\[Rule]", 
-           RowBox[{"{", 
-            RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
-            "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"importAIFF", "[", "fileName_", "]"}], ":=", 
-     RowBox[{"Module", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"readExt", ",", "numChannels", ",", "outputData"}], "}"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"readExt", "=", 
-         RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aiff\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIFF\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<aif\>\""}], ")"}], "||", 
-           RowBox[{"(", 
-            RowBox[{"readExt", "\[Equal]", "\"\<AIF\>\""}], ")"}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"numChannels", "=", 
-            RowBox[{"Import", "[", 
-             RowBox[{"fileName", ",", "\"\<AudioChannels\>\""}], "]"}]}], ";",
-            "\[IndentingNewLine]", 
-           RowBox[{"If", "[", 
-            RowBox[{
-             RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
-             RowBox[{
-              RowBox[{"outputData", "=", 
-               RowBox[{"List", "[", 
-                RowBox[{"Import", "[", 
-                 RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}], 
-              ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-             RowBox[{
-              RowBox[{"outputData", "=", 
-               RowBox[{"Import", "[", 
-                RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}]}], 
-            "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Specified file for import is not an AIFF file.\>\"", "]"}], 
-           ";", "\[IndentingNewLine]", 
-           RowBox[{"outputData", "=", 
-            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-           RowBox[{"numChannels", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"{", 
-         RowBox[{"outputData", ",", "numChannels"}], "}"}]}]}], 
-      "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"getSamplingRate", "[", "fileName_", "]"}], ":=", 
-     RowBox[{"Import", "[", 
-      RowBox[{"fileName", ",", "\"\<SampleRate\>\""}], "]"}]}], ";"}]}], 
-  "\[IndentingNewLine]", "]"}]}], "Input",
+        RowBox[{
+        "MessageDialog", "[", 
+         "\"\<Dimension mismatch between elements of inputList and \
+value!\>\"", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"nearestValue", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"nearestIndx", "=", 
+         RowBox[{"{", "}"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"nearestValue", ",", "nearestIndx"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellChangeTimes->{{3.6964255038774242`*^9, 3.6964255061212*^9}, 
    3.696425609476972*^9, {3.696425836705926*^9, 3.696425838030158*^9}, {
    3.697323951704811*^9, 3.697323952560511*^9}, {3.697325036285604*^9, 
@@ -1161,8 +1215,15 @@ Cell[BoxData[{
    3.740767933531839*^9}, {3.7407730585133543`*^9, 3.74077312735929*^9}, {
    3.740773533572723*^9, 3.740773536080982*^9}, {3.743265266815983*^9, 
    3.743265364403027*^9}, 3.743289893118685*^9, {3.7444632667000313`*^9, 
-   3.744463340405095*^9}, {3.744463507707114*^9, 
-   3.744463516000353*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.744463340405095*^9}, {3.744463507707114*^9, 3.744463516000353*^9}, {
+   3.745771067319305*^9, 3.7457710850763817`*^9}, {3.745771143084688*^9, 
+   3.745771147386099*^9}, {3.74577130501394*^9, 3.745771358559064*^9}, {
+   3.745772798324403*^9, 3.74577283970541*^9}, {3.745772879311384*^9, 
+   3.745772884163862*^9}, {3.745776215855473*^9, 3.7457762164096327`*^9}, {
+   3.745776376570435*^9, 3.745776377320725*^9}, {3.745777326006795*^9, 
+   3.745777362569543*^9}, {3.745777444456698*^9, 3.745777468222645*^9}, {
+   3.745777624151335*^9, 3.745777658581745*^9}, {3.745777726133821*^9, 
+   3.7457778967551107`*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1218,27 +1279,27 @@ Cell[580, 22, 58, 1, 98, "Title",ExpressionUUID->"f9e1b645-be0a-4784-9415-34a9af
 Cell[641, 25, 1773, 38, 725, "Text",ExpressionUUID->"5f58b60f-5a12-435d-bd34-ac66fd880ba8"],
 Cell[CellGroupData[{
 Cell[2439, 67, 36, 0, 67, "Section",ExpressionUUID->"9a727e61-87a1-4c21-8600-4662b448d721"],
-Cell[2478, 69, 80, 1, 46, "Input",ExpressionUUID->"a1678b66-e129-4fc3-9374-cc983ffb1b36"],
+Cell[2478, 69, 253, 5, 46, "Input",ExpressionUUID->"a1678b66-e129-4fc3-9374-cc983ffb1b36"],
 Cell[CellGroupData[{
-Cell[2583, 74, 61, 0, 54, "Subsection",ExpressionUUID->"b167258d-d10e-4a4d-b8f3-6d24e9ce28a1"],
-Cell[2647, 76, 7324, 154, 1118, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
+Cell[2756, 78, 61, 0, 54, "Subsection",ExpressionUUID->"b167258d-d10e-4a4d-b8f3-6d24e9ce28a1"],
+Cell[2820, 80, 7473, 156, 1118, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[10020, 236, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
-Cell[10068, 238, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
+Cell[10342, 242, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
+Cell[10390, 244, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
-Cell[10167, 243, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[10212, 245, 37304, 920, 4709, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[10489, 249, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
+Cell[10534, 251, 40048, 975, 5003, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47565, 1171, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[47611, 1173, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[50631, 1232, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[50677, 1234, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47699, 1179, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[47744, 1181, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[50765, 1240, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[50810, 1242, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

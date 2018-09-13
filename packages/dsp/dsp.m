@@ -134,6 +134,11 @@ OPTIONAL INPUTS:
 getSPLNorm::usage=
 "getSPLNorm[refSPL] returns the normalization factor required to normalize transfer functions to represent magnitude responses in dB SPL. The required input to the function, refSPL, must specify the SPL corresponding to 0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 dB. If refSPL is not specified, 105 dB is assumed."
 
+sweepToIR::usage=
+"sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists).
+
+Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
+
 
 Begin["`Private`"]
 
@@ -527,6 +532,48 @@ sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[in
 ]
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
+
+sweepToIR[sweepFilePath_,sweepFileFormat_:"AIFF"]:=Module[
+{rawData,numChannels,numMicChannels,rawMicData,triggerSignal,triggerSamplePositions,numSweeps,sweepLen,rawIRMat,sweepSignal,micIRs,micOnsetPos,firstOnset,preOnsetDelay,startPos,endPos}
+,
+If[StringQ[sweepFilePath],
+If[sweepFileFormat=="WAV"||sweepFileFormat=="wav",
+{rawData,numChannels}=importWAV[sweepFilePath];
+,
+{rawData,numChannels}=importAIFF[sweepFilePath];
+];
+numMicChannels=numChannels-2;(* Remaining two channels are sweep and trigger signal channels, respectively. *)
+rawMicData=rawData[[1;;numMicChannels]];
+sweepSignal=rawData[[numChannels-1]];
+triggerSignal=rawData[[numChannels]];
+triggerSamplePositions=Flatten[Position[Round[triggerSignal],1]];
+numSweeps=Length[triggerSamplePositions];
+sweepLen = If[numSweeps>1,Round[Mean[Differences[triggerSamplePositions]]],Length[sweepSignal]];
+rawIRMat=ConstantArray[{},{numMicChannels,numSweeps}]; (* numMicChannels rows correspond to each of recording points. *)
+micIRs = ConstantArray[0.,numMicChannels];
+micOnsetPos = ConstantArray[0.,numMicChannels];
+Do[
+micIRs[[ii]] = deconv[rawMicData[[ii]],sweepSignal];
+micOnsetPos[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->5];
+,
+{ii,1,numMicChannels}
+];
+firstOnset = Min[micOnsetPos];
+preOnsetDelay = If[numSweeps>1,Min[Ceiling[0.25 sweepLen],firstOnset-1],firstOnset-1];
+Do[
+startPos = firstOnset - preOnsetDelay + (jj-1)sweepLen;
+endPos = startPos + sweepLen - 1;
+rawIRMat[[ii,jj]] = micIRs[[ii,startPos;;endPos]];
+,
+{ii,1,numMicChannels},
+{jj,1,numSweeps}
+];
+,
+MessageDialog["Operation Canceled!"];
+rawIRMat={};
+];
+rawIRMat
+]
 
 
 End[]
