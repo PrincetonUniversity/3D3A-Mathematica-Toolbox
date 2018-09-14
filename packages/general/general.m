@@ -73,6 +73,9 @@ importAIFF::usage=
 getSamplingRate::usage=
 "getSamplingRate[fileName] extracts the sampling rate from an audio file specified by fileName."
 
+findNearest::usage=
+"findNearest[inputList,value] finds the nearest element to \"value\" in \"inputList\" and returns a two-element list containing the nearest element and its index, respectively."
+
 
 Begin["`Private`"]
 
