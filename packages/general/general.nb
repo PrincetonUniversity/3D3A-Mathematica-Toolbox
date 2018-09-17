@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     53591,       1308]
-NotebookOptionsPosition[     51294,       1255]
-NotebookOutlinePosition[     52174,       1283]
-CellTagsIndexPosition[     52131,       1280]
+NotebookDataLength[     52772,       1288]
+NotebookOptionsPosition[     50475,       1235]
+NotebookOutlinePosition[     51355,       1263]
+CellTagsIndexPosition[     51312,       1260]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1167,38 +1167,17 @@ Cell[BoxData[{
      RowBox[{"nearestValue", ",", "nearestIndx"}], "}"}], 
     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"If", "[", 
+     RowBox[{"nearestValue", "=", 
       RowBox[{
-       RowBox[{
-        RowBox[{
-         RowBox[{"Dimensions", "[", "inputList", "]"}], "[", 
-         RowBox[{"[", "2", "]"}], "]"}], "\[Equal]", 
-        RowBox[{
-         RowBox[{"Dimensions", "[", "value", "]"}], "[", 
-         RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"nearestValue", "=", 
-         RowBox[{
-          RowBox[{"Nearest", "[", 
-           RowBox[{"inputList", ",", "value"}], "]"}], "[", 
-          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
-        RowBox[{"nearestIndx", "=", 
-         RowBox[{
-          RowBox[{"Position", "[", 
-           RowBox[{"inputList", ",", "nearestValue"}], "]"}], "[", 
-          RowBox[{"[", 
-           RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], 
-       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{
-        "MessageDialog", "[", 
-         "\"\<Dimension mismatch between elements of inputList and \
-value!\>\"", "]"}], ";", "\[IndentingNewLine]", 
-        RowBox[{"nearestValue", "=", 
-         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
-        RowBox[{"nearestIndx", "=", 
-         RowBox[{"{", "}"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-     "\[IndentingNewLine]", 
+       RowBox[{"Nearest", "[", 
+        RowBox[{"inputList", ",", "value"}], "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"nearestIndx", "=", 
+      RowBox[{
+       RowBox[{"Position", "[", 
+        RowBox[{"inputList", ",", "nearestValue"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"{", 
       RowBox[{"nearestValue", ",", "nearestIndx"}], "}"}]}]}], 
    "\[IndentingNewLine]", "]"}]}]}], "Input",
@@ -1231,7 +1210,8 @@ value!\>\"", "]"}], ";", "\[IndentingNewLine]",
    3.745776376570435*^9, 3.745776377320725*^9}, {3.745777326006795*^9, 
    3.745777362569543*^9}, {3.745777444456698*^9, 3.745777468222645*^9}, {
    3.745777624151335*^9, 3.745777658581745*^9}, {3.745777726133821*^9, 
-   3.7457778967551107`*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.7457778967551107`*^9}, 
+   3.746186271753124*^9},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1298,16 +1278,16 @@ Cell[10740, 250, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7
 Cell[10788, 252, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
 Cell[10887, 257, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[10932, 259, 40048, 975, 5003, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[10932, 259, 39229, 955, 4877, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[51029, 1240, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[51075, 1242, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[50210, 1220, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[50256, 1222, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[51163, 1248, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[51208, 1250, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[50344, 1228, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[50389, 1230, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

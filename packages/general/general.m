@@ -306,14 +306,8 @@ getSamplingRate[fileName_]:=Import[fileName,"SampleRate"];
 findNearest[inputList_,value_]:=Module[
 {nearestValue,nearestIndx}
 ,
-If[Dimensions[inputList][[2]]==Dimensions[value][[1]],
 nearestValue=Nearest[inputList,value][[1]];
 nearestIndx=Position[inputList,nearestValue][[1,1]];
-,
-MessageDialog["Dimension mismatch between elements of inputList and value!"];
-nearestValue={};
-nearestIndx={};
-];
 {nearestValue,nearestIndx}
 ]
 
