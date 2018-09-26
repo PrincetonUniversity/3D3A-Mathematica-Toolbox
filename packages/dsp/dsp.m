@@ -139,6 +139,11 @@ sweepToIR::usage=
 
 Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
 
+sweepToIR2::usage=
+"sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) as well as the absolute delay of the earliest signal.
+
+Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
+
 
 Begin["`Private`"]
 
@@ -533,7 +538,9 @@ sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[in
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
-sweepToIR[sweepFilePath_,sweepFileFormat_:"AIFF"]:=Module[
+sweepToIR[sweepFilePath_,sweepFileFormat_:"AIFF"]:=sweepToIR2[sweepFilePath,sweepFileFormat][[1]]
+
+sweepToIR2[sweepFilePath_,sweepFileFormat_:"AIFF"]:=Module[
 {rawData,numChannels,numMicChannels,rawMicData,triggerSignal,triggerSamplePositions,numSweeps,sweepLen,rawIRMat,sweepSignal,micIRs,micOnsetPos,firstOnset,preOnsetDelay,startPos,endPos}
 ,
 If[StringQ[sweepFilePath],
@@ -572,7 +579,7 @@ rawIRMat[[ii,jj]] = micIRs[[ii,startPos;;endPos]];
 MessageDialog["Operation Canceled!"];
 rawIRMat={};
 ];
-rawIRMat
+{rawIRMat,firstOnset,preOnsetDelay}
 ]
 
 

@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    107507,       2564]
-NotebookOptionsPosition[    105148,       2510]
-NotebookOutlinePosition[    106078,       2539]
-CellTagsIndexPosition[    106035,       2536]
+NotebookDataLength[    108084,       2589]
+NotebookOptionsPosition[    106490,       2535]
+NotebookOutlinePosition[    107426,       2564]
+CellTagsIndexPosition[    107383,       2561]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -375,14 +375,25 @@ results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 \
 dB. If refSPL is not specified, 105 dB is assumed.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"sweepToIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
-  "\"\<sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) \
-in AIFF format with the (n-1)th channel containing the sweep signal and the \
-nth channel containing a sweep trigger signal (containing p triggers for each \
-of p sweeps, with p > 0), deconvolves all preceding channels by the sweep \
-signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists).\
-\n\nOptionally, sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep file \
-is in WAV format.\>\""}]}], "Input",
+  RowBox[{
+   RowBox[{"sweepToIR", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > \
+2) in AIFF format with the (n-1)th channel containing the sweep signal and \
+the nth channel containing a sweep trigger signal (containing p triggers for \
+each of p sweeps, with p > 0), deconvolves all preceding channels by the \
+sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of \
+lists).\n\nOptionally, sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep \
+file is in WAV format.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sweepToIR2", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > \
+2) in AIFF format with the (n-1)th channel containing the sweep signal and \
+the nth channel containing a sweep trigger signal (containing p triggers for \
+each of p sweeps, with p > 0), deconvolves all preceding channels by the \
+sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of \
+lists) as well as the absolute delay of the earliest signal.\n\nOptionally, \
+sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep file is in WAV format.\
+\>\""}]}], "Input",
  CellChangeTimes->{
   3.6964253886805487`*^9, {3.696426294808119*^9, 3.6964262995631742`*^9}, {
    3.696429001491379*^9, 3.696429074348794*^9}, {3.6964291114561996`*^9, 
@@ -445,9 +456,9 @@ is in WAV format.\>\""}]}], "Input",
    3.74327871727204*^9, 3.74327872327495*^9}, {3.743278795397004*^9, 
    3.7432788161993847`*^9}, {3.7432788902044697`*^9, 3.743278901369925*^9}, {
    3.743278962296001*^9, 3.7432793735570498`*^9}, {3.7432794296504173`*^9, 
-   3.743279737573584*^9}, {3.745776362135453*^9, 
-   3.745776362590293*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
-4fed5cf9a742"]
+   3.743279737573584*^9}, {3.745776362135453*^9, 3.745776362590293*^9}, {
+   3.7469909895407343`*^9, 3.746991051920265*^9}},
+ ExpressionUUID -> "307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2225,7 +2236,17 @@ Cell[BoxData[{
       RowBox[{"-", "refSPL"}], "/", "20."}], ")"}]}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"sweepToIR", "[", 
+  RowBox[{
+   RowBox[{"sweepToIR", "[", 
+    RowBox[{"sweepFilePath_", ",", 
+     RowBox[{"sweepFileFormat_:", "\"\<AIFF\>\""}]}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{"sweepToIR2", "[", 
+     RowBox[{"sweepFilePath", ",", "sweepFileFormat"}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sweepToIR2", "[", 
    RowBox[{"sweepFilePath_", ",", 
     RowBox[{"sweepFileFormat_:", "\"\<AIFF\>\""}]}], "]"}], ":=", 
   RowBox[{"Module", "[", "\[IndentingNewLine]", 
@@ -2396,8 +2417,10 @@ Cell[BoxData[{
         ";", "\[IndentingNewLine]", 
         RowBox[{"rawIRMat", "=", 
          RowBox[{"{", "}"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
-     "\[IndentingNewLine]", "rawIRMat"}]}], "\[IndentingNewLine]", 
-   "]"}]}]}], "Input",
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"rawIRMat", ",", "firstOnset", ",", "preOnsetDelay"}], 
+      "}"}]}]}], "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellChangeTimes->{
   3.6964254067997217`*^9, {3.696426245240288*^9, 3.696426289308839*^9}, {
    3.69642640587595*^9, 3.696426452128778*^9}, {3.6964269747974367`*^9, 
@@ -2486,8 +2509,10 @@ Cell[BoxData[{
    3.743280039526237*^9, 3.7432801680073137`*^9}, {3.743280210533908*^9, 
    3.7432802347597523`*^9}, {3.743290102302313*^9, 3.743290149985991*^9}, {
    3.7432902593794403`*^9, 3.743290271369589*^9}, {3.7457763828925447`*^9, 
-   3.745776383479746*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
-50c544207a54"]
+   3.745776383479746*^9}, {3.746990906803877*^9, 3.74699096854167*^9}, {
+   3.7469914552436943`*^9, 3.746991456539029*^9}, {3.7469917337780447`*^9, 
+   3.746991736251814*^9}},
+ ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2512,8 +2537,8 @@ AutoGeneratedPackage->Automatic,
 WindowSize->{945, 750},
 WindowMargins->{{Automatic, 52}, {Automatic, 34}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
-2018)",
+FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (November 20, \
+2012)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2524,7 +2549,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
+  "9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (November 20, 2012)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2539,31 +2564,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
-Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
+Cell[580, 22, 175, 2, 92, "Title"],
+Cell[758, 26, 1776, 39, 600, "Text"],
 Cell[CellGroupData[{
-Cell[2559, 69, 36, 0, 67, "Section",ExpressionUUID->"38c1865a-3c49-47bf-80d2-18f70c86ad6c"],
-Cell[2598, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
+Cell[2559, 69, 36, 0, 80, "Section"],
+Cell[2598, 71, 317, 7, 28, "Input"],
 Cell[CellGroupData[{
-Cell[2940, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3059, 84, 19791, 365, 3701, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[2940, 82, 116, 0, 44, "Subsection"],
+Cell[3059, 84, 20536, 376, 3123, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[22899, 455, 45, 0, 67, "Section",ExpressionUUID->"4496f803-ec79-4c38-b2f7-b8cea04b6e0a"],
-Cell[22947, 457, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[23644, 466, 45, 0, 80, "Section"],
+Cell[23692, 468, 253, 5, 28, "Input"],
 Cell[CellGroupData[{
-Cell[23225, 466, 42, 0, 54, "Subsection",ExpressionUUID->"2f2defe0-ffd7-45f1-88f0-d6b900ebb5b0"],
-Cell[23270, 468, 81454, 2021, 10127, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[23970, 477, 42, 0, 44, "Subsection"],
+Cell[24015, 479, 82051, 2035, 8395, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[104773, 2495, 43, 0, 67, "Section",ExpressionUUID->"93737186-8317-4603-9248-c252d9c69474"],
-Cell[104819, 2497, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[106115, 2520, 43, 0, 80, "Section"],
+Cell[106161, 2522, 106, 1, 28, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[104962, 2503, 42, 0, 67, "Section",ExpressionUUID->"5bb20c9f-71d0-4e4b-9cc4-03deefb35833"],
-Cell[105007, 2505, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[106304, 2528, 42, 0, 80, "Section"],
+Cell[106349, 2530, 113, 1, 28, "Input"]
 }, Open  ]]
 }, Open  ]]
 }
