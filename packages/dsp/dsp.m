@@ -538,17 +538,13 @@ sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[in
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
-sweepToIR[sweepFilePath_,sweepFileFormat_:"AIFF"]:=sweepToIR2[sweepFilePath,sweepFileFormat][[1]]
+sweepToIR[sweepFilePath_]:=sweepToIR2[sweepFilePath][[1]]
 
-sweepToIR2[sweepFilePath_,sweepFileFormat_:"AIFF"]:=Module[
+sweepToIR2[sweepFilePath_]:=Module[
 {rawData,numChannels,numMicChannels,rawMicData,triggerSignal,triggerSamplePositions,numSweeps,sweepLen,rawIRMat,sweepSignal,micIRs,micOnsetPos,firstOnset,preOnsetDelay,startPos,endPos}
 ,
 If[StringQ[sweepFilePath],
-If[sweepFileFormat=="WAV"||sweepFileFormat=="wav",
-{rawData,numChannels}=importWAV[sweepFilePath];
-,
-{rawData,numChannels}=importAIFF[sweepFilePath];
-];
+{rawData,numChannels}=importAudio[sweepFilePath];
 numMicChannels=numChannels-2;(* Remaining two channels are sweep and trigger signal channels, respectively. *)
 rawMicData=rawData[[1;;numMicChannels]];
 sweepSignal=rawData[[numChannels-1]];

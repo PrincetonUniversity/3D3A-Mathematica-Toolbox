@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    108084,       2589]
-NotebookOptionsPosition[    106490,       2535]
-NotebookOutlinePosition[    107426,       2564]
-CellTagsIndexPosition[    107383,       2561]
+NotebookDataLength[    107362,       2571]
+NotebookOptionsPosition[    105768,       2517]
+NotebookOutlinePosition[    106704,       2546]
+CellTagsIndexPosition[    106661,       2543]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -2237,18 +2237,13 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"sweepToIR", "[", 
-    RowBox[{"sweepFilePath_", ",", 
-     RowBox[{"sweepFileFormat_:", "\"\<AIFF\>\""}]}], "]"}], ":=", 
+   RowBox[{"sweepToIR", "[", "sweepFilePath_", "]"}], ":=", 
    RowBox[{
-    RowBox[{"sweepToIR2", "[", 
-     RowBox[{"sweepFilePath", ",", "sweepFileFormat"}], "]"}], "[", 
+    RowBox[{"sweepToIR2", "[", "sweepFilePath", "]"}], "[", 
     RowBox[{"[", "1", "]"}], "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"sweepToIR2", "[", 
-   RowBox[{"sweepFilePath_", ",", 
-    RowBox[{"sweepFileFormat_:", "\"\<AIFF\>\""}]}], "]"}], ":=", 
+  RowBox[{"sweepToIR2", "[", "sweepFilePath_", "]"}], ":=", 
   RowBox[{"Module", "[", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"{", 
@@ -2265,24 +2260,11 @@ Cell[BoxData[{
        RowBox[{"StringQ", "[", "sweepFilePath", "]"}], ",", 
        "\[IndentingNewLine]", 
        RowBox[{
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{
-           RowBox[{"sweepFileFormat", "\[Equal]", "\"\<WAV\>\""}], "||", 
-           RowBox[{"sweepFileFormat", "\[Equal]", "\"\<wav\>\""}]}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"{", 
-             RowBox[{"rawData", ",", "numChannels"}], "}"}], "=", 
-            RowBox[{"importWAV", "[", "sweepFilePath", "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"{", 
-             RowBox[{"rawData", ",", "numChannels"}], "}"}], "=", 
-            RowBox[{"importAIFF", "[", "sweepFilePath", "]"}]}], ";"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"rawData", ",", "numChannels"}], "}"}], "=", 
+         RowBox[{"importAudio", "[", "sweepFilePath", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
         RowBox[{"numMicChannels", "=", 
          RowBox[{"numChannels", "-", "2"}]}], ";", 
         RowBox[{"(*", " ", 
@@ -2511,7 +2493,7 @@ Cell[BoxData[{
    3.7432902593794403`*^9, 3.743290271369589*^9}, {3.7457763828925447`*^9, 
    3.745776383479746*^9}, {3.746990906803877*^9, 3.74699096854167*^9}, {
    3.7469914552436943`*^9, 3.746991456539029*^9}, {3.7469917337780447`*^9, 
-   3.746991736251814*^9}},
+   3.746991736251814*^9}, {3.747590829763062*^9, 3.747590843795774*^9}},
  ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -2579,16 +2561,16 @@ Cell[23644, 466, 45, 0, 80, "Section"],
 Cell[23692, 468, 253, 5, 28, "Input"],
 Cell[CellGroupData[{
 Cell[23970, 477, 42, 0, 44, "Subsection"],
-Cell[24015, 479, 82051, 2035, 8395, "Input"]
+Cell[24015, 479, 81329, 2017, 8327, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[106115, 2520, 43, 0, 80, "Section"],
-Cell[106161, 2522, 106, 1, 28, "Input"]
+Cell[105393, 2502, 43, 0, 80, "Section"],
+Cell[105439, 2504, 106, 1, 28, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[106304, 2528, 42, 0, 80, "Section"],
-Cell[106349, 2530, 113, 1, 28, "Input"]
+Cell[105582, 2510, 42, 0, 80, "Section"],
+Cell[105627, 2512, 113, 1, 28, "Input"]
 }, Open  ]]
 }, Open  ]]
 }
