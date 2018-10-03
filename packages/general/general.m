@@ -67,8 +67,14 @@ importWAV::usage=
 exportAIFF::usage=
 "exportAIFF[fileName,data,samplingRate,commentString] exports the information stored in data as a .aiff file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
 
+exportAudio::usage=
+"exportAudio[fileName,data,samplingRate,commentString] exports the information stored in data as an AIFF or WAV file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
+
 importAIFF::usage=
 "importAIFF[fileName] imports a *.aiff file and returns the imported data as well as the number of channels as a two-row list."
+
+importAudio::usage=
+"importAudio[fileName] imports an AIFF or WAV file and returns the imported data as well as the number of channels as a two-row list."
 
 getSamplingRate::usage=
 "getSamplingRate[fileName] extracts the sampling rate from an audio file specified by fileName."
@@ -188,53 +194,38 @@ currentDate=ToString[DateList[][[2]]]<>"/"<>ToString[DateList[][[3]]]<>"/"<>ToSt
 ]
 
 If[$VersionNumber<10,
-exportWAV[fileName_,data_,samplingRate_: 44100,commentString_:" "]:=Module[
+exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {Output,readExt,ext}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="wav")||(readExt=="WAV"),
-ext="";
-,
+Switch[readExt,
+"aiff",
+ext=".aiff";
+,"AIFF",
+ext=".aiff";
+,"wav",
 ext=".wav";
-];
-Output=Sound[SampledSoundList[data,samplingRate]];
-Export[fileName<>ext,Output,"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
-];
-importWAV[fileName_]:=Module[
-{readExt,outputData,numChannels}
-,
-readExt=FileExtension[fileName];
-If[(readExt=="wav")||(readExt=="WAV"),
-outputData=Import[fileName,"AudioEncoding"->"Integer24"][[1,1]];
-numChannels=Length[outputData];
-,
-MessageDialog["Specified file for import is not a WAV file."];
-outputData={};
-numChannels=0;
-];
-{outputData,numChannels}
-];
-exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_:" "]:=Module[
-{Output,readExt,ext}
-,
-readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF"),
-ext="";
-,
+,"WAV",
+ext=".wav";
+,"",
 ext=".aiff";
 ];
 Output=Sound[SampledSoundList[data,samplingRate]];
 Export[fileName<>ext,Output,"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
 ];
-importAIFF[fileName_]:=Module[
+importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
+importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
+importAudio[fileName_]:=Module[
 {readExt,outputData,numChannels}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF"),
+If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF")||(readExt=="wav")||(readExt=="WAV"),
 outputData=Import[fileName,"AudioEncoding"->"Integer24"][[1,1]];
 numChannels=Length[outputData];
 ,
-MessageDialog["Specified file for import is not an AIFF file."];
+MessageDialog["Specified file for import is not an AIFF or WAV file."];
 outputData={};
 numChannels=0;
 ];
@@ -242,51 +233,33 @@ numChannels=0;
 ];
 getSamplingRate[fileName_]:=Import[fileName][[1,2]];
 ,
-exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Block[
+exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {Rescale=#1&,readExt,ext}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="wav")||(readExt=="WAV"),
-ext="";
-,
+Switch[readExt,
+"aiff",
+ext=".aiff";
+,"AIFF",
+ext=".aiff";
+,"wav",
 ext=".wav";
-];
-Export[fileName<>ext,ListPlay[data,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
-];
-importWAV[fileName_]:=Module[
-{readExt,numChannels,outputData}
-,
-readExt=FileExtension[fileName];
-If[(readExt=="wav")||(readExt=="WAV"),
-numChannels=Import[fileName,"AudioChannels"];
-If[numChannels<2,
-outputData=List[Import[fileName,"Data"]];
-,
-outputData=Import[fileName,"Data"];
-];
-,
-MessageDialog["Specified file for import is not a WAV file."];
-outputData={};
-numChannels=0;
-];
-{outputData,numChannels}
-];
-exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Block[
-{Rescale=#1&,readExt,ext}
-,
-readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF"),
-ext="";
-,
+,"WAV",
+ext=".wav";
+,"",
 ext=".aiff";
 ];
 Export[fileName<>ext,ListPlay[data,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
 ];
-importAIFF[fileName_]:=Module[
+importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
+importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
+importAudio[fileName_]:=Module[
 {readExt,numChannels,outputData}
 ,
 readExt=FileExtension[fileName];
-If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF"),
+If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF")||(readExt=="wav")||(readExt=="WAV"),
 numChannels=Import[fileName,"AudioChannels"];
 If[numChannels<2,
 outputData=List[Import[fileName,"Data"]];
@@ -294,7 +267,7 @@ outputData=List[Import[fileName,"Data"]];
 outputData=Import[fileName,"Data"];
 ];
 ,
-MessageDialog["Specified file for import is not an AIFF file."];
+MessageDialog["Specified file for import is not an AIFF or WAV file."];
 outputData={};
 numChannels=0;
 ];
