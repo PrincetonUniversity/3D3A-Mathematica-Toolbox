@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     51607,       1240]
-NotebookOptionsPosition[     49310,       1187]
-NotebookOutlinePosition[     50190,       1215]
-CellTagsIndexPosition[     50147,       1212]
+NotebookDataLength[     53315,       1278]
+NotebookOptionsPosition[     51018,       1225]
+NotebookOutlinePosition[     51898,       1253]
+CellTagsIndexPosition[     51855,       1250]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -831,8 +831,10 @@ Cell[BoxData[{
       RowBox[{"Module", "[", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"Output", ",", "readExt", ",", "ext"}], "}"}], 
-        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+         RowBox[{
+         "Output", ",", "readExt", ",", "ext", ",", "maxAmp", ",", 
+          "exportData"}], "}"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"readExt", "=", 
           RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
@@ -859,10 +861,27 @@ Cell[BoxData[{
            RowBox[{
             RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"maxAmp", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"Abs", "[", "data", "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"maxAmp", ">", "1"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"exportData", "=", 
+             RowBox[{"data", "/", "maxAmp"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Maximum amplitude exceeds 1. Data normalized prior to \
+export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"exportData", "=", "data"}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
          RowBox[{"Output", "=", 
           RowBox[{"Sound", "[", 
            RowBox[{"SampledSoundList", "[", 
-            RowBox[{"data", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
+            RowBox[{"exportData", ",", "samplingRate"}], "]"}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"Export", "[", 
           RowBox[{
@@ -981,8 +1000,9 @@ Cell[BoxData[{
         RowBox[{"{", 
          RowBox[{
           RowBox[{"Rescale", "=", 
-           RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext"}], "}"}], 
-        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{"#1", "&"}]}], ",", "readExt", ",", "ext", ",", "maxAmp", 
+          ",", "exportData"}], "}"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"readExt", "=", 
           RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
@@ -1009,11 +1029,28 @@ Cell[BoxData[{
            RowBox[{
             RowBox[{"ext", "=", "\"\<.aiff\>\""}], ";"}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"maxAmp", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"Abs", "[", "data", "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"maxAmp", ">", "1"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"exportData", "=", 
+             RowBox[{"data", "/", "maxAmp"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Maximum amplitude exceeds 1. Data normalized prior to \
+export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"exportData", "=", "data"}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
          RowBox[{"Export", "[", 
           RowBox[{
            RowBox[{"fileName", "<>", "ext"}], ",", 
            RowBox[{"ListPlay", "[", 
-            RowBox[{"data", ",", 
+            RowBox[{"exportData", ",", 
              RowBox[{"PlayRange", "\[Rule]", 
               RowBox[{"{", 
                RowBox[{
@@ -1163,7 +1200,8 @@ Cell[BoxData[{
    3.7475828364048986`*^9}, {3.7475828678038197`*^9, 3.74758292763202*^9}, {
    3.74758297663453*^9, 3.7475830384441633`*^9}, 3.7475830709981127`*^9, {
    3.747596014941328*^9, 3.747596034723942*^9}, {3.747596182898734*^9, 
-   3.747596374878026*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.747596374878026*^9}, {3.7476185652089252`*^9, 
+   3.7476187664447412`*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1230,16 +1268,16 @@ Cell[11730, 267, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7
 Cell[11778, 269, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
 Cell[11877, 274, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[11922, 276, 37074, 890, 4457, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[11922, 276, 38782, 928, 4772, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[49045, 1172, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[49091, 1174, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[50753, 1210, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[50799, 1212, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[49179, 1180, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[49224, 1182, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[50887, 1218, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[50932, 1220, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

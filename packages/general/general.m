@@ -207,7 +207,7 @@ ext="";
 exportAudio[fileName<>ext,data,samplingRate,commentString] (* For backwards compatibility only. *)
 ];
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
-{Output,readExt,ext}
+{Output,readExt,ext,maxAmp,exportData}
 ,
 readExt=FileExtension[fileName];
 Switch[readExt,
@@ -222,7 +222,14 @@ ext=".wav";
 ,"",
 ext=".aiff";
 ];
-Output=Sound[SampledSoundList[data,samplingRate]];
+maxAmp=Max[Abs[data]];
+If[maxAmp>1,
+exportData=data/maxAmp;
+MessageDialog["Maximum amplitude exceeds 1. Data normalized prior to export."];
+,
+exportData=data;
+];
+Output=Sound[SampledSoundList[exportData,samplingRate]];
 Export[fileName<>ext,Output,"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
 ];
 importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
@@ -246,7 +253,7 @@ getSamplingRate[fileName_]:=Import[fileName][[1,2]];
 exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
 exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
-{Rescale=#1&,readExt,ext}
+{Rescale=#1&,readExt,ext,maxAmp,exportData}
 ,
 readExt=FileExtension[fileName];
 Switch[readExt,
@@ -261,7 +268,14 @@ ext=".wav";
 ,"",
 ext=".aiff";
 ];
-Export[fileName<>ext,ListPlay[data,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
+maxAmp=Max[Abs[data]];
+If[maxAmp>1,
+exportData=data/maxAmp;
+MessageDialog["Maximum amplitude exceeds 1. Data normalized prior to export."];
+,
+exportData=data;
+];
+Export[fileName<>ext,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
 ];
 importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
 importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
