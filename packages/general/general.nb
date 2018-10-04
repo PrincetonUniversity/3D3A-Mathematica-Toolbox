@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     50472,       1216]
-NotebookOptionsPosition[     48175,       1163]
-NotebookOutlinePosition[     49055,       1191]
-CellTagsIndexPosition[     49012,       1188]
+NotebookDataLength[     51607,       1240]
+NotebookOptionsPosition[     49310,       1187]
+NotebookOutlinePosition[     50190,       1215]
+CellTagsIndexPosition[     50147,       1212]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -91,10 +91,10 @@ to SOFA's cartesian coordinates. Input angles must be in degrees.\>\""}], " ",
  RowBox[{
   RowBox[{
    StyleBox[
-    RowBox[{"dbToMag", "::", "usage"}], "MessageName"], 
+    RowBox[{"dBToMag", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
    StyleBox["\[IndentingNewLine]", "MessageName"], 
-   "\"\<dbToMag[db] converts dB to magnitude.\>\""}], 
+   "\"\<dBToMag[dB] converts dB to magnitude.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -183,7 +183,7 @@ mm/dd/yyyy at hh:mm.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
   RowBox[{
    RowBox[{"exportWAV", "::", "usage"}], "=", "\[IndentingNewLine]", 
    "\"\<exportWAV[fileName,data,samplingRate,commentString] exports the \
-information stored in data as a .wav file to the file specified by fileName \
+information stored in data as a *.wav file to the file specified by fileName \
 at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be \
 specified in Hz. A comment string to be added as metadata may also be \
 specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -197,17 +197,9 @@ data as well as the number of channels as a two-row list.\>\""}],
   RowBox[{
    RowBox[{"exportAIFF", "::", "usage"}], "=", "\[IndentingNewLine]", 
    "\"\<exportAIFF[fileName,data,samplingRate,commentString] exports the \
-information stored in data as a .aiff file to the file specified by fileName \
+information stored in data as a *.aiff file to the file specified by fileName \
 at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be \
 specified in Hz. A comment string to be added as metadata may also be \
-specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"exportAudio", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<exportAudio[fileName,data,samplingRate,commentString] exports the \
-information stored in data as an AIFF or WAV file to the file specified by \
-fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export \
-can be specified in Hz. A comment string to be added as metadata may also be \
 specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -215,6 +207,15 @@ specified.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
    "\"\<importAIFF[fileName] imports a *.aiff file and returns the imported \
 data as well as the number of channels as a two-row list.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"exportAudio", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<exportAudio[fileName,data,samplingRate,commentString] exports the \
+information stored in data as an AIFF or WAV file to the file specified by \
+fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export \
+can be specified in Hz. A comment string to be added as metadata may also be \
+specified. If a file extension is not specified in fileName, AIFF is assumed.\
+\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"importAudio", "::", "usage"}], "=", "\[IndentingNewLine]", 
@@ -255,7 +256,9 @@ the nearest element and its index, respectively.\>\""}]}], "Input",
    3.74577225588579*^9, 3.745772444600774*^9}, {3.7457724889175253`*^9, 
    3.745772728808929*^9}, {3.7457763659511538`*^9, 3.745776366506022*^9}, {
    3.74592660671697*^9, 3.745926715920288*^9}, {3.7475831112110987`*^9, 
-   3.747583161913889*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
+   3.747583161913889*^9}, {3.747596001796541*^9, 3.7475960263650503`*^9}, {
+   3.747596100989071*^9, 
+   3.747596161418684*^9}},ExpressionUUID->"f70f128f-58a0-4f5a-8d85-\
 14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
@@ -303,9 +306,9 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"dbToMag", "[", "db_", "]"}], ":=", 
+   RowBox[{"dBToMag", "[", "dB_", "]"}], ":=", 
    SuperscriptBox["10", 
-    RowBox[{"db", "/", "20"}]]}], 
+    RowBox[{"dB", "/", "20"}]]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -793,13 +796,33 @@ Cell[BoxData[{
        RowBox[{"fileName_", ",", "data_", ",", 
         RowBox[{"samplingRate_:", " ", "44100"}], ",", 
         RowBox[{"commentString_:", " ", "\"\< \>\""}]}], "]"}], ":=", 
-      RowBox[{"exportAudio", "[", 
+      RowBox[{"Module", "[", "\[IndentingNewLine]", 
        RowBox[{
-       "fileName", ",", "data", ",", "samplingRate", ",", "commentString"}], 
-       "]"}]}], ";", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{"For", " ", "backwards", " ", "compatibility", " ", 
-       RowBox[{"only", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"readExt", ",", "ext"}], "}"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"readExt", "=", 
+          RowBox[{"FileExtension", "[", "fileName", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"readExt", "\[Equal]", "\"\<\>\""}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<.wav\>\""}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"ext", "=", "\"\<\>\""}], ";"}]}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"exportAudio", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", "data", ",", 
+           "samplingRate", ",", "commentString"}], "]"}]}]}], " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{"For", " ", "backwards", " ", "compatibility", " ", 
+         RowBox[{"only", "."}]}], " ", "*)"}], "\[IndentingNewLine]", "]"}]}],
+      ";", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"exportAudio", "[", 
        RowBox[{"fileName_", ",", "data_", ",", 
@@ -1138,8 +1161,9 @@ Cell[BoxData[{
    3.7475817872053747`*^9, {3.747582333225498*^9, 3.747582462227056*^9}, {
    3.747582596296344*^9, 3.7475826326692123`*^9}, {3.747582746033667*^9, 
    3.7475828364048986`*^9}, {3.7475828678038197`*^9, 3.74758292763202*^9}, {
-   3.74758297663453*^9, 3.7475830384441633`*^9}, 
-   3.7475830709981127`*^9},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.74758297663453*^9, 3.7475830384441633`*^9}, 3.7475830709981127`*^9, {
+   3.747596014941328*^9, 3.747596034723942*^9}, {3.747596182898734*^9, 
+   3.747596374878026*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1198,24 +1222,24 @@ Cell[2439, 67, 36, 0, 67, "Section",ExpressionUUID->"9a727e61-87a1-4c21-8600-466
 Cell[2478, 69, 253, 5, 46, "Input",ExpressionUUID->"a1678b66-e129-4fc3-9374-cc983ffb1b36"],
 Cell[CellGroupData[{
 Cell[2756, 78, 61, 0, 54, "Subsection",ExpressionUUID->"b167258d-d10e-4a4d-b8f3-6d24e9ce28a1"],
-Cell[2820, 80, 8688, 178, 1370, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
+Cell[2820, 80, 8861, 181, 1370, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[11557, 264, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
-Cell[11605, 266, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
+Cell[11730, 267, 45, 0, 67, "Section",ExpressionUUID->"d03e8178-218b-46fe-8ba6-7ac8bc4b964e"],
+Cell[11778, 269, 74, 1, 46, "Input",ExpressionUUID->"1c2f92a0-701e-4377-b2d3-61efa9cd2a25"],
 Cell[CellGroupData[{
-Cell[11704, 271, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
-Cell[11749, 273, 36112, 869, 4268, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[11877, 274, 42, 0, 54, "Subsection",ExpressionUUID->"32cb4c33-ffe6-455c-ab6c-377cf94fb5a8"],
+Cell[11922, 276, 37074, 890, 4457, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[47910, 1148, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
-Cell[47956, 1150, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
+Cell[49045, 1172, 43, 0, 67, "Section",ExpressionUUID->"3243a789-7070-42f0-8406-1db80849bda2"],
+Cell[49091, 1174, 51, 1, 46, "Input",ExpressionUUID->"87aa3638-c728-46fc-b326-0c629a1e8494"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[48044, 1156, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
-Cell[48089, 1158, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
+Cell[49179, 1180, 42, 0, 67, "Section",ExpressionUUID->"8300f75f-0836-4163-8051-9136b6696cf2"],
+Cell[49224, 1182, 58, 1, 46, "Input",ExpressionUUID->"77e8a03c-5555-4276-992e-233a24eeb17b"]
 }, Open  ]]
 }, Open  ]]
 }

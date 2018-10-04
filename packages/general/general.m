@@ -25,8 +25,8 @@ BeginPackage["general`"]
 CIPICToSOFAC::usage=
 "CIPICToSOFAC[az,el,rad] converts from CIPIC's interaural coordinates to SOFA's cartesian coordinates. Input angles must be in degrees." 
 
-dbToMag::usage=
-"dbToMag[db] converts dB to magnitude."
+dBToMag::usage=
+"dBToMag[dB] converts dB to magnitude."
 
 freqList::usage=
 "freqList[vecLen,fS] generates a frequency vector of length vecLen assuming a sampling rate of fS."
@@ -59,19 +59,19 @@ getCurrentDate::usage=
 "getCurrentDate[] returns the current date and time in the format mm/dd/yyyy at hh:mm."
 
 exportWAV::usage=
-"exportWAV[fileName,data,samplingRate,commentString] exports the information stored in data as a .wav file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
+"exportWAV[fileName,data,samplingRate,commentString] exports the information stored in data as a *.wav file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
 
 importWAV::usage=
 "importWAV[fileName] imports a *.wav file and returns the imported data as well as the number of channels as a two-row list."
 
 exportAIFF::usage=
-"exportAIFF[fileName,data,samplingRate,commentString] exports the information stored in data as a .aiff file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
-
-exportAudio::usage=
-"exportAudio[fileName,data,samplingRate,commentString] exports the information stored in data as an AIFF or WAV file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
+"exportAIFF[fileName,data,samplingRate,commentString] exports the information stored in data as a *.aiff file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified."
 
 importAIFF::usage=
 "importAIFF[fileName] imports a *.aiff file and returns the imported data as well as the number of channels as a two-row list."
+
+exportAudio::usage=
+"exportAudio[fileName,data,samplingRate,commentString] exports the information stored in data as an AIFF or WAV file to the file specified by fileName at a sampling rate of 44100 Hz. Optionally, sampling rate for export can be specified in Hz. A comment string to be added as metadata may also be specified. If a file extension is not specified in fileName, AIFF is assumed."
 
 importAudio::usage=
 "importAudio[fileName] imports an AIFF or WAV file and returns the imported data as well as the number of channels as a two-row list."
@@ -95,7 +95,7 @@ z = rad Cos[-az] Sin[el];
 {x, y, z}
 ]
 
-dbToMag[db_]:=10^(db/20)
+dBToMag[dB_]:=10^(dB/20)
 
 freqList[vecLen_,fS_]:=Range[0,1-(1/vecLen),1/vecLen]fS
 
@@ -195,7 +195,17 @@ currentDate=ToString[DateList[][[2]]]<>"/"<>ToString[DateList[][[3]]]<>"/"<>ToSt
 
 If[$VersionNumber<10,
 exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
-exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
+{readExt,ext}
+,
+readExt=FileExtension[fileName];
+If[readExt=="",
+ext=".wav";
+,
+ext="";
+];
+exportAudio[fileName<>ext,data,samplingRate,commentString] (* For backwards compatibility only. *)
+];
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {Output,readExt,ext}
 ,
