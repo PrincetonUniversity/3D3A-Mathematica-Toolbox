@@ -29,16 +29,22 @@ listIntegrate::usage=
 "listIntegrate[listData] computes the numerical integral of listData using the trapezoidal rule. listData must be a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
 
 logMean::usage=
-"(*** DEPRECATED! Use logMean2 instead ***) logMean[f,df,Q] computes the logarithmically-weighted mean of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
+"(*** DEPRECATED! Use logMean3 instead ***) logMean[f,df,Q] computes the logarithmically-weighted mean of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
 
 logSTD::usage=
-"(*** DEPRECATED! Use logSTD2 instead ***) logSTD[f,df,Q] computes the logarithmically-weighted standard deviation of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
+"(*** DEPRECATED! Use logSTD3 instead ***) logSTD[f,df,Q] computes the logarithmically-weighted standard deviation of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
 
 logMean2::usage=
-"logMean2[f,Q] computes the logarithmically-weighted mean of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
+"(*** DEPRECATED! Use logMean3 instead ***) logMean2[f,Q] computes the logarithmically-weighted mean of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
 
 logSTD2::usage=
-"logSTD2[f,Q] computes the logarithmically-weighted standard deviation of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
+"(*** DEPRECATED! Use logSTD3 instead ***) logSTD2[f,Q] computes the logarithmically-weighted standard deviation of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
+
+logMean3::usage=
+"logMean2[Q] computes the logarithmically-weighted mean of the list Q."
+
+logSTD3::usage=
+"logSTD2[Q] computes the logarithmically-weighted standard deviation of the list Q."
 
 
 Begin["`Private`"]
@@ -65,24 +71,43 @@ ydataShift = Drop[RotateLeft[ydata,1],-1];
 totalIntegral=N[Total[((Drop[ydata,-1]+ydataShift)/2) (xdataShift-Drop[xdata,-1])]]
 ]
 
-logMean[f_,df_,Q_]:=Module[{W},
-W=Log[10,(f+df/2)/(f-df/2)];
-Total[W Q]/Total[W]
+logMean[f_,df_,Q_]:=Module[{W,fZeroPosIndxs,finalF,finalQ},
+MessageDialog["DEPRECATED! Use logMean3 instead"];
+fZeroPosIndxs=Position[N[f],0.];
+finalF=Delete[f,fZeroPosIndxs];
+finalQ=Delete[Q,fZeroPosIndxs];
+W=Log[10,(finalF+df/2)/(finalF-df/2)];
+Total[W finalQ]/Total[W]
 ]
 
-logMean2[f_,Q_]:=Module[{},
-Total[Q/f]/Total[1/f]
+logMean2[f_,Q_]:=Module[{fZeroPosIndxs,finalF,finalQ},
+MessageDialog["DEPRECATED! Use logMean3 instead"];
+fZeroPosIndxs=Position[N[f],0.];
+finalF=Delete[f,fZeroPosIndxs];
+finalQ=Delete[Q,fZeroPosIndxs];
+Total[finalQ/finalF]/Total[1/finalF]
 ]
 
-logSTD[f_,df_,Q_]:=Module[{W,Qbar},
-W=Log[10,(f+df/2)/(f-df/2)];
+logMean3[Q_]:=Module[{F},
+F=Range[Length[Q]];
+Total[Q/F]/Total[1/F]
+]
+
+logSTD[f_,df_,Q_]:=Module[{Qbar},
+MessageDialog["DEPRECATED! Use logSTD3 instead"];
 Qbar=logMean[f,df,Q];
-Sqrt[Total[W (Q-Qbar)^2]/Total[W]]
+Sqrt[logMean[f,df,(Q-Qbar)^2]]
 ]
 
 logSTD2[f_,Q_]:=Module[{Qbar},
+MessageDialog["DEPRECATED! Use logSTD3 instead"];
 Qbar = logMean2[f,Q];
-Sqrt[Total[((Q-Qbar)/f)^2]/Total[1/f]]
+Sqrt[logMean2[f,(Q-Qbar)^2]]
+]
+
+logSTD3[Q_]:=Module[{Qbar},
+Qbar = logMean3[Q];
+Sqrt[logMean3[(Q-Qbar)^2]]
 ]
 
 

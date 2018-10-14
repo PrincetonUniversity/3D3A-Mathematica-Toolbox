@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     18232,        462]
-NotebookOptionsPosition[     15939,        409]
-NotebookOutlinePosition[     16820,        437]
-CellTagsIndexPosition[     16777,        434]
+NotebookDataLength[     21575,        540]
+NotebookOptionsPosition[     19280,        487]
+NotebookOutlinePosition[     20161,        515]
+CellTagsIndexPosition[     20118,        512]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -103,7 +103,7 @@ variable and the other to the dependent variable.\>\""}], " ",
  RowBox[{
   RowBox[{
    RowBox[{"logMean", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<(*** DEPRECATED! Use logMean2 instead ***) logMean[f,df,Q] computes \
+   "\"\<(*** DEPRECATED! Use logMean3 instead ***) logMean[f,df,Q] computes \
 the logarithmically-weighted mean of the list Q given f and df, where f is a \
 list of the same length as Q containing the values at which the corresponding \
 values of Q are specified, and df is the average separation between the \
@@ -113,7 +113,7 @@ a uniform separation df.\>\""}],
  RowBox[{
   RowBox[{
    RowBox[{"logSTD", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<(*** DEPRECATED! Use logSTD2 instead ***) logSTD[f,df,Q] computes the \
+   "\"\<(*** DEPRECATED! Use logSTD3 instead ***) logSTD[f,df,Q] computes the \
 logarithmically-weighted standard deviation of the list Q given f and df, \
 where f is a list of the same length as Q containing the values at which the \
 corresponding values of Q are specified, and df is the average separation \
@@ -123,25 +123,37 @@ values having a uniform separation df.\>\""}],
  RowBox[{
   RowBox[{
    RowBox[{"logMean2", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<logMean2[f,Q] computes the logarithmically-weighted mean of the list \
-Q given f, where f is a list of the same length as Q containing the values at \
-which the corresponding values of Q are specified. Typically, f is \
-monotonically increasing with its values having a uniform separation.\>\""}], 
+   "\"\<(*** DEPRECATED! Use logMean3 instead ***) logMean2[f,Q] computes the \
+logarithmically-weighted mean of the list Q given f, where f is a list of the \
+same length as Q containing the values at which the corresponding values of Q \
+are specified. Typically, f is monotonically increasing with its values \
+having a uniform separation.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"logSTD2", "::", "usage"}], "=", "\[IndentingNewLine]", 
-  "\"\<logSTD2[f,Q] computes the logarithmically-weighted standard deviation \
-of the list Q given f, where f is a list of the same length as Q containing \
-the values at which the corresponding values of Q are specified. Typically, f \
-is monotonically increasing with its values having a uniform \
-separation.\>\""}]}], "Input",
+  RowBox[{
+   RowBox[{"logSTD2", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<(*** DEPRECATED! Use logSTD3 instead ***) logSTD2[f,Q] computes the \
+logarithmically-weighted standard deviation of the list Q given f, where f is \
+a list of the same length as Q containing the values at which the \
+corresponding values of Q are specified. Typically, f is monotonically \
+increasing with its values having a uniform separation.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logMean3", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<logMean2[Q] computes the logarithmically-weighted mean of the list Q.\
+\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"logSTD3", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<logSTD2[Q] computes the logarithmically-weighted standard deviation of \
+the list Q.\>\""}]}], "Input",
  CellChangeTimes->{{3.710981009938883*^9, 3.7109810313349543`*^9}, {
   3.71098109419849*^9, 3.710981180531123*^9}, {3.710981256331766*^9, 
   3.710981281969541*^9}, {3.730668027268035*^9, 3.730668082620163*^9}, {
   3.7306681158121443`*^9, 3.730668308453586*^9}, {3.743289483754624*^9, 
   3.7432895549596663`*^9}, {3.7459648470542393`*^9, 3.745964967971266*^9}, {
-  3.745965443003208*^9, 
-  3.745965445723941*^9}},ExpressionUUID->"541bab32-4168-4b94-975e-\
+  3.745965443003208*^9, 3.745965445723941*^9}, {3.748538837248988*^9, 
+  3.7485388861831493`*^9}},ExpressionUUID->"541bab32-4168-4b94-975e-\
 93d9e21aaf32"]
 }, Open  ]]
 }, Open  ]],
@@ -296,22 +308,40 @@ Cell[BoxData[{
     RowBox[{"f_", ",", "df_", ",", "Q_"}], "]"}], ":=", 
    RowBox[{"Module", "[", 
     RowBox[{
-     RowBox[{"{", "W", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"W", ",", "fZeroPosIndxs", ",", "finalF", ",", "finalQ"}], 
+      "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{
+      RowBox[{
+      "MessageDialog", "[", "\"\<DEPRECATED! Use logMean3 instead\>\"", "]"}],
+       ";", "\[IndentingNewLine]", 
+      RowBox[{"fZeroPosIndxs", "=", 
+       RowBox[{"Position", "[", 
+        RowBox[{
+         RowBox[{"N", "[", "f", "]"}], ",", "0."}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"finalF", "=", 
+       RowBox[{"Delete", "[", 
+        RowBox[{"f", ",", "fZeroPosIndxs"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"finalQ", "=", 
+       RowBox[{"Delete", "[", 
+        RowBox[{"Q", ",", "fZeroPosIndxs"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
       RowBox[{"W", "=", 
        RowBox[{"Log", "[", 
         RowBox[{"10", ",", 
          RowBox[{
           RowBox[{"(", 
-           RowBox[{"f", "+", 
+           RowBox[{"finalF", "+", 
             RowBox[{"df", "/", "2"}]}], ")"}], "/", 
           RowBox[{"(", 
-           RowBox[{"f", "-", 
+           RowBox[{"finalF", "-", 
             RowBox[{"df", "/", "2"}]}], ")"}]}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"Total", "[", 
-        RowBox[{"W", " ", "Q"}], "]"}], "/", 
+        RowBox[{"W", " ", "finalQ"}], "]"}], "/", 
        RowBox[{"Total", "[", "W", "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}],
    "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -320,12 +350,48 @@ Cell[BoxData[{
     RowBox[{"f_", ",", "Q_"}], "]"}], ":=", 
    RowBox[{"Module", "[", 
     RowBox[{
-     RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"fZeroPosIndxs", ",", "finalF", ",", "finalQ"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
      RowBox[{
-      RowBox[{"Total", "[", 
-       FractionBox["Q", "f"], "]"}], "/", 
-      RowBox[{"Total", "[", 
-       FractionBox["1", "f"], "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+      RowBox[{
+      "MessageDialog", "[", "\"\<DEPRECATED! Use logMean3 instead\>\"", "]"}],
+       ";", "\[IndentingNewLine]", 
+      RowBox[{"fZeroPosIndxs", "=", 
+       RowBox[{"Position", "[", 
+        RowBox[{
+         RowBox[{"N", "[", "f", "]"}], ",", "0."}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"finalF", "=", 
+       RowBox[{"Delete", "[", 
+        RowBox[{"f", ",", "fZeroPosIndxs"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"finalQ", "=", 
+       RowBox[{"Delete", "[", 
+        RowBox[{"Q", ",", "fZeroPosIndxs"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Total", "[", 
+        FractionBox["finalQ", "finalF"], "]"}], "/", 
+       RowBox[{"Total", "[", 
+        FractionBox["1", "finalF"], "]"}]}]}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"logMean3", "[", "Q_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "F", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"F", "=", 
+       RowBox[{"Range", "[", 
+        RowBox[{"Length", "[", "Q", "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Total", "[", 
+        FractionBox["Q", "F"], "]"}], "/", 
+       RowBox[{"Total", "[", 
+        FractionBox["1", "F"], "]"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -333,59 +399,71 @@ Cell[BoxData[{
     RowBox[{"f_", ",", "df_", ",", "Q_"}], "]"}], ":=", 
    RowBox[{"Module", "[", 
     RowBox[{
-     RowBox[{"{", 
-      RowBox[{"W", ",", "Qbar"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "Qbar", "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{
-      RowBox[{"W", "=", 
-       RowBox[{"Log", "[", 
-        RowBox[{"10", ",", 
-         RowBox[{
-          RowBox[{"(", 
-           RowBox[{"f", "+", 
-            RowBox[{"df", "/", "2"}]}], ")"}], "/", 
-          RowBox[{"(", 
-           RowBox[{"f", "-", 
-            RowBox[{"df", "/", "2"}]}], ")"}]}]}], "]"}]}], ";", 
-      "\[IndentingNewLine]", 
+      RowBox[{
+      "MessageDialog", "[", "\"\<DEPRECATED! Use logSTD3 instead\>\"", "]"}], 
+      ";", "\[IndentingNewLine]", 
       RowBox[{"Qbar", "=", 
        RowBox[{"logMean", "[", 
         RowBox[{"f", ",", "df", ",", "Q"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"Sqrt", "[", 
-       RowBox[{
-        RowBox[{"Total", "[", 
-         RowBox[{"W", " ", 
-          RowBox[{
-           RowBox[{"(", 
-            RowBox[{"Q", "-", "Qbar"}], ")"}], "^", "2"}]}], "]"}], "/", 
-        RowBox[{"Total", "[", "W", "]"}]}], "]"}]}]}], "\[IndentingNewLine]", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+       RowBox[{"logMean", "[", 
+        RowBox[{"f", ",", "df", ",", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Q", "-", "Qbar"}], ")"}], "^", "2"}]}], "]"}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"logSTD2", "[", 
-   RowBox[{"f_", ",", "Q_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"logSTD2", "[", 
+    RowBox[{"f_", ",", "Q_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "Qbar", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+      "MessageDialog", "[", "\"\<DEPRECATED! Use logSTD3 instead\>\"", "]"}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"Qbar", " ", "=", " ", 
+       RowBox[{"logMean2", "[", 
+        RowBox[{"f", ",", "Q"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Sqrt", "[", 
+       RowBox[{"logMean2", "[", 
+        RowBox[{"f", ",", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Q", "-", "Qbar"}], ")"}], "^", "2"}]}], "]"}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"logSTD3", "[", "Q_", "]"}], ":=", 
   RowBox[{"Module", "[", 
    RowBox[{
     RowBox[{"{", "Qbar", "}"}], ",", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Qbar", " ", "=", " ", 
-      RowBox[{"logMean2", "[", 
-       RowBox[{"f", ",", "Q"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"logMean3", "[", "Q", "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"Sqrt", "[", 
-      RowBox[{
-       RowBox[{"Total", "[", 
-        SuperscriptBox[
-         FractionBox[
-          RowBox[{"(", 
-           RowBox[{"Q", "-", "Qbar"}], ")"}], "f"], "2"], "]"}], "/", 
-       RowBox[{"Total", "[", 
-        FractionBox["1", "f"], "]"}]}], "]"}]}]}], "\[IndentingNewLine]", 
-   "]"}]}]}], "Input",
+      RowBox[{"logMean3", "[", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"Q", "-", "Qbar"}], ")"}], "^", "2"}], "]"}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellChangeTimes->{{3.710980992460129*^9, 3.710980997483789*^9}, {
   3.710981249679347*^9, 3.71098125043565*^9}, {3.7306678754093122`*^9, 
   3.730667886710092*^9}, {3.743423745745762*^9, 3.743423781395686*^9}, {
   3.743423814933385*^9, 3.7434238156347713`*^9}, {3.745964807794311*^9, 
-  3.7459648333426247`*^9}, {3.7459650383069277`*^9, 
-  3.7459650991174507`*^9}},ExpressionUUID->"a90f920c-becc-4990-b756-\
+  3.7459648333426247`*^9}, {3.7459650383069277`*^9, 3.7459650991174507`*^9}, {
+  3.7485382395050364`*^9, 3.748538254284026*^9}, {3.748538306510367*^9, 
+  3.748538309741029*^9}, {3.7485383450826*^9, 3.748538390792444*^9}, {
+  3.748538460130918*^9, 3.7485384773734093`*^9}, {3.748538570390016*^9, 
+  3.7485386036795597`*^9}, {3.7485386338261633`*^9, 3.748538673002612*^9}, {
+  3.748538894383038*^9, 3.748538992002736*^9}, {3.7485390228733883`*^9, 
+  3.74853903913262*^9}, {3.748539161540296*^9, 
+  3.7485391988969812`*^9}},ExpressionUUID->"a90f920c-becc-4990-b756-\
 a8242710e3a7"]
 }, Open  ]]
 }, Open  ]],
@@ -444,24 +522,24 @@ Cell[2496, 68, 91, 0, 67, "Section",ExpressionUUID->"728f0d90-2637-4255-8fee-2e4
 Cell[2590, 70, 132, 1, 46, "Input",ExpressionUUID->"ff6454b6-51f4-40d6-abcc-d6af7d941401"],
 Cell[CellGroupData[{
 Cell[2747, 75, 116, 0, 54, "Subsection",ExpressionUUID->"9590927c-171f-468f-a73f-716503700453"],
-Cell[2866, 77, 3660, 67, 908, "Input",ExpressionUUID->"541bab32-4168-4b94-975e-93d9e21aaf32"]
+Cell[2866, 77, 4264, 79, 1076, "Input",ExpressionUUID->"541bab32-4168-4b94-975e-93d9e21aaf32"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[6575, 150, 100, 0, 67, "Section",ExpressionUUID->"1997f2b9-a0e1-4215-a220-0a41dd830860"],
-Cell[6678, 152, 129, 1, 46, "Input",ExpressionUUID->"84d8f929-0812-40b7-83f3-cab12256d9e9"],
+Cell[7179, 162, 100, 0, 67, "Section",ExpressionUUID->"1997f2b9-a0e1-4215-a220-0a41dd830860"],
+Cell[7282, 164, 129, 1, 46, "Input",ExpressionUUID->"84d8f929-0812-40b7-83f3-cab12256d9e9"],
 Cell[CellGroupData[{
-Cell[6832, 157, 97, 0, 54, "Subsection",ExpressionUUID->"63506a71-b295-4cd6-94f6-58c0f409e49b"],
-Cell[6932, 159, 8473, 229, 1104, "Input",ExpressionUUID->"a90f920c-becc-4990-b756-a8242710e3a7"]
+Cell[7436, 169, 97, 0, 54, "Subsection",ExpressionUUID->"63506a71-b295-4cd6-94f6-58c0f409e49b"],
+Cell[7536, 171, 11210, 295, 1503, "Input",ExpressionUUID->"a90f920c-becc-4990-b756-a8242710e3a7"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15454, 394, 98, 0, 67, "Section",ExpressionUUID->"9e67901c-e875-4d2e-9bbc-e0ad6031ef10"],
-Cell[15555, 396, 106, 1, 46, "Input",ExpressionUUID->"ca8aeceb-b9b7-4b4b-8c71-27444fd87286"]
+Cell[18795, 472, 98, 0, 67, "Section",ExpressionUUID->"9e67901c-e875-4d2e-9bbc-e0ad6031ef10"],
+Cell[18896, 474, 106, 1, 46, "Input",ExpressionUUID->"ca8aeceb-b9b7-4b4b-8c71-27444fd87286"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15698, 402, 97, 0, 67, "Section",ExpressionUUID->"95621cd2-43b0-4f23-bb6f-05063fa13b0b"],
-Cell[15798, 404, 113, 1, 46, "Input",ExpressionUUID->"f363ecf7-0b91-4166-a4ea-89bee543b5cb"]
+Cell[19039, 480, 97, 0, 67, "Section",ExpressionUUID->"95621cd2-43b0-4f23-bb6f-05063fa13b0b"],
+Cell[19139, 482, 113, 1, 46, "Input",ExpressionUUID->"f363ecf7-0b91-4166-a4ea-89bee543b5cb"]
 }, Open  ]]
 }, Open  ]]
 }
