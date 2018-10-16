@@ -72,7 +72,6 @@ totalIntegral=N[Total[((Drop[ydata,-1]+ydataShift)/2) (xdataShift-Drop[xdata,-1]
 ]
 
 logMean[f_,df_,Q_]:=Module[{W,fZeroPosIndxs,finalF,finalQ},
-MessageDialog["DEPRECATED! Use logMean3 instead"];
 fZeroPosIndxs=Position[N[f],0.];
 finalF=Delete[f,fZeroPosIndxs];
 finalQ=Delete[Q,fZeroPosIndxs];
@@ -81,7 +80,6 @@ Total[W finalQ]/Total[W]
 ]
 
 logMean2[f_,Q_]:=Module[{fZeroPosIndxs,finalF,finalQ},
-MessageDialog["DEPRECATED! Use logMean3 instead"];
 fZeroPosIndxs=Position[N[f],0.];
 finalF=Delete[f,fZeroPosIndxs];
 finalQ=Delete[Q,fZeroPosIndxs];
@@ -94,13 +92,11 @@ Total[Q/F]/Total[1/F]
 ]
 
 logSTD[f_,df_,Q_]:=Module[{Qbar},
-MessageDialog["DEPRECATED! Use logSTD3 instead"];
 Qbar=logMean[f,df,Q];
 Sqrt[logMean[f,df,(Q-Qbar)^2]]
 ]
 
 logSTD2[f_,Q_]:=Module[{Qbar},
-MessageDialog["DEPRECATED! Use logSTD3 instead"];
 Qbar = logMean2[f,Q];
 Sqrt[logMean2[f,(Q-Qbar)^2]]
 ]
