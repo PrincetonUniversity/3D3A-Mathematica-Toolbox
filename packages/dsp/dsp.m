@@ -541,41 +541,57 @@ getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 sweepToIR[sweepFilePath_]:=sweepToIR2[sweepFilePath][[1]]
 
 sweepToIR2[sweepFilePath_]:=Module[
-{rawData,numChannels,numMicChannels,rawMicData,triggerSignal,triggerSamplePositions,numSweeps,sweepLen,rawIRMat,sweepSignal,micIRs,micOnsetPos,firstOnset,preOnsetDelay,startPos,endPos}
+{rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen}
 ,
 If[StringQ[sweepFilePath],
-{rawData,numChannels}=importAudio[sweepFilePath];
-numMicChannels=numChannels-2;(* Remaining two channels are sweep and trigger signal channels, respectively. *)
-rawMicData=rawData[[1;;numMicChannels]];
-sweepSignal=rawData[[numChannels-1]];
-triggerSignal=rawData[[numChannels]];
-triggerSamplePositions=Flatten[Position[Round[triggerSignal],1]];
-numSweeps=Length[triggerSamplePositions];
-sweepLen = If[numSweeps>1,Round[Mean[Differences[triggerSamplePositions]]],Length[sweepSignal]];
-rawIRMat=ConstantArray[{},{numMicChannels,numSweeps}]; (* numMicChannels rows correspond to each of recording points. *)
-micIRs = ConstantArray[0.,numMicChannels];
-micOnsetPos = ConstantArray[0.,numMicChannels];
+{rawData,numCh}=importAudio[sweepFilePath];
+numMics=numCh-2;
+(* Remaining two channels are sweep and trigger signal channels, respectively. *)
+fileLen = Dimensions[rawData][[2]];
+FFTLen = nextPowTwo[fileLen];
+
+rawMicData=rawData[[1;;numMics]];
+sweepSignal=rawData[[numCh-1]];
+triggerSignal=rawData[[numCh]];
+
+triggerPositions=Flatten[Position[Round[triggerSignal],1]];
+interSweepDelay = Round[Mean[Differences[triggerPositions]]];
+numSweeps=Length[triggerPositions];
+
+micIRs = ConstantArray[0.,numMics];
+micOnsets = ConstantArray[0.,numMics];
 Do[
-micIRs[[ii]] = deconv[rawMicData[[ii]],sweepSignal];
-micOnsetPos[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->5];
+micIRs[[ii]] = deconv[PadRight[rawMicData[[ii]],FFTLen],PadRight[sweepSignal,FFTLen]];
+micOnsets[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->5];
+,{ii,1,numMics}];
+firstOnset = Min[micOnsets];
+
+If[numSweeps>1,
+IRLen = interSweepDelay;
+preOnsetDelay = Min[Ceiling[0.25 interSweepDelay],firstOnset-1];
 ,
-{ii,1,numMicChannels}
+IRLen = FFTLen;
+preOnsetDelay = firstOnset-1;
 ];
-firstOnset = Min[micOnsetPos];
-preOnsetDelay = If[numSweeps>1,Min[Ceiling[0.25 sweepLen],firstOnset-1],firstOnset-1];
+
+IRList=ConstantArray[{},{numMics,numSweeps}]; (* numMics rows correspond to each of recording points. *)
 Do[
-startPos = firstOnset - preOnsetDelay + (jj-1)sweepLen;
-endPos = startPos + sweepLen - 1;
-rawIRMat[[ii,jj]] = micIRs[[ii,startPos;;endPos]];
-,
-{ii,1,numMicChannels},
-{jj,1,numSweeps}
-];
+startPos = firstOnset - preOnsetDelay + (jj-1)IRLen;
+endPos = startPos + IRLen - 1;
+If[endPos > FFTLen,endPos = FFTLen;];
+indxLen = endPos-startPos+1;
+Do[
+IRList[[ii,jj]] = ConstantArray[0.,IRLen];
+IRList[[ii,jj,1;;indxLen]] = micIRs[[ii,startPos;;endPos]];
+,{ii,1,numMics}];
+,{jj,1,numSweeps}];
 ,
 MessageDialog["Operation Canceled!"];
-rawIRMat={};
+IRList={};
+firstOnset = {};
+preOnsetDelay = {};
 ];
-{rawIRMat,firstOnset,preOnsetDelay}
+{IRList,firstOnset,preOnsetDelay}
 ]
 
 

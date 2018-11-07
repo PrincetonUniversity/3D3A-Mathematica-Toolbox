@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    108407,       2573]
-NotebookOptionsPosition[    106047,       2519]
-NotebookOutlinePosition[    106977,       2548]
-CellTagsIndexPosition[    106934,       2545]
+NotebookDataLength[    109968,       2614]
+NotebookOptionsPosition[    108379,       2560]
+NotebookOutlinePosition[    109309,       2589]
+CellTagsIndexPosition[    109266,       2586]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -457,9 +457,8 @@ sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep file is in WAV format.\
    3.7432788161993847`*^9}, {3.7432788902044697`*^9, 3.743278901369925*^9}, {
    3.743278962296001*^9, 3.7432793735570498`*^9}, {3.7432794296504173`*^9, 
    3.743279737573584*^9}, {3.745776362135453*^9, 3.745776362590293*^9}, {
-   3.7469909895407343`*^9, 
-   3.746991051920265*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
-4fed5cf9a742"]
+   3.7469909895407343`*^9, 3.746991051920265*^9}},
+ ExpressionUUID -> "307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2249,12 +2248,12 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"{", 
      RowBox[{
-     "rawData", ",", "numChannels", ",", "numMicChannels", ",", "rawMicData", 
-      ",", "triggerSignal", ",", "triggerSamplePositions", ",", "numSweeps", 
-      ",", "sweepLen", ",", "rawIRMat", ",", "sweepSignal", ",", "micIRs", 
-      ",", "micOnsetPos", ",", "firstOnset", ",", "preOnsetDelay", ",", 
-      "startPos", ",", "endPos"}], "}"}], "\[IndentingNewLine]", ",", 
-    "\[IndentingNewLine]", 
+     "rawData", ",", "numCh", ",", "numMics", ",", "fileLen", ",", "FFTLen", 
+      ",", "rawMicData", ",", "sweepSignal", ",", "triggerSignal", ",", 
+      "triggerPositions", ",", "interSweepDelay", ",", "numSweeps", ",", 
+      "micIRs", ",", "micOnsets", ",", "firstOnset", ",", "IRLen", ",", 
+      "preOnsetDelay", ",", "IRList", ",", "startPos", ",", "endPos", ",", 
+      "indxLen"}], "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"If", "[", 
       RowBox[{
@@ -2263,11 +2262,11 @@ Cell[BoxData[{
        RowBox[{
         RowBox[{
          RowBox[{"{", 
-          RowBox[{"rawData", ",", "numChannels"}], "}"}], "=", 
+          RowBox[{"rawData", ",", "numCh"}], "}"}], "=", 
          RowBox[{"importAudio", "[", "sweepFilePath", "]"}]}], ";", 
         "\[IndentingNewLine]", 
-        RowBox[{"numMicChannels", "=", 
-         RowBox[{"numChannels", "-", "2"}]}], ";", 
+        RowBox[{"numMics", "=", 
+         RowBox[{"numCh", "-", "2"}]}], ";", "\[IndentingNewLine]", 
         RowBox[{"(*", " ", 
          RowBox[{
           RowBox[{
@@ -2275,59 +2274,47 @@ Cell[BoxData[{
            " ", "and", " ", "trigger", " ", "signal", " ", "channels"}], ",", 
           " ", 
           RowBox[{"respectively", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"fileLen", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"Dimensions", "[", "rawData", "]"}], "[", 
+          RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"FFTLen", " ", "=", " ", 
+         RowBox[{"nextPowTwo", "[", "fileLen", "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
         RowBox[{"rawMicData", "=", 
          RowBox[{"rawData", "[", 
           RowBox[{"[", 
-           RowBox[{"1", ";;", "numMicChannels"}], "]"}], "]"}]}], ";", 
+           RowBox[{"1", ";;", "numMics"}], "]"}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"sweepSignal", "=", 
          RowBox[{"rawData", "[", 
           RowBox[{"[", 
-           RowBox[{"numChannels", "-", "1"}], "]"}], "]"}]}], ";", 
+           RowBox[{"numCh", "-", "1"}], "]"}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"triggerSignal", "=", 
          RowBox[{"rawData", "[", 
-          RowBox[{"[", "numChannels", "]"}], "]"}]}], ";", 
+          RowBox[{"[", "numCh", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
         "\[IndentingNewLine]", 
-        RowBox[{"triggerSamplePositions", "=", 
+        RowBox[{"triggerPositions", "=", 
          RowBox[{"Flatten", "[", 
           RowBox[{"Position", "[", 
            RowBox[{
             RowBox[{"Round", "[", "triggerSignal", "]"}], ",", "1"}], "]"}], 
           "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"interSweepDelay", " ", "=", " ", 
+         RowBox[{"Round", "[", 
+          RowBox[{"Mean", "[", 
+           RowBox[{"Differences", "[", "triggerPositions", "]"}], "]"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
         RowBox[{"numSweeps", "=", 
-         RowBox[{"Length", "[", "triggerSamplePositions", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"sweepLen", " ", "=", " ", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{"numSweeps", ">", "1"}], ",", 
-           RowBox[{"Round", "[", 
-            RowBox[{"Mean", "[", 
-             RowBox[{"Differences", "[", "triggerSamplePositions", "]"}], 
-             "]"}], "]"}], ",", 
-           RowBox[{"Length", "[", "sweepSignal", "]"}]}], "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"rawIRMat", "=", 
-         RowBox[{"ConstantArray", "[", 
-          RowBox[{
-           RowBox[{"{", "}"}], ",", 
-           RowBox[{"{", 
-            RowBox[{"numMicChannels", ",", "numSweeps"}], "}"}]}], "]"}]}], 
-        ";", " ", 
-        RowBox[{"(*", " ", 
-         RowBox[{
-         "numMicChannels", " ", "rows", " ", "correspond", " ", "to", " ", 
-          "each", " ", "of", " ", "recording", " ", 
-          RowBox[{"points", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"Length", "[", "triggerPositions", "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
         RowBox[{"micIRs", " ", "=", " ", 
          RowBox[{"ConstantArray", "[", 
-          RowBox[{"0.", ",", "numMicChannels"}], "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"micOnsetPos", " ", "=", " ", 
+          RowBox[{"0.", ",", "numMics"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"micOnsets", " ", "=", " ", 
          RowBox[{"ConstantArray", "[", 
-          RowBox[{"0.", ",", "numMicChannels"}], "]"}]}], ";", 
-        "\[IndentingNewLine]", 
+          RowBox[{"0.", ",", "numMics"}], "]"}]}], ";", "\[IndentingNewLine]", 
         RowBox[{"Do", "[", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{
@@ -2336,35 +2323,59 @@ Cell[BoxData[{
              RowBox[{"[", "ii", "]"}], "]"}], " ", "=", " ", 
             RowBox[{"deconv", "[", 
              RowBox[{
-              RowBox[{"rawMicData", "[", 
-               RowBox[{"[", "ii", "]"}], "]"}], ",", "sweepSignal"}], "]"}]}],
-            ";", "\[IndentingNewLine]", 
+              RowBox[{"PadRight", "[", 
+               RowBox[{
+                RowBox[{"rawMicData", "[", 
+                 RowBox[{"[", "ii", "]"}], "]"}], ",", "FFTLen"}], "]"}], ",", 
+              RowBox[{"PadRight", "[", 
+               RowBox[{"sweepSignal", ",", "FFTLen"}], "]"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
            RowBox[{
-            RowBox[{"micOnsetPos", "[", 
+            RowBox[{"micOnsets", "[", 
              RowBox[{"[", "ii", "]"}], "]"}], " ", "=", " ", 
             RowBox[{"signalOnset", "[", 
              RowBox[{
               RowBox[{"micIRs", "[", 
                RowBox[{"[", "ii", "]"}], "]"}], ",", 
               RowBox[{"\"\<Threshold\>\"", "\[Rule]", "5"}]}], "]"}]}], ";"}],
-           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", ",", 
           RowBox[{"{", 
-           RowBox[{"ii", ",", "1", ",", "numMicChannels"}], "}"}]}], 
-         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
         RowBox[{"firstOnset", " ", "=", " ", 
-         RowBox[{"Min", "[", "micOnsetPos", "]"}]}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"preOnsetDelay", " ", "=", " ", 
-         RowBox[{"If", "[", 
+         RowBox[{"Min", "[", "micOnsets", "]"}]}], ";", "\[IndentingNewLine]",
+         "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"numSweeps", ">", "1"}], ",", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"numSweeps", ">", "1"}], ",", 
-           RowBox[{"Min", "[", 
-            RowBox[{
-             RowBox[{"Ceiling", "[", 
-              RowBox[{"0.25", " ", "sweepLen"}], "]"}], ",", 
-             RowBox[{"firstOnset", "-", "1"}]}], "]"}], ",", 
-           RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";", 
+           RowBox[{"IRLen", " ", "=", " ", "interSweepDelay"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"preOnsetDelay", " ", "=", " ", 
+            RowBox[{"Min", "[", 
+             RowBox[{
+              RowBox[{"Ceiling", "[", 
+               RowBox[{"0.25", " ", "interSweepDelay"}], "]"}], ",", 
+              RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";"}], 
+          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"IRLen", " ", "=", " ", "FFTLen"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"preOnsetDelay", " ", "=", " ", 
+            RowBox[{"firstOnset", "-", "1"}]}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
         "\[IndentingNewLine]", 
+        RowBox[{"IRList", "=", 
+         RowBox[{"ConstantArray", "[", 
+          RowBox[{
+           RowBox[{"{", "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"numMics", ",", "numSweeps"}], "}"}]}], "]"}]}], ";", " ", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "numMics", " ", "rows", " ", "correspond", " ", "to", " ", "each", 
+          " ", "of", " ", "recording", " ", 
+          RowBox[{"points", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
         RowBox[{"Do", "[", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{
@@ -2373,37 +2384,61 @@ Cell[BoxData[{
             "firstOnset", " ", "-", " ", "preOnsetDelay", " ", "+", " ", 
              RowBox[{
               RowBox[{"(", 
-               RowBox[{"jj", "-", "1"}], ")"}], "sweepLen"}]}]}], ";", 
+               RowBox[{"jj", "-", "1"}], ")"}], "IRLen"}]}]}], ";", 
            "\[IndentingNewLine]", 
            RowBox[{"endPos", " ", "=", " ", 
             RowBox[{
-            "startPos", " ", "+", " ", "sweepLen", " ", "-", " ", "1"}]}], 
+            "startPos", " ", "+", " ", "IRLen", " ", "-", " ", "1"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"endPos", " ", ">", " ", "FFTLen"}], ",", 
+             RowBox[{
+              RowBox[{"endPos", " ", "=", " ", "FFTLen"}], ";"}]}], "]"}], 
            ";", "\[IndentingNewLine]", 
-           RowBox[{
-            RowBox[{"rawIRMat", "[", 
-             RowBox[{"[", 
-              RowBox[{"ii", ",", "jj"}], "]"}], "]"}], " ", "=", " ", 
-            RowBox[{"micIRs", "[", 
-             RowBox[{"[", 
-              RowBox[{"ii", ",", 
-               RowBox[{"startPos", ";;", "endPos"}]}], "]"}], "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{"indxLen", " ", "=", " ", 
+            RowBox[{"endPos", "-", "startPos", "+", "1"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"IRList", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ii", ",", "jj"}], "]"}], "]"}], " ", "=", " ", 
+               RowBox[{"ConstantArray", "[", 
+                RowBox[{"0.", ",", "IRLen"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"IRList", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ii", ",", "jj", ",", 
+                  RowBox[{"1", ";;", "indxLen"}]}], "]"}], "]"}], " ", "=", 
+               " ", 
+               RowBox[{"micIRs", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ii", ",", 
+                  RowBox[{"startPos", ";;", "endPos"}]}], "]"}], "]"}]}], 
+              ";"}], "\[IndentingNewLine]", ",", 
+             RowBox[{"{", 
+              RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], "]"}], ";"}],
+           "\[IndentingNewLine]", ",", 
           RowBox[{"{", 
-           RowBox[{"ii", ",", "1", ",", "numMicChannels"}], "}"}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{"{", 
-           RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], 
-         "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
-       "\[IndentingNewLine]", 
+           RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], "]"}], ";"}], 
+       "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{"MessageDialog", "[", "\"\<Operation Canceled!\>\"", "]"}], 
         ";", "\[IndentingNewLine]", 
-        RowBox[{"rawIRMat", "=", 
+        RowBox[{"IRList", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"firstOnset", " ", "=", " ", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"preOnsetDelay", " ", "=", " ", 
          RowBox[{"{", "}"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"{", 
-      RowBox[{"rawIRMat", ",", "firstOnset", ",", "preOnsetDelay"}], 
-      "}"}]}]}], "\[IndentingNewLine]", "]"}]}]}], "Input",
+      RowBox[{"IRList", ",", "firstOnset", ",", "preOnsetDelay"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellChangeTimes->{
   3.6964254067997217`*^9, {3.696426245240288*^9, 3.696426289308839*^9}, {
    3.69642640587595*^9, 3.696426452128778*^9}, {3.6964269747974367`*^9, 
@@ -2494,9 +2529,15 @@ Cell[BoxData[{
    3.7432902593794403`*^9, 3.743290271369589*^9}, {3.7457763828925447`*^9, 
    3.745776383479746*^9}, {3.746990906803877*^9, 3.74699096854167*^9}, {
    3.7469914552436943`*^9, 3.746991456539029*^9}, {3.7469917337780447`*^9, 
-   3.746991736251814*^9}, {3.747590829763062*^9, 
-   3.747590843795774*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
-50c544207a54"]
+   3.746991736251814*^9}, {3.747590829763062*^9, 3.747590843795774*^9}, {
+   3.750613153264208*^9, 3.7506131560460863`*^9}, {3.750613194677129*^9, 
+   3.750613202255218*^9}, {3.750613238934094*^9, 3.750613343437975*^9}, {
+   3.750613382844851*^9, 3.750613574655798*^9}, {3.750613612070664*^9, 
+   3.750613719726142*^9}, {3.750613758836535*^9, 3.750613997838822*^9}, {
+   3.75061412402944*^9, 3.750614129369547*^9}, {3.750614280278783*^9, 
+   3.7506142880313263`*^9}, {3.750614319883443*^9, 3.750614355822166*^9}, {
+   3.750614454164052*^9, 3.750614456595006*^9}},
+ ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2518,11 +2559,11 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{945, 750},
-WindowMargins->{{175, Automatic}, {Automatic, 0}},
+WindowSize->{723, 807},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
-2018)",
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2533,7 +2574,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
+  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2548,31 +2589,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
-Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
+Cell[580, 22, 175, 2, 92, "Title"],
+Cell[758, 26, 1776, 39, 695, "Text"],
 Cell[CellGroupData[{
-Cell[2559, 69, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b5d7a1890a"],
-Cell[2653, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
+Cell[2559, 69, 91, 0, 64, "Section"],
+Cell[2653, 71, 317, 7, 28, "Input"],
 Cell[CellGroupData[{
-Cell[2995, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3114, 84, 20538, 377, 3890, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[2995, 82, 116, 0, 44, "Subsection"],
+Cell[3114, 84, 20536, 376, 3939, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[23701, 467, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
-Cell[23804, 469, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[23699, 466, 100, 0, 64, "Section"],
+Cell[23802, 468, 253, 5, 28, "Input"],
 Cell[CellGroupData[{
-Cell[24082, 478, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
-Cell[24182, 480, 81331, 2018, 10085, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[24080, 477, 97, 0, 44, "Subsection"],
+Cell[24180, 479, 83665, 2060, 9133, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[105562, 2504, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
-Cell[105663, 2506, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[107894, 2545, 98, 0, 64, "Section"],
+Cell[107995, 2547, 106, 1, 28, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[105806, 2512, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
-Cell[105906, 2514, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[108138, 2553, 97, 0, 64, "Section"],
+Cell[108238, 2555, 113, 1, 28, "Input"]
 }, Open  ]]
 }, Open  ]]
 }
