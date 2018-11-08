@@ -38,7 +38,7 @@ conv::usage=
 "conv[x,y] circularly convolves x with y, both of which must have the same length. conv[x,y,\"lin\"] performs linear convolution, returning a signal of length = Length[x]+Length[y]-1. All convolutions are performed in the frequency domain. For linear convolution, it is assumed that the signals being convolved are causal."
 
 deconv::usage=
-"deconv[y,x] circularly deconvolves y by x and outputs a signal with the same length as y. deconv[y,x,\"lin\"] performs linear deconvolution, returning a signal with the same length as y. All deconvolutions are performed in the frequency domain. For linear deconvolution, it is assumed that the signals being deconvolved are causal."
+"deconv[y,x] circularly deconvolves y by x, both of which must have the same length. deconv[y,x,\"lin\"] performs linear deconvolution, returning a signal with length = Length[y]-Length[x]+1, where Length[x] < Length[y]. All deconvolutions are performed in the frequency domain. For linear deconvolution, it is assumed that y is the result of linearly convolving x with another causal signal so that the result of the deconvolution will be causal."
 
 groupDelaySpec::usage=
 "groupDelaySpec[inputIR] returns the group delay spectrum of inputIR."
@@ -212,11 +212,16 @@ MessageDialog["Sequences must be of the same length."];
 Abort[];
 ]
 ,
+If[type=="lin",
 padLen=nextPowTwo[xLen+yLen-1];
 yPad=PadRight[y,padLen];
 xPad=PadRight[x,padLen];
 outputPad=TFtoIR[IRtoTF[xPad] IRtoTF[yPad]];
 output=outputPad[[;;xLen+yLen-1]];
+,
+MessageDialog["Unrecognized input. See function help for valid inputs."];
+Abort[];
+]
 ];
 output
 ]
@@ -234,11 +239,19 @@ MessageDialog["Sequences must be of the same length."];
 Abort[];
 ]
 ,
-padLen=nextPowTwo[xLen+yLen-1];
-yPad=PadRight[y,padLen];
-xPad=PadRight[x,padLen];
-outputPad=TFtoIR[Quiet[IRtoTF[yPad]/IRtoTF[xPad]]/.ComplexInfinity->0.];
-output=outputPad[[;;yLen]]
+If[type=="lin",
+If[yLen>xLen,
+xPad=PadRight[x,yLen];
+outputPad=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
+,
+MessageDialog["Length of y must be greater than that of x."];
+Abort[];
+];
+output=outputPad[[;;yLen-xLen+1]];
+,
+MessageDialog["Unrecognized input. See function help for valid inputs."];
+Abort[];
+]
 ];
 output
 ]
@@ -568,13 +581,12 @@ firstOnset = Min[micOnsets];
 
 If[numSweeps>1,
 IRLen = interSweepDelay;
-preOnsetDelay = Min[Ceiling[0.25 interSweepDelay],firstOnset-1];
 ,
 IRLen = FFTLen;
-preOnsetDelay = firstOnset-1;
 ];
+preOnsetDelay = Min[Ceiling[0.25 IRLen],firstOnset-1];
 
-IRList=ConstantArray[{},{numMics,numSweeps}]; (* numMics rows correspond to each of recording points. *)
+IRList=ConstantArray[{},{numMics,numSweeps}]; (* numMics rows correspond to each of the recording points. *)
 Do[
 startPos = firstOnset - preOnsetDelay + (jj-1)IRLen;
 endPos = startPos + IRLen - 1;

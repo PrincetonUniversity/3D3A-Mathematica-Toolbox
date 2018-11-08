@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    109968,       2614]
-NotebookOptionsPosition[    108379,       2560]
-NotebookOutlinePosition[    109309,       2589]
-CellTagsIndexPosition[    109266,       2586]
+NotebookDataLength[    113124,       2654]
+NotebookOptionsPosition[    110765,       2600]
+NotebookOutlinePosition[    111694,       2629]
+CellTagsIndexPosition[    111651,       2626]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -147,11 +147,13 @@ being convolved are causal.\>\""}],
     StyleBox["usage", "MessageName"]}], 
    StyleBox["=", "MessageName"], 
    StyleBox["\[IndentingNewLine]", "MessageName"], 
-   "\"\<deconv[y,x] circularly deconvolves y by x and outputs a signal with \
-the same length as y. deconv[y,x,\\\"lin\\\"] performs linear deconvolution, \
-returning a signal with the same length as y. All deconvolutions are \
-performed in the frequency domain. For linear deconvolution, it is assumed \
-that the signals being deconvolved are causal.\>\""}], 
+   "\"\<deconv[y,x] circularly deconvolves y by x, both of which must have \
+the same length. deconv[y,x,\\\"lin\\\"] performs linear deconvolution, \
+returning a signal with length = Length[y]-Length[x]+1, where Length[x] < \
+Length[y]. All deconvolutions are performed in the frequency domain. For \
+linear deconvolution, it is assumed that y is the result of linearly \
+convolving x with another causal signal so that the result of the \
+deconvolution will be causal.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -457,8 +459,11 @@ sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep file is in WAV format.\
    3.7432788161993847`*^9}, {3.7432788902044697`*^9, 3.743278901369925*^9}, {
    3.743278962296001*^9, 3.7432793735570498`*^9}, {3.7432794296504173`*^9, 
    3.743279737573584*^9}, {3.745776362135453*^9, 3.745776362590293*^9}, {
-   3.7469909895407343`*^9, 3.746991051920265*^9}},
- ExpressionUUID -> "307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+   3.7469909895407343`*^9, 3.746991051920265*^9}, {3.750677126585059*^9, 
+   3.750677144701606*^9}, {3.750682658497123*^9, 3.7506827808240833`*^9}, {
+   3.750683188335658*^9, 3.750683267014526*^9}, 
+   3.7506833505962143`*^9},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 
@@ -746,31 +751,42 @@ Cell[BoxData[{
            "\[IndentingNewLine]", 
            RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"padLen", "=", 
-          RowBox[{"nextPowTwo", "[", 
-           RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"yPad", "=", 
-          RowBox[{"PadRight", "[", 
-           RowBox[{"y", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         
-         RowBox[{"xPad", "=", 
-          RowBox[{"PadRight", "[", 
-           RowBox[{"x", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         
-         RowBox[{"outputPad", "=", 
-          RowBox[{"TFtoIR", "[", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"type", "\[Equal]", "\"\<lin\>\""}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"padLen", "=", 
+            RowBox[{"nextPowTwo", "[", 
+             RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"yPad", "=", 
+            RowBox[{"PadRight", "[", 
+             RowBox[{"y", ",", "padLen"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"xPad", "=", 
+            RowBox[{"PadRight", "[", 
+             RowBox[{"x", ",", "padLen"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"outputPad", "=", 
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{
+              RowBox[{"IRtoTF", "[", "xPad", "]"}], " ", 
+              RowBox[{"IRtoTF", "[", "yPad", "]"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"output", "=", 
+            RowBox[{"outputPad", "[", 
+             RowBox[{"[", 
+              RowBox[{";;", 
+               RowBox[{"xLen", "+", "yLen", "-", "1"}]}], "]"}], "]"}]}], 
+           ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
            RowBox[{
-            RowBox[{"IRtoTF", "[", "xPad", "]"}], " ", 
-            RowBox[{"IRtoTF", "[", "yPad", "]"}]}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"output", "=", 
-          RowBox[{"outputPad", "[", 
-           RowBox[{"[", 
-            RowBox[{";;", 
-             RowBox[{"xLen", "+", "yLen", "-", "1"}]}], "]"}], "]"}]}], 
-         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+           "MessageDialog", "[", 
+            "\"\<Unrecognized input. See function help for valid inputs.\>\"",
+             "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+         "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       "output"}]}], "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -814,34 +830,49 @@ Cell[BoxData[{
            "\[IndentingNewLine]", 
            RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"padLen", "=", 
-          RowBox[{"nextPowTwo", "[", 
-           RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"yPad", "=", 
-          RowBox[{"PadRight", "[", 
-           RowBox[{"y", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         
-         RowBox[{"xPad", "=", 
-          RowBox[{"PadRight", "[", 
-           RowBox[{"x", ",", "padLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-         
-         RowBox[{"outputPad", "=", 
-          RowBox[{"TFtoIR", "[", 
-           RowBox[{
-            RowBox[{"Quiet", "[", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"type", "\[Equal]", "\"\<lin\>\""}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"yLen", ">", "xLen"}], ",", "\[IndentingNewLine]", 
              RowBox[{
-              RowBox[{"IRtoTF", "[", "yPad", "]"}], "/", 
-              RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
-            RowBox[{"ComplexInfinity", "\[Rule]", "0."}]}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"output", "=", 
-          RowBox[{"outputPad", "[", 
-           RowBox[{"[", 
-            RowBox[{";;", "yLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]",
-        "]"}], ";", "\[IndentingNewLine]", "output"}]}], 
-    "\[IndentingNewLine]", "]"}]}], 
+              RowBox[{"xPad", "=", 
+               RowBox[{"PadRight", "[", 
+                RowBox[{"x", ",", "yLen"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"outputPad", "=", 
+               RowBox[{"TFtoIR", "[", 
+                RowBox[{
+                 RowBox[{"Quiet", "[", 
+                  RowBox[{
+                   RowBox[{"IRtoTF", "[", "y", "]"}], "/", " ", 
+                   RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
+                 RowBox[{"ComplexInfinity", "\[Rule]", "0."}]}], "]"}]}], 
+              ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+              "MessageDialog", "[", 
+               "\"\<Length of y must be greater than that of x.\>\"", "]"}], 
+              ";", "\[IndentingNewLine]", 
+              RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+            "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"output", "=", 
+            RowBox[{"outputPad", "[", 
+             RowBox[{"[", 
+              RowBox[{";;", 
+               RowBox[{"yLen", "-", "xLen", "+", "1"}]}], "]"}], "]"}]}], 
+           ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+           "MessageDialog", "[", 
+            "\"\<Unrecognized input. See function help for valid inputs.\>\"",
+             "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+         "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "output"}]}], "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2349,22 +2380,18 @@ Cell[BoxData[{
          RowBox[{
           RowBox[{"numSweeps", ">", "1"}], ",", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"IRLen", " ", "=", " ", "interSweepDelay"}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"preOnsetDelay", " ", "=", " ", 
-            RowBox[{"Min", "[", 
-             RowBox[{
-              RowBox[{"Ceiling", "[", 
-               RowBox[{"0.25", " ", "interSweepDelay"}], "]"}], ",", 
-              RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";"}], 
+           RowBox[{"IRLen", " ", "=", " ", "interSweepDelay"}], ";"}], 
           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"IRLen", " ", "=", " ", "FFTLen"}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"preOnsetDelay", " ", "=", " ", 
-            RowBox[{"firstOnset", "-", "1"}]}], ";"}]}], 
+           RowBox[{"IRLen", " ", "=", " ", "FFTLen"}], ";"}]}], 
          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-        "\[IndentingNewLine]", 
+        RowBox[{"preOnsetDelay", " ", "=", " ", 
+         RowBox[{"Min", "[", 
+          RowBox[{
+           RowBox[{"Ceiling", "[", 
+            RowBox[{"0.25", " ", "IRLen"}], "]"}], ",", 
+           RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
         RowBox[{"IRList", "=", 
          RowBox[{"ConstantArray", "[", 
           RowBox[{
@@ -2374,7 +2401,7 @@ Cell[BoxData[{
         RowBox[{"(*", " ", 
          RowBox[{
          "numMics", " ", "rows", " ", "correspond", " ", "to", " ", "each", 
-          " ", "of", " ", "recording", " ", 
+          " ", "of", " ", "the", " ", "recording", " ", 
           RowBox[{"points", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
         RowBox[{"Do", "[", "\[IndentingNewLine]", 
          RowBox[{
@@ -2536,8 +2563,21 @@ Cell[BoxData[{
    3.750613719726142*^9}, {3.750613758836535*^9, 3.750613997838822*^9}, {
    3.75061412402944*^9, 3.750614129369547*^9}, {3.750614280278783*^9, 
    3.7506142880313263`*^9}, {3.750614319883443*^9, 3.750614355822166*^9}, {
-   3.750614454164052*^9, 3.750614456595006*^9}},
- ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
+   3.750614454164052*^9, 3.750614456595006*^9}, {3.7506767076450644`*^9, 
+   3.750676726628331*^9}, {3.7506768997056837`*^9, 3.7506769320188923`*^9}, {
+   3.7506769632209663`*^9, 3.75067699012766*^9}, {3.750677748384227*^9, 
+   3.750677798248869*^9}, {3.75067783522997*^9, 3.7506778638274803`*^9}, {
+   3.75067801752978*^9, 3.750678018272132*^9}, {3.7506781065294523`*^9, 
+   3.750678112320957*^9}, {3.7506781423812857`*^9, 3.750678176769641*^9}, {
+   3.750678606761959*^9, 3.750678608269083*^9}, {3.750678649331526*^9, 
+   3.750678654074901*^9}, {3.750679062795208*^9, 3.750679075733479*^9}, {
+   3.750679125946783*^9, 3.750679126402115*^9}, {3.750681068799309*^9, 
+   3.75068108553552*^9}, {3.750681172659169*^9, 3.750681184210916*^9}, {
+   3.75068122161535*^9, 3.750681224310608*^9}, {3.750681325536892*^9, 
+   3.75068132589491*^9}, {3.750682609012808*^9, 3.7506826194364223`*^9}, {
+   3.750683284629099*^9, 3.750683285420494*^9}, {3.750683336716651*^9, 
+   3.750683337204815*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2559,11 +2599,11 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{723, 807},
+WindowSize->{1440, 851},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2574,7 +2614,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2589,31 +2629,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 92, "Title"],
-Cell[758, 26, 1776, 39, 695, "Text"],
+Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
 Cell[CellGroupData[{
-Cell[2559, 69, 91, 0, 64, "Section"],
-Cell[2653, 71, 317, 7, 28, "Input"],
+Cell[2559, 69, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b5d7a1890a"],
+Cell[2653, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
-Cell[2995, 82, 116, 0, 44, "Subsection"],
-Cell[3114, 84, 20536, 376, 3939, "Input"]
+Cell[2995, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+Cell[3114, 84, 20829, 381, 3239, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[23699, 466, 100, 0, 64, "Section"],
-Cell[23802, 468, 253, 5, 28, "Input"],
+Cell[23992, 471, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
+Cell[24095, 473, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[24080, 477, 97, 0, 44, "Subsection"],
-Cell[24180, 479, 83665, 2060, 9133, "Input"]
+Cell[24373, 482, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
+Cell[24473, 484, 85758, 2095, 10320, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[107894, 2545, 98, 0, 64, "Section"],
-Cell[107995, 2547, 106, 1, 28, "Input"]
+Cell[110280, 2585, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
+Cell[110381, 2587, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[108138, 2553, 97, 0, 64, "Section"],
-Cell[108238, 2555, 113, 1, 28, "Input"]
+Cell[110524, 2593, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
+Cell[110624, 2595, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }
