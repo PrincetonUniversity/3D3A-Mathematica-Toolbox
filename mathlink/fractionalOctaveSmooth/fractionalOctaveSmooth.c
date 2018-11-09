@@ -69,7 +69,7 @@ void fractionalOctaveSmooth()
 {
     /* Inputs */
     double *H;
-    double frac;
+    double frac = 0.;
     const char *methodIn;
     const char *winTypeIn;
     const char *scaleIn;
@@ -129,8 +129,6 @@ void fractionalOctaveSmooth()
     
     /* Allocate memory */
     Hin = (double*) malloc (sizeof(double) * FFTLen);
-    Hout = (double*) malloc (sizeof(double) * specLen);
-    Hsm = (double*) malloc (sizeof(double) * FFTLen);
     M = (double**) malloc (sizeof(double*) * specLen);
     for (int ii = 0; ii < specLen; ii++)
     {
@@ -140,6 +138,8 @@ void fractionalOctaveSmooth()
             M[ii][jj] = 0.;
         }
     }
+    Hout = (double*) malloc (sizeof(double) * specLen);
+    Hsm = (double*) malloc (sizeof(double) * FFTLen);
     
     /* Begin real code */
     for (int jj = 0; jj < FFTLen; jj++)
@@ -195,17 +195,17 @@ void fractionalOctaveSmooth()
     MLPutReal64List(stdlink, Hsm, FFTLen);
     
     /* Free memory */
+    free(Hsm);
+    free(Hout);
     for (int ii = 0; ii < specLen; ii++)
     {
         free(M[ii]);
     }
     free(M);
-    free(Hsm);
     free(Hin);
-    free(Hout);
-    free(method);
-    free(winType);
     free(scale);
+    free(winType);
+    free(method);
     return;
 }
 
