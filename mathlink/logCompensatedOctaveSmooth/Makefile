@@ -2,7 +2,7 @@
 # program.  To build it, use the command 'make logCompensatedOctaveSmooth'.
 
 VERSION=10.0
-MLINKDIR = /Applications/Mathematica.app/Contents/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64/
+MLINKDIR = /Applications/Mathematica.app/Contents/SystemFiles/Links/MathLink/DeveloperKit/MacOSX-x86-64
 SYS = MacOSX-x86-64
 CADDSDIR = ${MLINKDIR}/CompilerAdditions
 EXTRA_CFLAGS=-stdlib=libstdc++ -stdlib=libc++
