@@ -35,6 +35,8 @@
 
 //  Version History:
 //
+//  Version 1.2: rearrange input arguments.
+//
 //  Version 1.1: add 'scale' input argument for smoothing magnitude, power or dB
 //      spectra.
 //
@@ -52,7 +54,7 @@
 #include <string.h>
 #include <ctype.h>
 
-extern void fractionalOctaveSmooth(double frac);
+extern void fractionalOctaveSmooth();
 void computeSmoothingMatrix(int FFTLen, double frac, char* method, char* winType, double** M);
 void smoothingMatrix_eye(int FFTLen, double** M);
 void smoothingMatrix_tylka(int FFTLen, double frac, char* winType, double** M);
@@ -63,26 +65,28 @@ int main(int argc, char *argv[])
     MLMain(argc, argv);
 }
 
-void fractionalOctaveSmooth(double frac)
+void fractionalOctaveSmooth()
 {
     /* Inputs */
-    int FFTLen = 0;
     double *H;
+    double frac;
     const char *methodIn;
     const char *winTypeIn;
     const char *scaleIn;
+    int FFTLen = 0;
     char method[100];
     char winType[100];
     char scale[100];
     
-    /* Get Inputs from Mathematica */
+    /* Get inputs from Mathematica */
+    MLGetReal64List(stdlink, &H, &FFTLen);
+    MLGetReal64(stdlink, &frac);
     MLGetString(stdlink, &methodIn);
     MLGetString(stdlink, &winTypeIn);
     MLGetString(stdlink, &scaleIn);
-    MLGetReal64List(stdlink, &H, &FFTLen);
     
     if (frac == 0.0)
-    {   // No Smoothing Case
+    {   // No smoothing case
         MLPutReal64List(stdlink, H, FFTLen);
         MLReleaseReal64List(stdlink, H, FFTLen);
         return;
@@ -105,7 +109,12 @@ void fractionalOctaveSmooth(double frac)
     }
     scale[strlen(scaleIn)] = '\0';
     
-    /* Local Variables */
+    /* Release input strings */
+    MLReleaseString(stdlink, methodIn);
+    MLReleaseString(stdlink, winTypeIn);
+    MLReleaseString(stdlink, scaleIn);
+    
+    /* Local variables */
     int specLen = 1 + FFTLen/2;
     double *Hin, *Hout;
     double **M;
@@ -113,7 +122,7 @@ void fractionalOctaveSmooth(double frac)
     /* Outputs */
     double *Hsm;
     
-    /* Allocate Memory */
+    /* Allocate memory */
     Hin = (double*) malloc (sizeof(double) * FFTLen);
     Hout = (double*) malloc (sizeof(double) * specLen);
     Hsm = (double*) malloc (sizeof(double) * FFTLen);
@@ -127,7 +136,7 @@ void fractionalOctaveSmooth(double frac)
         }
     }
     
-    /* Begin Real Code */
+    /* Begin real code */
     for (int jj = 0; jj < FFTLen; jj++)
     {   // Re-scale input
         if (strcmp(scale,"raw") == 0)
@@ -144,7 +153,10 @@ void fractionalOctaveSmooth(double frac)
         }
     }
     
-    // Compute smoothing matrix
+    /* Release input spectrum */
+    MLReleaseReal64List(stdlink, H, FFTLen);
+    
+    /* Compute smoothing matrix */
     computeSmoothingMatrix(FFTLen, frac, method, winType, M);
     
     for (int ii = 0; ii < specLen; ii++)
@@ -174,10 +186,10 @@ void fractionalOctaveSmooth(double frac)
         Hsm[ii] = Hsm[FFTLen - ii];
     }
     
-    /* Send Output to Mathematica */
+    /* Send output to Mathematica */
     MLPutReal64List(stdlink, Hsm, FFTLen);
     
-    /* Free Memory */
+    /* Free memory */
     for (int ii = 0; ii < specLen; ii++)
     {
         free(M[ii]);
@@ -186,10 +198,6 @@ void fractionalOctaveSmooth(double frac)
     free(Hsm);
     free(Hin);
     free(Hout);
-    MLReleaseString(stdlink, methodIn);
-    MLReleaseString(stdlink, winTypeIn);
-    MLReleaseString(stdlink, scaleIn);
-    MLReleaseReal64List(stdlink, H, FFTLen);
     return;
 }
 
@@ -249,7 +257,7 @@ void smoothingMatrix_tylka(int FFTLen, double frac, char* winType, double** M)
         }
     }
     
-    /* Local Variables */
+    /* Local variables */
     int nL = 0;
     int nH = 0;
     double fL = 0.;
@@ -336,7 +344,7 @@ void smoothingMatrix_hatz(int FFTLen, double frac, char* winType, double** M)
         }
     }
     
-    /* Local Variables */
+    /* Local variables */
     int m = 0;
     int mMax = (FFTLen / 2) - 1;
     int winLen = 0;
