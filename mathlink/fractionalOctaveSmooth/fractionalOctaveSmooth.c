@@ -35,6 +35,9 @@
 
 //  Version History:
 //
+//  Version 1.1: add 'scale' input argument for smoothing magnitude, power or dB
+//      spectra.
+//
 //  Version 1.0: created from version 2.2 of "realOctaveSmooth" program and
 //      version 1.1 of "logCompensatedOctaveSmooth" program.
 //
@@ -67,12 +70,15 @@ void fractionalOctaveSmooth(double frac)
     double *H;
     const char *methodIn;
     const char *winTypeIn;
+    const char *scaleIn;
     char method[100];
     char winType[100];
+    char scale[100];
     
     /* Get Inputs from Mathematica */
     MLGetString(stdlink, &methodIn);
     MLGetString(stdlink, &winTypeIn);
+    MLGetString(stdlink, &scaleIn);
     MLGetReal64List(stdlink, &H, &FFTLen);
     
     if (frac == 0.0)
@@ -93,15 +99,23 @@ void fractionalOctaveSmooth(double frac)
         winType[ii] = tolower(winTypeIn[ii]);
     }
     winType[strlen(winTypeIn)] = '\0';
+    for (int ii = 0; ii < strlen(scaleIn); ii++)
+    {
+        scale[ii] = tolower(scaleIn[ii]);
+    }
+    scale[strlen(scaleIn)] = '\0';
     
     /* Local Variables */
     int specLen = 1 + FFTLen/2;
+    double *Hin, *Hout;
     double **M;
     
     /* Outputs */
     double *Hsm;
     
     /* Allocate Memory */
+    Hin = (double*) malloc (sizeof(double) * FFTLen);
+    Hout = (double*) malloc (sizeof(double) * specLen);
     Hsm = (double*) malloc (sizeof(double) * FFTLen);
     M = (double**) malloc (sizeof(double*) * specLen);
     for (int ii = 0; ii < specLen; ii++)
@@ -114,13 +128,45 @@ void fractionalOctaveSmooth(double frac)
     }
     
     /* Begin Real Code */
+    for (int jj = 0; jj < FFTLen; jj++)
+    {   // Re-scale input
+        if (strcmp(scale,"raw") == 0)
+        {
+            Hin[jj] = H[jj];
+        }
+        else if (strcmp(scale,"power") == 0)
+        {
+            Hin[jj] = fabs(H[jj]) * fabs(H[jj]);
+        }
+        else if (strcmp(scale,"db") == 0)
+        {
+            Hin[jj] = log(fabs(H[jj]));
+        }
+    }
+    
+    // Compute smoothing matrix
     computeSmoothingMatrix(FFTLen, frac, method, winType, M);
+    
     for (int ii = 0; ii < specLen; ii++)
     {
-        Hsm[ii] = 0.;
+        Hout[ii] = 0.;
         for (int jj = 0; jj < FFTLen; jj++)
         {   // Perform matrix multiplication
-            Hsm[ii] = Hsm[ii] + (M[ii][jj] * H[jj]);
+            Hout[ii] = Hout[ii] + (M[ii][jj] * Hin[jj]);
+        }
+        
+        // Re-scale output
+        if (strcmp(scale,"raw") == 0)
+        {
+            Hsm[ii] = Hout[ii];
+        }
+        else if (strcmp(scale,"power") == 0)
+        {
+            Hsm[ii] = sqrt(Hout[ii]);
+        }
+        else if (strcmp(scale,"db") == 0)
+        {
+            Hsm[ii] = exp(Hout[ii]);
         }
     }
     for (int ii = specLen; ii < FFTLen; ii++)
@@ -138,8 +184,11 @@ void fractionalOctaveSmooth(double frac)
     }
     free(M);
     free(Hsm);
+    free(Hin);
+    free(Hout);
     MLReleaseString(stdlink, methodIn);
     MLReleaseString(stdlink, winTypeIn);
+    MLReleaseString(stdlink, scaleIn);
     MLReleaseReal64List(stdlink, H, FFTLen);
     return;
 }
