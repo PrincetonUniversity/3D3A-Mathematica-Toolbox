@@ -35,7 +35,7 @@
 
 //  Version History:
 //
-//  Version 1.2: rearrange input arguments.
+//  Version 1.2: rearrange input arguments; dynamically allocate char arrays.
 //
 //  Version 1.1: add 'scale' input argument for smoothing magnitude, power or dB
 //      spectra.
@@ -74,9 +74,9 @@ void fractionalOctaveSmooth()
     const char *winTypeIn;
     const char *scaleIn;
     int FFTLen = 0;
-    char method[100];
-    char winType[100];
-    char scale[100];
+    char *method;
+    char *winType;
+    char *scale;
     
     /* Get inputs from Mathematica */
     MLGetReal64List(stdlink, &H, &FFTLen);
@@ -93,16 +93,21 @@ void fractionalOctaveSmooth()
     }
     
     /* Make strings lower case */
+    method = (char*) malloc (sizeof(char) * (strlen(methodIn) + 1));
     for (int ii = 0; ii < strlen(methodIn); ii++)
     {
         method[ii] = tolower(methodIn[ii]);
     }
     method[strlen(methodIn)] = '\0';
+    
+    winType = (char*) malloc (sizeof(char) * (strlen(winTypeIn) + 1));
     for (int ii = 0; ii < strlen(winTypeIn); ii++)
     {
         winType[ii] = tolower(winTypeIn[ii]);
     }
     winType[strlen(winTypeIn)] = '\0';
+    
+    scale = (char*) malloc (sizeof(char) * (strlen(scaleIn) + 1));
     for (int ii = 0; ii < strlen(scaleIn); ii++)
     {
         scale[ii] = tolower(scaleIn[ii]);
@@ -198,6 +203,9 @@ void fractionalOctaveSmooth()
     free(Hsm);
     free(Hin);
     free(Hout);
+    free(method);
+    free(winType);
+    free(scale);
     return;
 }
 
