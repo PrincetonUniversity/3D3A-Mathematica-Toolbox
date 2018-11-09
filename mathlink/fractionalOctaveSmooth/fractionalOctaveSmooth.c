@@ -59,6 +59,7 @@ void computeSmoothingMatrix(int FFTLen, double frac, char* method, char* winType
 void smoothingMatrix_eye(int FFTLen, double** M);
 void smoothingMatrix_tylka(int FFTLen, double frac, char* winType, double** M);
 void smoothingMatrix_hatz(int FFTLen, double frac, char* winType, double** M);
+void lowerString(const char* str1, char* str2);
 
 int main(int argc, char *argv[])
 {
@@ -94,25 +95,13 @@ void fractionalOctaveSmooth()
     
     /* Make strings lower case */
     method = (char*) malloc (sizeof(char) * (strlen(methodIn) + 1));
-    for (int ii = 0; ii < strlen(methodIn); ii++)
-    {
-        method[ii] = tolower(methodIn[ii]);
-    }
-    method[strlen(methodIn)] = '\0';
+    lowerString(methodIn, method);
     
     winType = (char*) malloc (sizeof(char) * (strlen(winTypeIn) + 1));
-    for (int ii = 0; ii < strlen(winTypeIn); ii++)
-    {
-        winType[ii] = tolower(winTypeIn[ii]);
-    }
-    winType[strlen(winTypeIn)] = '\0';
+    lowerString(winTypeIn, winType);
     
     scale = (char*) malloc (sizeof(char) * (strlen(scaleIn) + 1));
-    for (int ii = 0; ii < strlen(scaleIn); ii++)
-    {
-        scale[ii] = tolower(scaleIn[ii]);
-    }
-    scale[strlen(scaleIn)] = '\0';
+    lowerString(scaleIn, scale);
     
     /* Release input strings */
     MLReleaseString(stdlink, methodIn);
@@ -395,4 +384,14 @@ void smoothingMatrix_hatz(int FFTLen, double frac, char* winType, double** M)
     }
     
     return;
+}
+
+void lowerString(const char* str1, char* str2)
+{
+    int len = strlen(str1);
+    for (int ii = 0; ii < len; ii++)
+    {
+        str2[ii] = tolower(str1[ii]);
+    }
+    str2[len] = '\0';
 }
