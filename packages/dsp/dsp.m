@@ -144,6 +144,39 @@ sweepToIR2::usage=
 
 Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
 
+getForwardSTFT::usage=
+"getForwardSTFT[x,\!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\)] computes the STFT of \!\(\*
+StyleBox[\"x\",\nFontSlant->\"Italic\"]\) using overlapping partitions of length \!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\) and \!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\) overlapping samples.
+
+Optionally, getForwardSTFT[\!\(\*
+StyleBox[\"x\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\)\!\(\*
+StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
+StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\)] applies a smoothing window \!\(\*
+StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\) to each partition."
+
+getInverseSTFT::usage=
+"getInverseSTFT[\!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\)] computes the inverse STFT of the spectrogram \!\(\*
+StyleBox[\"Y\",\nFontSlant->\"Italic\"]\), which was computed using overlapping partitions of length \!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\) and \!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\) overlapping samples.
+
+Optionally, getInverseSTFT[\!\(\*
+StyleBox[\"list\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"n\",\nFontSlant->\"Italic\"]\),\!\(\*
+StyleBox[\"p\",\nFontSlant->\"Italic\"]\)\!\(\*
+StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
+StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\)] specifies the smoothing window \!\(\*
+StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\) which was applied to each partition."
+
 
 Begin["`Private`"]
 
@@ -604,6 +637,23 @@ firstOnset = {};
 preOnsetDelay = {};
 ];
 {IRList,firstOnset,preOnsetDelay}
+]
+
+getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=SpectrogramArray[X,WinLen,WinLen-Overlap,WinFun]
+
+getInverseSTFT[Y_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{Win,InvWin,XLen,XMat,X,indx,numFrames},
+Win = WinFun[Range[-0.5,0.5,1/(WinLen-1)]];
+InvWin = 1/(Win/.(0.->1.));
+XLen = (Length[Y]-1)(WinLen-Overlap)+WinLen;
+XMat=Chop[InverseFourier[# ,FourierParameters->{1,-1}]&/@Y];
+X = ConstantArray[0.,XLen];
+numFrames = ConstantArray[0.,XLen];
+Do[
+indx = Range[1,WinLen]+(ii-1)(WinLen-Overlap);
+X[[indx]] = X[[indx]]+InvWin XMat[[ii]];
+numFrames[[indx]] = numFrames[[indx]]+(1-Boole[#==0.&/@Win]);
+,{ii,1,Length[Y]}];
+X/(numFrames/.(0.->1.))
 ]
 
 
