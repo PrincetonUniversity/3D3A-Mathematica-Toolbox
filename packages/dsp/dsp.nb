@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    118548,       2827]
-NotebookOptionsPosition[    116959,       2773]
-NotebookOutlinePosition[    117889,       2802]
-CellTagsIndexPosition[    117846,       2799]
+NotebookDataLength[    119794,       2856]
+NotebookOptionsPosition[    118204,       2802]
+NotebookOutlinePosition[    119135,       2831]
+CellTagsIndexPosition[    119092,       2828]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -2538,9 +2538,38 @@ Cell[BoxData[{
    RowBox[{"getForwardSTFT", "[", 
     RowBox[{"X_", ",", "WinLen_", ",", "Overlap_", ",", 
      RowBox[{"WinFun_:", "DirichletWindow"}]}], "]"}], ":=", 
-   RowBox[{"SpectrogramArray", "[", 
-    RowBox[{"X", ",", "WinLen", ",", 
-     RowBox[{"WinLen", "-", "Overlap"}], ",", "WinFun"}], "]"}]}], 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"XLen", ",", "HopLen", ",", "XPadLen", ",", "XPad"}], "}"}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"XLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "X", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"HopLen", " ", "=", " ", 
+       RowBox[{"WinLen", " ", "-", " ", "Overlap"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"XPadLen", " ", "=", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Ceiling", "[", 
+            FractionBox[
+             RowBox[{"XLen", "+", "WinLen", "-", "Overlap"}], "HopLen"], 
+            "]"}], "-", "1"}], ")"}], "HopLen"}], " ", "+", " ", "WinLen"}]}],
+       ";", "\[IndentingNewLine]", 
+      RowBox[{"XPad", " ", "=", " ", 
+       RowBox[{"PadRight", "[", 
+        RowBox[{
+         RowBox[{"PadLeft", "[", 
+          RowBox[{"X", ",", 
+           RowBox[{"XLen", "+", "HopLen"}]}], "]"}], ",", "XPadLen"}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"SpectrogramArray", "[", 
+       RowBox[{"XPad", ",", "WinLen", ",", 
+        RowBox[{"WinLen", "-", "Overlap"}], ",", "WinFun"}], "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"getInverseSTFT", "[", 
@@ -2550,8 +2579,8 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"{", 
      RowBox[{
-     "Win", ",", "InvWin", ",", "XLen", ",", "XMat", ",", "X", ",", "indx", 
-      ",", "numFrames"}], "}"}], ",", "\[IndentingNewLine]", 
+     "Win", ",", "HopLen", ",", "XLen", ",", "XMat", ",", "X", ",", "WinSum", 
+      ",", "indx"}], "}"}], ",", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"Win", " ", "=", " ", 
       RowBox[{"WinFun", "[", 
@@ -2561,22 +2590,15 @@ Cell[BoxData[{
          FractionBox["1", 
           RowBox[{"WinLen", "-", "1"}]]}], "]"}], "]"}]}], ";", 
      "\[IndentingNewLine]", 
-     RowBox[{"InvWin", " ", "=", " ", 
-      RowBox[{"1", "/", 
-       RowBox[{"(", 
-        RowBox[{"Win", "/.", 
-         RowBox[{"(", 
-          RowBox[{"0.", "\[Rule]", "1."}], ")"}]}], ")"}]}]}], ";", 
-     "\[IndentingNewLine]", 
+     RowBox[{"HopLen", " ", "=", " ", 
+      RowBox[{"WinLen", "-", "Overlap"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"XLen", " ", "=", " ", 
       RowBox[{
        RowBox[{
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"Length", "[", "Y", "]"}], "-", "1"}], ")"}], 
-        RowBox[{"(", 
-         RowBox[{"WinLen", "-", "Overlap"}], ")"}]}], "+", "WinLen"}]}], ";", 
-     "\[IndentingNewLine]", 
+          RowBox[{"Length", "[", "Y", "]"}], "-", "1"}], ")"}], "HopLen"}], 
+       "+", "WinLen"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"XMat", "=", 
       RowBox[{"Chop", "[", 
        RowBox[{
@@ -2591,7 +2613,7 @@ Cell[BoxData[{
      RowBox[{"X", " ", "=", " ", 
       RowBox[{"ConstantArray", "[", 
        RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"numFrames", " ", "=", " ", 
+     RowBox[{"WinSum", " ", "=", " ", 
       RowBox[{"ConstantArray", "[", 
        RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"Do", "[", "\[IndentingNewLine]", 
@@ -2613,31 +2635,35 @@ Cell[BoxData[{
          RowBox[{
           RowBox[{"X", "[", 
            RowBox[{"[", "indx", "]"}], "]"}], "+", 
-          RowBox[{"InvWin", " ", 
+          RowBox[{"Win", " ", 
            RowBox[{"XMat", "[", 
             RowBox[{"[", "ii", "]"}], "]"}]}]}]}], ";", "\[IndentingNewLine]", 
         RowBox[{
-         RowBox[{"numFrames", "[", 
+         RowBox[{"WinSum", "[", 
           RowBox[{"[", "indx", "]"}], "]"}], " ", "=", " ", 
          RowBox[{
-          RowBox[{"numFrames", "[", 
-           RowBox[{"[", "indx", "]"}], "]"}], "+", 
-          RowBox[{"(", 
-           RowBox[{"1", "-", 
-            RowBox[{"Boole", "[", 
-             RowBox[{
-              RowBox[{
-               RowBox[{"#", "\[Equal]", "0."}], "&"}], "/@", "Win"}], "]"}]}],
-            ")"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+          RowBox[{"WinSum", "[", 
+           RowBox[{"[", "indx", "]"}], "]"}], " ", "+", " ", 
+          SuperscriptBox["Win", "2"]}]}], ";"}], "\[IndentingNewLine]", ",", 
        RowBox[{"{", 
         RowBox[{"ii", ",", "1", ",", 
          RowBox[{"Length", "[", "Y", "]"}]}], "}"}]}], "]"}], ";", 
      "\[IndentingNewLine]", 
-     RowBox[{"X", "/", 
-      RowBox[{"(", 
-       RowBox[{"numFrames", "/.", 
-        RowBox[{"(", 
-         RowBox[{"0.", "\[Rule]", "1."}], ")"}]}], ")"}]}]}]}], 
+     FractionBox[
+      RowBox[{"X", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
+         RowBox[{"(", 
+          RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}], 
+      RowBox[{"WinSum", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
+         RowBox[{"(", 
+          RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}]]}]}], 
    "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellChangeTimes->{
   3.6964254067997217`*^9, {3.696426245240288*^9, 3.696426289308839*^9}, {
@@ -2749,7 +2775,10 @@ Cell[BoxData[{
    3.75068122161535*^9, 3.750681224310608*^9}, {3.750681325536892*^9, 
    3.75068132589491*^9}, {3.750682609012808*^9, 3.7506826194364223`*^9}, {
    3.750683284629099*^9, 3.750683285420494*^9}, {3.750683336716651*^9, 
-   3.750683337204815*^9}, {3.752610839097821*^9, 3.752610858557721*^9}},
+   3.750683337204815*^9}, {3.752610839097821*^9, 3.752610858557721*^9}, {
+   3.752864369589055*^9, 3.752864457002788*^9}, {3.75286451283298*^9, 
+   3.752864720617793*^9}, {3.7528647528296957`*^9, 3.752864850491646*^9}, {
+   3.75286503278369*^9, 3.752865067410635*^9}},
  ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -2772,8 +2801,8 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{925, 851},
-WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+WindowSize->{713, 851},
+WindowMargins->{{-4, Automatic}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
 FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
@@ -2803,13 +2832,13 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 175, 2, 92, "Title"],
-Cell[758, 26, 1776, 39, 600, "Text"],
+Cell[758, 26, 1776, 39, 695, "Text"],
 Cell[CellGroupData[{
 Cell[2559, 69, 91, 0, 64, "Section"],
 Cell[2653, 71, 317, 7, 28, "Input"],
 Cell[CellGroupData[{
 Cell[2995, 82, 116, 0, 44, "Subsection"],
-Cell[3114, 84, 22751, 440, 3395, "Input"]
+Cell[3114, 84, 22751, 440, 4330, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
@@ -2817,16 +2846,16 @@ Cell[25914, 530, 100, 0, 64, "Section"],
 Cell[26017, 532, 253, 5, 28, "Input"],
 Cell[CellGroupData[{
 Cell[26295, 541, 97, 0, 44, "Subsection"],
-Cell[26395, 543, 90030, 2209, 9237, "Input"]
+Cell[26395, 543, 91275, 2238, 9973, "Input"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[116474, 2758, 98, 0, 64, "Section"],
-Cell[116575, 2760, 106, 1, 28, "Input"]
+Cell[117719, 2787, 98, 0, 64, "Section"],
+Cell[117820, 2789, 106, 1, 28, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[116718, 2766, 97, 0, 64, "Section"],
-Cell[116818, 2768, 113, 1, 28, "Input"]
+Cell[117963, 2795, 97, 0, 64, "Section"],
+Cell[118063, 2797, 113, 1, 28, "Input"]
 }, Open  ]]
 }, Open  ]]
 }

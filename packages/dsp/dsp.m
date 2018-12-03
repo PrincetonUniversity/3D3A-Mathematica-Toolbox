@@ -639,21 +639,27 @@ preOnsetDelay = {};
 {IRList,firstOnset,preOnsetDelay}
 ]
 
-getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=SpectrogramArray[X,WinLen,WinLen-Overlap,WinFun]
+getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{XLen,HopLen,XPadLen,XPad},
+XLen = Length[X];
+HopLen = WinLen - Overlap;
+XPadLen = (Ceiling[(XLen+WinLen-Overlap)/HopLen]-1)HopLen + WinLen;
+XPad = PadRight[PadLeft[X,XLen+HopLen],XPadLen];
+SpectrogramArray[XPad,WinLen,WinLen-Overlap,WinFun]
+]
 
-getInverseSTFT[Y_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{Win,InvWin,XLen,XMat,X,indx,numFrames},
+getInverseSTFT[Y_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{Win,HopLen,XLen,XMat,X,WinSum,indx},
 Win = WinFun[Range[-0.5,0.5,1/(WinLen-1)]];
-InvWin = 1/(Win/.(0.->1.));
-XLen = (Length[Y]-1)(WinLen-Overlap)+WinLen;
+HopLen = WinLen-Overlap;
+XLen = (Length[Y]-1)HopLen+WinLen;
 XMat=Chop[InverseFourier[# ,FourierParameters->{1,-1}]&/@Y];
 X = ConstantArray[0.,XLen];
-numFrames = ConstantArray[0.,XLen];
+WinSum = ConstantArray[0.,XLen];
 Do[
 indx = Range[1,WinLen]+(ii-1)(WinLen-Overlap);
-X[[indx]] = X[[indx]]+InvWin XMat[[ii]];
-numFrames[[indx]] = numFrames[[indx]]+(1-Boole[#==0.&/@Win]);
+X[[indx]] = X[[indx]]+Win XMat[[ii]];
+WinSum[[indx]] = WinSum[[indx]] + Win^2;
 ,{ii,1,Length[Y]}];
-X/(numFrames/.(0.->1.))
+X[[(HopLen+1);;(XLen-Overlap)]]/WinSum[[(HopLen+1);;(XLen-Overlap)]]
 ]
 
 
