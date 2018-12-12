@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     52547,       1274]
-NotebookOptionsPosition[     51018,       1221]
-NotebookOutlinePosition[     51900,       1249]
-CellTagsIndexPosition[     51857,       1246]
+NotebookDataLength[     55260,       1309]
+NotebookOptionsPosition[     52957,       1256]
+NotebookOutlinePosition[     53837,       1284]
+CellTagsIndexPosition[     53794,       1281]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -21,7 +21,7 @@ Notebook[{
 
 Cell[CellGroupData[{
 Cell["general.m package", "Title",
- TextAlignment->Center],
+ TextAlignment->Center,ExpressionUUID->"4d15e69f-b115-4cd8-8e4a-625f934f99b8"],
 
 Cell["\<\
 ==============================================================================\
@@ -65,7 +65,7 @@ SOFTWARE.
 
 Cell[CellGroupData[{
 
-Cell["Begin the package", "Section"],
+Cell["Begin the package", "Section",ExpressionUUID->"35efc471-877a-4904-a3b1-a5fd4499b687"],
 
 Cell[BoxData[
  RowBox[{"BeginPackage", "[", "\"\<general`\>\"", "]"}]], "Input",
@@ -76,7 +76,7 @@ cc983ffb1b36"],
 
 Cell[CellGroupData[{
 
-Cell["Usage messages for the public functions", "Subsection"],
+Cell["Usage messages for the public functions", "Subsection",ExpressionUUID->"bc2f2aa8-9f5a-4e17-a924-0aa76522401a"],
 
 Cell[BoxData[{
  RowBox[{
@@ -265,14 +265,14 @@ the nearest element and its index, respectively.\>\""}]}], "Input",
 
 Cell[CellGroupData[{
 
-Cell["Begin the `Private context", "Section"],
+Cell["Begin the `Private context", "Section",ExpressionUUID->"55c64a07-f979-4094-b931-39ddd9a001ee"],
 
 Cell[BoxData[
- RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input"],
+ RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input",ExpressionUUID->"4de5908b-f0e2-4a59-ba86-a6eda40c6fce"],
 
 Cell[CellGroupData[{
 
-Cell["Function definitions", "Subsection"],
+Cell["Function definitions", "Subsection",ExpressionUUID->"d228ad91-e667-4580-a54e-94445bb555f8"],
 
 Cell[BoxData[{
  RowBox[{
@@ -963,6 +963,33 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
      ",", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{
+      RowBox[{"writeAudioToFile", "[", 
+       RowBox[{
+       "fileName_", ",", "exportData_", ",", "samplingRate_", ",", 
+        "commentString_"}], "]"}], ":=", 
+      RowBox[{"Block", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Rescale", "=", 
+          RowBox[{"#1", "&"}]}], "}"}], ",", 
+        RowBox[{
+         RowBox[{"Export", "[", 
+          RowBox[{"fileName", ",", 
+           RowBox[{"ListPlay", "[", 
+            RowBox[{"exportData", ",", 
+             RowBox[{"PlayRange", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", "1"}], "}"}]}], ",", 
+             RowBox[{"SampleRate", "\[Rule]", "samplingRate"}]}], "]"}], ",", 
+           
+           RowBox[{"\"\<AudioEncoding\>\"", "\[Rule]", "\"\<Integer24\>\""}], 
+           ",", 
+           RowBox[{"MetaInformation", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
+             "}"}]}]}], "]"}], ";"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
       RowBox[{"exportAIFF", "[", 
        RowBox[{"fileName_", ",", "data_", ",", 
         RowBox[{"samplingRate_:", " ", "44100"}], ",", 
@@ -1039,6 +1066,13 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
            RowBox[{
             RowBox[{"exportData", "=", "data"}], ";"}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"writeAudioToFile", "[", 
+          RowBox[{
+           RowBox[{"fileName", "<>", "ext"}], ",", "exportData", ",", 
+           "samplingRate", ",", "commentString"}], "]"}], ";"}]}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
          RowBox[{"Export", "[", 
           RowBox[{
            RowBox[{"fileName", "<>", "ext"}], ",", 
@@ -1055,8 +1089,8 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
            RowBox[{"MetaInformation", "\[Rule]", 
             RowBox[{"{", 
              RowBox[{"\"\<Comment\>\"", "\[Rule]", "commentString"}], 
-             "}"}]}]}], "]"}], ";"}]}], "\[IndentingNewLine]", "]"}]}], ";", 
-     "\[IndentingNewLine]", 
+             "}"}]}]}], "]"}], ";"}], "*)"}], "\[IndentingNewLine]", "]"}]}], 
+     ";", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"importAIFF", "[", "fileName_", "]"}], ":=", 
       RowBox[{"importAudio", "[", "fileName", "]"}]}], ";", " ", 
@@ -1197,33 +1231,34 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
    3.747679885895879*^9, 3.747679911431386*^9}, {3.747680051104188*^9, 
    3.747680078453393*^9}, {3.74768023269123*^9, 3.747680283586602*^9}, {
    3.747680365410099*^9, 3.7476803874517107`*^9}, {3.753629498945424*^9, 
-   3.753629507564993*^9}},
- ExpressionUUID -> "ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+   3.753629507564993*^9}, {3.75363116685184*^9, 
+   3.7536313263154583`*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["End the `Private context", "Section"],
+Cell["End the `Private context", "Section",ExpressionUUID->"35b20da3-285d-4777-a76a-fac431eab7d1"],
 
 Cell[BoxData[
- RowBox[{"End", "[", "]"}]], "Input"]
+ RowBox[{"End", "[", "]"}]], "Input",ExpressionUUID->"9d778d4c-7970-44ff-a634-d3d5d2f47281"]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["End the package context", "Section"],
+Cell["End the package context", "Section",ExpressionUUID->"4daf3662-1c67-45c8-b102-2dd0af134e33"],
 
 Cell[BoxData[
- RowBox[{"EndPackage", "[", "]"}]], "Input"]
+ RowBox[{"EndPackage", "[", "]"}]], "Input",ExpressionUUID->"0e22668f-8880-44e3-90e3-1b6a0242fd62"]
 }, Open  ]]
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
 WindowSize->{1440, 851},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -1234,7 +1269,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -1249,31 +1284,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 58, 1, 92, "Title"],
-Cell[641, 25, 1773, 38, 600, "Text"],
+Cell[580, 22, 113, 1, 98, "Title",ExpressionUUID->"4d15e69f-b115-4cd8-8e4a-625f934f99b8"],
+Cell[696, 25, 1773, 38, 725, "Text",ExpressionUUID->"5f58b60f-5a12-435d-bd34-ac66fd880ba8"],
 Cell[CellGroupData[{
-Cell[2439, 67, 36, 0, 64, "Section"],
-Cell[2478, 69, 253, 5, 28, "Input"],
+Cell[2494, 67, 91, 0, 67, "Section",ExpressionUUID->"35efc471-877a-4904-a3b1-a5fd4499b687"],
+Cell[2588, 69, 253, 5, 46, "Input",ExpressionUUID->"a1678b66-e129-4fc3-9374-cc983ffb1b36"],
 Cell[CellGroupData[{
-Cell[2756, 78, 61, 0, 44, "Subsection"],
-Cell[2820, 80, 8861, 181, 1100, "Input"]
+Cell[2866, 78, 116, 0, 54, "Subsection",ExpressionUUID->"bc2f2aa8-9f5a-4e17-a924-0aa76522401a"],
+Cell[2985, 80, 8861, 181, 1370, "Input",ExpressionUUID->"f70f128f-58a0-4f5a-8d85-14f3e37c4430"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[11730, 267, 45, 0, 64, "Section"],
-Cell[11778, 269, 74, 1, 28, "Input"],
+Cell[11895, 267, 100, 0, 67, "Section",ExpressionUUID->"55c64a07-f979-4094-b931-39ddd9a001ee"],
+Cell[11998, 269, 129, 1, 46, "Input",ExpressionUUID->"4de5908b-f0e2-4a59-ba86-a6eda40c6fce"],
 Cell[CellGroupData[{
-Cell[11877, 274, 42, 0, 44, "Subsection"],
-Cell[11922, 276, 38782, 924, 3740, "Input"]
+Cell[12152, 274, 97, 0, 54, "Subsection",ExpressionUUID->"d228ad91-e667-4580-a54e-94445bb555f8"],
+Cell[12252, 276, 40171, 959, 4688, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[50753, 1206, 43, 0, 64, "Section"],
-Cell[50799, 1208, 51, 1, 28, "Input"]
+Cell[52472, 1241, 98, 0, 67, "Section",ExpressionUUID->"35b20da3-285d-4777-a76a-fac431eab7d1"],
+Cell[52573, 1243, 106, 1, 46, "Input",ExpressionUUID->"9d778d4c-7970-44ff-a634-d3d5d2f47281"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[50887, 1214, 42, 0, 64, "Section"],
-Cell[50932, 1216, 58, 1, 28, "Input"]
+Cell[52716, 1249, 97, 0, 67, "Section",ExpressionUUID->"4daf3662-1c67-45c8-b102-2dd0af134e33"],
+Cell[52816, 1251, 113, 1, 46, "Input",ExpressionUUID->"0e22668f-8880-44e3-90e3-1b6a0242fd62"]
 }, Open  ]]
 }, Open  ]]
 }
