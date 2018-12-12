@@ -251,13 +251,13 @@ exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 readExt=FileExtension[fileName];
 Switch[readExt,
 "aiff",
-ext=".aiff";
+ext="";
 ,"AIFF",
-ext=".aiff";
+ext="";
 ,"wav",
-ext=".wav";
+ext="";
 ,"WAV",
-ext=".wav";
+ext="";
 ,"",
 ext=".aiff";
 ];
