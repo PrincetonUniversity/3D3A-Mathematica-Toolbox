@@ -507,11 +507,13 @@ outputSignal=TFtoIR[inputSignalRealDFT hilbertDFT]
 ]
 
 envelopeSignal[inputSignal_]:=Module[
-{positiveEnvelope,negativeEnvelope,outputSignal}
+{inputSignalMean,currentSignal,positiveEnvelope,negativeEnvelope,outputSignal}
 ,
-positiveEnvelope=Chop[Abs[discreteAnalyticSignal[inputSignal]]];
+inputSignalMean=Mean[inputSignal];
+currentSignal=inputSignal-inputSignalMean;
+positiveEnvelope=Chop[Abs[discreteAnalyticSignal[currentSignal]]];
 negativeEnvelope=-positiveEnvelope;
-outputSignal={positiveEnvelope,negativeEnvelope}
+outputSignal={positiveEnvelope,negativeEnvelope}+inputSignalMean
 ]
 
 HilbertTransform[inputSignal_] := Module[

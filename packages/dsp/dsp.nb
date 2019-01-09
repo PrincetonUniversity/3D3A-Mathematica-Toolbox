@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    119794,       2856]
-NotebookOptionsPosition[    118204,       2802]
-NotebookOutlinePosition[    119135,       2831]
-CellTagsIndexPosition[    119092,       2828]
+NotebookDataLength[    120968,       2838]
+NotebookOptionsPosition[    118609,       2784]
+NotebookOutlinePosition[    119538,       2813]
+CellTagsIndexPosition[    119495,       2810]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -400,61 +400,33 @@ sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep file is in WAV format.\
  RowBox[{
   RowBox[{
    RowBox[{"getForwardSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<getForwardSTFT[x,\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)] computes the STFT of \!\(\*
-StyleBox[\"x\",
-FontSlant->\"Italic\"]\) using overlapping partitions of length \!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\) and \!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\) overlapping samples.\n\nOptionally, \
-getForwardSTFT[\!\(\*
-StyleBox[\"x\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\",\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\)] applies a smoothing window \!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\) to each partition.\>\""}], 
+   "\"\<getForwardSTFT[x,\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"p\",FontSlant->\"Italic\"]\)] computes the STFT of \!\(\*StyleBox[\
+\"x\",FontSlant->\"Italic\"]\) using overlapping partitions of length \
+\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\) and \
+\!\(\*StyleBox[\"p\",FontSlant->\"Italic\"]\) overlapping samples.\n\n\
+Optionally, getForwardSTFT[\!\(\*StyleBox[\"x\",FontSlant->\"Italic\"]\),\!\(\
+\*StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\)] applies a smoothing window \!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\) to each partition.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"getInverseSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
-  "\"\<getInverseSTFT[\!\(\*
-StyleBox[\"Y\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)] computes the inverse STFT of the spectrogram \!\(\*
-StyleBox[\"Y\",
-FontSlant->\"Italic\"]\), which was computed using overlapping partitions of \
-length \!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\) and \!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\) overlapping samples.\n\nOptionally, \
-getInverseSTFT[\!\(\*
-StyleBox[\"list\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\",\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\)] specifies the smoothing window \!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\) which was applied to each partition.\>\""}]}], \
-"Input",
+  "\"\<getInverseSTFT[\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)] computes the inverse STFT of the spectrogram \
+\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\), which was computed using \
+overlapping partitions of length \
+\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\) and \
+\!\(\*StyleBox[\"p\",FontSlant->\"Italic\"]\) overlapping samples.\n\n\
+Optionally, \
+getInverseSTFT[\!\(\*StyleBox[\"list\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\)] specifies the smoothing window \
+\!\(\*StyleBox[\"wfun\",FontSlant->\"Italic\"]\) which was applied to each \
+partition.\>\""}]}], "Input",
  CellChangeTimes->{
   3.6964253886805487`*^9, {3.696426294808119*^9, 3.6964262995631742`*^9}, {
    3.696429001491379*^9, 3.696429074348794*^9}, {3.6964291114561996`*^9, 
@@ -521,8 +493,9 @@ FontSlant->\"Italic\"]\) which was applied to each partition.\>\""}]}], \
    3.7469909895407343`*^9, 3.746991051920265*^9}, {3.750677126585059*^9, 
    3.750677144701606*^9}, {3.750682658497123*^9, 3.7506827808240833`*^9}, {
    3.750683188335658*^9, 3.750683267014526*^9}, 3.7506833505962143`*^9, {
-   3.7526108760726137`*^9, 3.752611167603908*^9}},
- ExpressionUUID -> "307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+   3.7526108760726137`*^9, 
+   3.752611167603908*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2006,20 +1979,28 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"{", 
       RowBox[{
-      "positiveEnvelope", ",", "negativeEnvelope", ",", "outputSignal"}], 
-      "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+      "inputSignalMean", ",", "currentSignal", ",", "positiveEnvelope", ",", 
+       "negativeEnvelope", ",", "outputSignal"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
      RowBox[{
+      RowBox[{"inputSignalMean", "=", 
+       RowBox[{"Mean", "[", "inputSignal", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"currentSignal", "=", 
+       RowBox[{"inputSignal", "-", "inputSignalMean"}]}], ";", 
+      "\[IndentingNewLine]", 
       RowBox[{"positiveEnvelope", "=", 
        RowBox[{"Chop", "[", 
         RowBox[{"Abs", "[", 
-         RowBox[{"discreteAnalyticSignal", "[", "inputSignal", "]"}], "]"}], 
-        "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"discreteAnalyticSignal", "[", "currentSignal", "]"}], "]"}],
+         "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"negativeEnvelope", "=", 
        RowBox[{"-", "positiveEnvelope"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"outputSignal", "=", 
-       RowBox[{"{", 
-        RowBox[{"positiveEnvelope", ",", "negativeEnvelope"}], "}"}]}]}]}], 
-    "\[IndentingNewLine]", "]"}]}], 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"positiveEnvelope", ",", "negativeEnvelope"}], "}"}], "+", 
+        "inputSignalMean"}]}]}]}], "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2778,8 +2759,9 @@ Cell[BoxData[{
    3.750683337204815*^9}, {3.752610839097821*^9, 3.752610858557721*^9}, {
    3.752864369589055*^9, 3.752864457002788*^9}, {3.75286451283298*^9, 
    3.752864720617793*^9}, {3.7528647528296957`*^9, 3.752864850491646*^9}, {
-   3.75286503278369*^9, 3.752865067410635*^9}},
- ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
+   3.75286503278369*^9, 3.752865067410635*^9}, {3.7560535400459023`*^9, 
+   3.7560536369074707`*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2801,11 +2783,11 @@ Cell[BoxData[
 }, Open  ]]
 },
 AutoGeneratedPackage->Automatic,
-WindowSize->{713, 851},
-WindowMargins->{{-4, Automatic}, {Automatic, 0}},
+WindowSize->{1440, 851},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
-2016)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2816,7 +2798,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, 2016)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2831,31 +2813,31 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 92, "Title"],
-Cell[758, 26, 1776, 39, 695, "Text"],
+Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
 Cell[CellGroupData[{
-Cell[2559, 69, 91, 0, 64, "Section"],
-Cell[2653, 71, 317, 7, 28, "Input"],
+Cell[2559, 69, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b5d7a1890a"],
+Cell[2653, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
-Cell[2995, 82, 116, 0, 44, "Subsection"],
-Cell[3114, 84, 22751, 440, 4330, "Input"]
+Cell[2995, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+Cell[3114, 84, 22743, 413, 3449, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[25914, 530, 100, 0, 64, "Section"],
-Cell[26017, 532, 253, 5, 28, "Input"],
+Cell[25906, 503, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
+Cell[26009, 505, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[26295, 541, 97, 0, 44, "Subsection"],
-Cell[26395, 543, 91275, 2238, 9973, "Input"]
+Cell[26287, 514, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
+Cell[26387, 516, 91688, 2247, 10942, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[117719, 2787, 98, 0, 64, "Section"],
-Cell[117820, 2789, 106, 1, 28, "Input"]
+Cell[118124, 2769, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
+Cell[118225, 2771, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[117963, 2795, 97, 0, 64, "Section"],
-Cell[118063, 2797, 113, 1, 28, "Input"]
+Cell[118368, 2777, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
+Cell[118468, 2779, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }
