@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     55260,       1309]
-NotebookOptionsPosition[     52957,       1256]
-NotebookOutlinePosition[     53837,       1284]
-CellTagsIndexPosition[     53794,       1281]
+NotebookDataLength[     55584,       1316]
+NotebookOptionsPosition[     53281,       1263]
+NotebookOutlinePosition[     54161,       1291]
+CellTagsIndexPosition[     54118,       1288]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1135,21 +1135,27 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
              RowBox[{"Import", "[", 
               RowBox[{"fileName", ",", "\"\<AudioChannels\>\""}], "]"}]}], 
             ";", "\[IndentingNewLine]", 
-            RowBox[{"If", "[", 
+            RowBox[{"(*", 
              RowBox[{
-              RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"outputData", "=", 
-                RowBox[{"List", "[", 
-                 RowBox[{"Import", "[", 
-                  RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}], 
-               ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"outputData", "=", 
-                RowBox[{"Import", "[", 
-                 RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}]}], 
-             "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", ",", 
-           "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"numChannels", "<", "2"}], ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"outputData", "=", 
+                  RowBox[{"List", "[", 
+                   RowBox[{"Import", "[", 
+                    RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}], "]"}]}],
+                  ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"outputData", "=", 
+                  RowBox[{"Import", "[", 
+                   RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], 
+                 ";"}]}], "\[IndentingNewLine]", "]"}], ";"}], "*)"}], 
+            "\[IndentingNewLine]", 
+            RowBox[{"outputData", "=", 
+             RowBox[{"Import", "[", 
+              RowBox[{"fileName", ",", "\"\<Data\>\""}], "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
            RowBox[{
             RowBox[{
             "MessageDialog", "[", 
@@ -1231,8 +1237,9 @@ export.\>\"", "]"}], ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]",
    3.747679885895879*^9, 3.747679911431386*^9}, {3.747680051104188*^9, 
    3.747680078453393*^9}, {3.74768023269123*^9, 3.747680283586602*^9}, {
    3.747680365410099*^9, 3.7476803874517107`*^9}, {3.753629498945424*^9, 
-   3.753629507564993*^9}, {3.75363116685184*^9, 
-   3.7536313263154583`*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
+   3.753629507564993*^9}, {3.75363116685184*^9, 3.7536313263154583`*^9}, {
+   3.759257510640099*^9, 
+   3.759257512641881*^9}},ExpressionUUID->"ffb75994-b0b4-49b4-a397-\
 7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
@@ -1299,16 +1306,16 @@ Cell[11895, 267, 100, 0, 67, "Section",ExpressionUUID->"55c64a07-f979-4094-b931-
 Cell[11998, 269, 129, 1, 46, "Input",ExpressionUUID->"4de5908b-f0e2-4a59-ba86-a6eda40c6fce"],
 Cell[CellGroupData[{
 Cell[12152, 274, 97, 0, 54, "Subsection",ExpressionUUID->"d228ad91-e667-4580-a54e-94445bb555f8"],
-Cell[12252, 276, 40171, 959, 4688, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
+Cell[12252, 276, 40495, 966, 4709, "Input",ExpressionUUID->"ffb75994-b0b4-49b4-a397-7422a2d140cd"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[52472, 1241, 98, 0, 67, "Section",ExpressionUUID->"35b20da3-285d-4777-a76a-fac431eab7d1"],
-Cell[52573, 1243, 106, 1, 46, "Input",ExpressionUUID->"9d778d4c-7970-44ff-a634-d3d5d2f47281"]
+Cell[52796, 1248, 98, 0, 67, "Section",ExpressionUUID->"35b20da3-285d-4777-a76a-fac431eab7d1"],
+Cell[52897, 1250, 106, 1, 46, "Input",ExpressionUUID->"9d778d4c-7970-44ff-a634-d3d5d2f47281"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[52716, 1249, 97, 0, 67, "Section",ExpressionUUID->"4daf3662-1c67-45c8-b102-2dd0af134e33"],
-Cell[52816, 1251, 113, 1, 46, "Input",ExpressionUUID->"0e22668f-8880-44e3-90e3-1b6a0242fd62"]
+Cell[53040, 1256, 97, 0, 67, "Section",ExpressionUUID->"4daf3662-1c67-45c8-b102-2dd0af134e33"],
+Cell[53140, 1258, 113, 1, 46, "Input",ExpressionUUID->"0e22668f-8880-44e3-90e3-1b6a0242fd62"]
 }, Open  ]]
 }, Open  ]]
 }

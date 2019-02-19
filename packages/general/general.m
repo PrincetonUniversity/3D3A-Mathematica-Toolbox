@@ -280,11 +280,12 @@ importAudio[fileName_]:=Module[
 readExt=FileExtension[fileName];
 If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF")||(readExt=="wav")||(readExt=="WAV"),
 numChannels=Import[fileName,"AudioChannels"];
-If[numChannels<2,
+(*If[numChannels<2,
 outputData=List[Import[fileName,"Data"]];
 ,
 outputData=Import[fileName,"Data"];
-];
+];*)
+outputData=Import[fileName,"Data"];
 ,
 MessageDialog["Specified file for import is not an AIFF or WAV file."];
 outputData={};
