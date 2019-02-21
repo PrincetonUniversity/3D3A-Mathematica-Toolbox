@@ -38,7 +38,7 @@ conv::usage=
 "conv[x,y] circularly convolves x with y, both of which must have the same length. conv[x,y,\"lin\"] performs linear convolution, returning a signal of length = Length[x]+Length[y]-1. All convolutions are performed in the frequency domain. For linear convolution, it is assumed that the signals being convolved are causal."
 
 deconv::usage=
-"deconv[y,x] circularly deconvolves y by x, both of which must have the same length. deconv[y,x,\"lin\"] performs linear deconvolution, returning a signal with length = Length[y]-Length[x]+1, where Length[x] < Length[y]. All deconvolutions are performed in the frequency domain. For linear deconvolution, it is assumed that y is the result of linearly convolving x with another causal signal so that the result of the deconvolution will be causal."
+"deconv[y,x] circularly deconvolves y by x, where x cannot be longer than y. If x is shorter, x is zero-padded on the right before deconvolution (i.e. it is assumed that x is causal). deconv[y,x,\"lin\"] performs linear deconvolution, returning a signal with length = Length[y]-Length[x]+1, where Length[x] < Length[y]. All deconvolutions are performed in the frequency domain. For linear deconvolution, it is assumed that y is the result of linearly convolving x with another causal signal so that the result of the deconvolution will be causal."
 
 groupDelaySpec::usage=
 "groupDelaySpec[inputIR] returns the group delay spectrum of inputIR."
@@ -140,9 +140,9 @@ sweepToIR::usage=
 Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
 
 sweepToIR2::usage=
-"sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) as well as the absolute delay of the earliest signal.
+"sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) as well as the absolute delay of the earliest signal. Estimated pre-onset delay and background noise signals are also returned.
 
-Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
+Optionally, sweepToIR2[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
 
 getForwardSTFT::usage=
 "getForwardSTFT[x,\!\(\*
@@ -264,22 +264,17 @@ deconv[y_,x_,type_:"circ"]:=Module[
 ,
 yLen=Length[y];
 xLen=Length[x];
-If[type=="circ",
-If[xLen==yLen,
-output=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[x]]/.ComplexInfinity->0.];
-,
-MessageDialog["Sequences must be of the same length."];
-Abort[];
-]
-,
-If[type=="lin",
-If[yLen>xLen,
-xPad=PadRight[x,yLen];
-outputPad=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
-,
-MessageDialog["Length of y must be greater than that of x."];
+If[xLen>yLen,
+MessageDialog["The length of x cannot exceed that of y."];
 Abort[];
 ];
+If[type=="circ",
+xPad=PadRight[x,yLen];
+output=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
+,
+If[type=="lin",
+xPad=PadRight[x,yLen];
+outputPad=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
 output=outputPad[[;;yLen-xLen+1]];
 ,
 MessageDialog["Unrecognized input. See function help for valid inputs."];
@@ -589,10 +584,11 @@ getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 sweepToIR[sweepFilePath_]:=sweepToIR2[sweepFilePath][[1]]
 
 sweepToIR2[sweepFilePath_]:=Module[
-{rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen}
+{rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen,Fs,backgroundNoiseList,backgroundNoiseLen,availableBGNoiseLen}
 ,
 If[StringQ[sweepFilePath],
 {rawData,numCh}=importAudio[sweepFilePath];
+Fs=getSamplingRate[sweepFilePath];
 numMics=numCh-2;
 (* Remaining two channels are sweep and trigger signal channels, respectively. *)
 fileLen = Dimensions[rawData][[2]];
@@ -610,16 +606,28 @@ micIRs = ConstantArray[0.,numMics];
 micOnsets = ConstantArray[0.,numMics];
 Do[
 micIRs[[ii]] = deconv[PadRight[rawMicData[[ii]],FFTLen],PadRight[sweepSignal,FFTLen]];
-micOnsets[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->5];
+micOnsets[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->10];
 ,{ii,1,numMics}];
 firstOnset = Min[micOnsets];
+preOnsetDelay = Min[Round[0.004 Fs],firstOnset-1];
 
 If[numSweeps>1,
 IRLen = interSweepDelay;
 ,
 IRLen = FFTLen;
 ];
-preOnsetDelay = Min[Ceiling[0.25 IRLen],firstOnset-1];
+
+backgroundNoiseLen=IRLen;
+backgroundNoiseList=ConstantArray[ConstantArray[0.,backgroundNoiseLen],numMics];
+availableBGNoiseLen=firstOnset-preOnsetDelay;
+If[availableBGNoiseLen>backgroundNoiseLen,
+availableBGNoiseLen=backgroundNoiseLen;
+];
+Do[
+backgroundNoiseList[[ii,;;availableBGNoiseLen]] = micIRs[[ii,;;availableBGNoiseLen]];
+,
+{ii,1,numMics}
+];
 
 IRList=ConstantArray[{},{numMics,numSweeps}]; (* numMics rows correspond to each of the recording points. *)
 Do[
@@ -637,8 +645,9 @@ MessageDialog["Operation Canceled!"];
 IRList={};
 firstOnset = {};
 preOnsetDelay = {};
+backgroundNoiseList={};
 ];
-{IRList,firstOnset,preOnsetDelay}
+{IRList,firstOnset,preOnsetDelay,backgroundNoiseList}
 ]
 
 getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{XLen,HopLen,XPadLen,XPad},
