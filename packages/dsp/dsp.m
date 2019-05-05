@@ -581,10 +581,19 @@ sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[in
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
-sweepToIR[sweepFilePath_]:=sweepToIR2[sweepFilePath][[1]]
+sweepToIR[sweepFilePath_,fsFlag_:0]:=Module[
+{outData}
+,
+If[fsFlag==1,
+outData=Pick[sweepToIR2[sweepFilePath,5],{1,0,0,0,1},1];
+,
+outData=sweepToIR2[sweepFilePath][[1]];
+];
+outData
+]
 
-sweepToIR2[sweepFilePath_]:=Module[
-{rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen,Fs,backgroundNoiseList,backgroundNoiseLen,availableBGNoiseLen}
+sweepToIR2[sweepFilePath_,numOuts_:3]:=Module[
+{rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen,Fs,backgroundNoiseList,backgroundNoiseLen,availableBGNoiseLen,outData}
 ,
 If[StringQ[sweepFilePath],
 {rawData,numCh}=importAudio[sweepFilePath];
@@ -646,8 +655,21 @@ IRList={};
 firstOnset = {};
 preOnsetDelay = {};
 backgroundNoiseList={};
+Fs={};
 ];
-{IRList,firstOnset,preOnsetDelay,backgroundNoiseList}
+Switch[numOuts
+,1,
+outData=IRList;
+,2,
+outData={IRList,firstOnset};
+,3,
+outData={IRList,firstOnset,preOnsetDelay};
+,4,
+outData={IRList,firstOnset,preOnsetDelay,backgroundNoiseList};
+,5,
+outData={IRList,firstOnset,preOnsetDelay,backgroundNoiseList,Fs};
+];
+outData
 ]
 
 getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{XLen,HopLen,XPadLen,XPad},
