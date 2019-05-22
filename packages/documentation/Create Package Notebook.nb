@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     12807,        293]
-NotebookOptionsPosition[     12130,        269]
-NotebookOutlinePosition[     12484,        285]
-CellTagsIndexPosition[     12441,        282]
+NotebookDataLength[     15336,        330]
+NotebookOptionsPosition[     14686,        310]
+NotebookOutlinePosition[     15040,        326]
+CellTagsIndexPosition[     14997,        323]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -31,7 +31,7 @@ Princeton University, Princeton, New Jersey 08544, USA
    
 MIT License
    
-Copyright (c) 2018 Princeton University
+Copyright (c) 2019 Princeton University
    
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the \"Software\"), to deal
@@ -53,8 +53,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ==============================================================================\
 \>", "Text",
- CellChangeTimes->{{3.74109170337764*^9, 
-  3.74109178585573*^9}},ExpressionUUID->"16dd1f1d-4dbd-4061-8b64-\
+ CellChangeTimes->{{3.74109170337764*^9, 3.74109178585573*^9}, {
+  3.767536108905902*^9, 
+  3.767536108955258*^9}},ExpressionUUID->"16dd1f1d-4dbd-4061-8b64-\
 7c6087915fed"],
 
 Cell[CellGroupData[{
@@ -64,12 +65,14 @@ Cell[TextData[{
 CreatePackageNotebook[\[OpenCurlyDoubleQuote]PackageName\
 \[CloseCurlyDoubleQuote]];, where \[OpenCurlyDoubleQuote]PackageName\
 \[CloseCurlyDoubleQuote] is the name of your package.\n", "Subsubsection"],
- StyleBox["This function was taken from \[OpenCurlyDoubleQuote]Building \
+ StyleBox["This function is based on the \[OpenCurlyDoubleQuote]Building \
 Packages Tutorial.nb\[CloseCurlyDoubleQuote] written by Scientific Arts LLC.",
    "Text"]
 }], "Subsection",
  CellChangeTimes->{{3.6960372895755997`*^9, 3.696037393792472*^9}, {
-  3.6960374404006233`*^9, 3.6960374885930223`*^9}}],
+  3.6960374404006233`*^9, 3.6960374885930223`*^9}, {3.767536147561466*^9, 
+  3.767536149461359*^9}},ExpressionUUID->"f1e028c6-508e-4cae-803a-\
+08c6596cdede"],
 
 Cell[BoxData[{
  RowBox[{
@@ -81,7 +84,39 @@ that has the property that it will save a package version of itself when the \
 notebook itself is saved. The argument, \\\"package\\\", should be a string \
 without any whitespace.  If it contains whitespace then that will be removed. \
 When CreatePackageNotebook is executed it will bring up a dialog asking you \
-in which directory to save the notebook. \>\""}], ";"}], "\n"}], "\n", 
+in which directory to save the notebook. \>\""}], ";"}], 
+  "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"licenseText", "[", "]"}], ":=", 
+   RowBox[{
+   "\"\<======================================================================\
+========\nThis file is part of the 3D3A Mathematica Toolbox.\n   \n\
+Contributing author(s), listed alphabetically by last name:\nRahulram Sridhar \
+<rahulram@princeton.edu>\nJoseph G. Tylka <josephgt@princeton.edu>\n3D Audio \
+and Applied Acoustics (3D3A) Laboratory\nPrinceton University, Princeton, New \
+Jersey 08544, USA\n   \nMIT License\n   \nCopyright (c) \>\"", "<>", 
+    RowBox[{"ToString", "[", 
+     RowBox[{
+      RowBox[{"DateList", "[", "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}], "]"}], "<>", 
+    "\"\< Princeton University\n   \nPermission is hereby granted, free of \
+charge, to any person obtaining a copy\nof this software and associated \
+documentation files (the \\\"Software\\\"), to deal\nin the Software without \
+restriction, including without limitation the rights\nto use, copy, modify, \
+merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, \
+and to permit persons to whom the Software is\nfurnished to do so, subject to \
+the following conditions:\n   \nThe above copyright notice and this \
+permission notice shall be included in all\ncopies or substantial portions of \
+the Software.\n   \nTHE SOFTWARE IS PROVIDED \\\"AS IS\\\", WITHOUT WARRANTY \
+OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES \
+OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN \
+NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, \
+DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \
+OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE \
+USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\
+==============================================================================\
+\>\""}]}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"CreatePackageNotebook", "[", "theName_String", "]"}], ":=", 
@@ -119,6 +154,10 @@ in which directory to save the notebook. \>\""}], ";"}], "\n"}], "\n",
               "&"}], "[", 
              RowBox[{"name", "<>", "\"\<.m package\>\""}], "]"}], ",", 
             "\[IndentingNewLine]", 
+            RowBox[{"TextCell", "[", 
+             RowBox[{
+              RowBox[{"licenseText", "[", "]"}], ",", "\"\<Text\>\""}], "]"}],
+             ",", "\[IndentingNewLine]", 
             RowBox[{"TextCell", "[", 
              RowBox[{"\"\<Begin the package\>\"", ",", "\"\<Section\>\""}], 
              "]"}], ",", "\[IndentingNewLine]", 
@@ -254,23 +293,25 @@ in which directory to save the notebook. \>\""}], ";"}], "\n"}], "\n",
    3.603222241561941*^9, 3.603222340222205*^9}, {3.603222383393222*^9, 
    3.6032224666356*^9}, 3.6032225278275757`*^9, {3.603225080176652*^9, 
    3.603225080896413*^9}, 3.6032251228590593`*^9, {3.6032319445550013`*^9, 
-   3.603231958448491*^9}, 3.6032331257067213`*^9},
- CellID->486023811],
+   3.603231958448491*^9}, 3.6032331257067213`*^9, {3.767535788487782*^9, 
+   3.767535941760665*^9}, {3.767536048530243*^9, 3.7675360547065067`*^9}, {
+   3.76753623530694*^9, 3.767536238587501*^9}},
+ CellID->486023811,ExpressionUUID->"9878a2ad-fa2f-42b0-be83-477ccef51be0"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"CreatePackageNotebook", "[", "\"\<dsp\>\"", "]"}], ";"}]], "Input",\
-
+  RowBox[{"CreatePackageNotebook", "[", "\"\<sample\>\"", "]"}], 
+  ";"}]], "Input",
  CellChangeTimes->{{3.696178526967551*^9, 3.6961785582358217`*^9}, {
   3.696178604153954*^9, 3.696178604945653*^9}, {3.7410894160996723`*^9, 
-  3.741089416227367*^9}},ExpressionUUID->"cfb70043-c97e-4a16-813b-\
-91b9d3b44c04"]
+  3.741089416227367*^9}, {3.767536173343734*^9, 3.7675361738918943`*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"cfb70043-c97e-4a16-813b-91b9d3b44c04"]
 }, Open  ]]
 },
 WindowSize->{808, 751},
-WindowMargins->{{25, Automatic}, {Automatic, 4}},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 27, \
-2017)",
+WindowMargins->{{Automatic, 292}, {Automatic, 3}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -284,16 +325,12 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 1708, 37, 600, "Text", "ExpressionUUID" -> \
-"16dd1f1d-4dbd-4061-8b64-7c6087915fed"],
+Cell[558, 20, 1757, 38, 725, "Text",ExpressionUUID->"16dd1f1d-4dbd-4061-8b64-7c6087915fed"],
 Cell[CellGroupData[{
-Cell[2291, 61, 600, 10, 110, "Subsection", "ExpressionUUID" -> \
-"f1e028c6-508e-4cae-803a-08c6596cdede"],
-Cell[2894, 73, 8888, 184, 1104, "Input", "ExpressionUUID" -> \
-"9878a2ad-fa2f-42b0-be83-477ccef51be0",
+Cell[2340, 62, 707, 12, 128, "Subsection",ExpressionUUID->"f1e028c6-508e-4cae-803a-08c6596cdede"],
+Cell[3050, 76, 11215, 222, 1816, "Input",ExpressionUUID->"9878a2ad-fa2f-42b0-be83-477ccef51be0",
  CellID->486023811],
-Cell[11785, 259, 329, 7, 32, "Input", "ExpressionUUID" -> \
-"cfb70043-c97e-4a16-813b-91b9d3b44c04"]
+Cell[14268, 300, 402, 7, 30, "Input",ExpressionUUID->"cfb70043-c97e-4a16-813b-91b9d3b44c04"]
 }, Open  ]]
 }
 ]
