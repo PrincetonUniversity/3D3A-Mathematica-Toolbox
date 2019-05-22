@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    125350,       2937]
-NotebookOptionsPosition[    122991,       2883]
-NotebookOutlinePosition[    123920,       2912]
-CellTagsIndexPosition[    123877,       2909]
+NotebookDataLength[    127191,       2978]
+NotebookOptionsPosition[    124832,       2924]
+NotebookOutlinePosition[    125761,       2953]
+CellTagsIndexPosition[    125718,       2950]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -414,8 +414,9 @@ Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
 \",FontSlant->\"Italic\"]\) to each partition.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"getInverseSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
-  "\"\<getInverseSTFT[\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\),\!\(\*\
+  RowBox[{
+   RowBox[{"getInverseSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
+   "\"\<getInverseSTFT[\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\),\!\(\*\
 StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
 Italic\"]\)] computes the inverse STFT of the spectrogram \
 \!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\), which was computed using \
@@ -428,7 +429,15 @@ StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
 Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
 \",FontSlant->\"Italic\"]\)] specifies the smoothing window \
 \!\(\*StyleBox[\"wfun\",FontSlant->\"Italic\"]\) which was applied to each \
-partition.\>\""}]}], "Input",
+partition.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"addTFs", "::", "usage"}], "=", "\[IndentingNewLine]", 
+  "\"\<addTFs[H1,H2] takes as inputs two transfer functions and returns the \
+magnitude square of their sum (i.e., Abs[H1+H2\!\(\*SuperscriptBox[\(]\), \(2\
+\)]\)). This command may also be specified as \
+addTFs[H1,H2,\\\"Correlated\\\"]\naddTFs[H1,H2,\\\"Uncorrelated\\\"] returns \
+Abs[H1\!\(\*SuperscriptBox[\(]\), \(2\)]\)+Abs[H2\!\(\*SuperscriptBox[\(]\), \
+\(2\)]\) instead.\>\""}]}], "Input",
  CellChangeTimes->{
   3.6964253886805487`*^9, {3.696426294808119*^9, 3.6964262995631742`*^9}, {
    3.696429001491379*^9, 3.696429074348794*^9}, {3.6964291114561996`*^9, 
@@ -496,8 +505,9 @@ partition.\>\""}]}], "Input",
    3.750677144701606*^9}, {3.750682658497123*^9, 3.7506827808240833`*^9}, {
    3.750683188335658*^9, 3.750683267014526*^9}, 3.7506833505962143`*^9, {
    3.7526108760726137`*^9, 3.752611167603908*^9}, {3.759743690735177*^9, 
-   3.759743696155362*^9}, {3.759743929804028*^9, 
-   3.75974395660716*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+   3.759743696155362*^9}, {3.759743929804028*^9, 3.75974395660716*^9}, {
+   3.767529503301136*^9, 3.7675295154452047`*^9}, {3.767529556020381*^9, 
+   3.7675297080334673`*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
 4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
@@ -2648,99 +2658,129 @@ Cell[BoxData[{
     "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"getInverseSTFT", "[", 
-   RowBox[{"Y_", ",", "WinLen_", ",", "Overlap_", ",", 
-    RowBox[{"WinFun_:", "DirichletWindow"}]}], "]"}], ":=", 
-  RowBox[{"Module", "[", 
-   RowBox[{
-    RowBox[{"{", 
-     RowBox[{
-     "Win", ",", "HopLen", ",", "XLen", ",", "XMat", ",", "X", ",", "WinSum", 
-      ",", "indx"}], "}"}], ",", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"getInverseSTFT", "[", 
+    RowBox[{"Y_", ",", "WinLen_", ",", "Overlap_", ",", 
+     RowBox[{"WinFun_:", "DirichletWindow"}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
     RowBox[{
-     RowBox[{"Win", " ", "=", " ", 
-      RowBox[{"WinFun", "[", 
-       RowBox[{"Range", "[", 
-        RowBox[{
-         RowBox[{"-", "0.5"}], ",", "0.5", ",", 
-         FractionBox["1", 
-          RowBox[{"WinLen", "-", "1"}]]}], "]"}], "]"}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"HopLen", " ", "=", " ", 
-      RowBox[{"WinLen", "-", "Overlap"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"XLen", " ", "=", " ", 
+     RowBox[{"{", 
       RowBox[{
-       RowBox[{
-        RowBox[{"(", 
+      "Win", ",", "HopLen", ",", "XLen", ",", "XMat", ",", "X", ",", "WinSum",
+        ",", "indx"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Win", " ", "=", " ", 
+       RowBox[{"WinFun", "[", 
+        RowBox[{"Range", "[", 
          RowBox[{
-          RowBox[{"Length", "[", "Y", "]"}], "-", "1"}], ")"}], "HopLen"}], 
-       "+", "WinLen"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"XMat", "=", 
-      RowBox[{"Chop", "[", 
+          RowBox[{"-", "0.5"}], ",", "0.5", ",", 
+          FractionBox["1", 
+           RowBox[{"WinLen", "-", "1"}]]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"HopLen", " ", "=", " ", 
+       RowBox[{"WinLen", "-", "Overlap"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"XLen", " ", "=", " ", 
        RowBox[{
         RowBox[{
-         RowBox[{"InverseFourier", "[", 
-          RowBox[{"#", " ", ",", 
-           RowBox[{"FourierParameters", "\[Rule]", 
-            RowBox[{"{", 
-             RowBox[{"1", ",", 
-              RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "&"}], "/@", "Y"}], 
-       "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"X", " ", "=", " ", 
-      RowBox[{"ConstantArray", "[", 
-       RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"WinSum", " ", "=", " ", 
-      RowBox[{"ConstantArray", "[", 
-       RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-     RowBox[{"Do", "[", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{
-        RowBox[{"indx", " ", "=", " ", 
-         RowBox[{
-          RowBox[{"Range", "[", 
-           RowBox[{"1", ",", "WinLen"}], "]"}], "+", 
+         RowBox[{"(", 
           RowBox[{
-           RowBox[{"(", 
-            RowBox[{"ii", "-", "1"}], ")"}], 
-           RowBox[{"(", 
-            RowBox[{"WinLen", "-", "Overlap"}], ")"}]}]}]}], ";", 
-        "\[IndentingNewLine]", 
+           RowBox[{"Length", "[", "Y", "]"}], "-", "1"}], ")"}], "HopLen"}], 
+        "+", "WinLen"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"XMat", "=", 
+       RowBox[{"Chop", "[", 
         RowBox[{
-         RowBox[{"X", "[", 
-          RowBox[{"[", "indx", "]"}], "]"}], " ", "=", " ", 
+         RowBox[{
+          RowBox[{"InverseFourier", "[", 
+           RowBox[{"#", " ", ",", 
+            RowBox[{"FourierParameters", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", 
+               RowBox[{"-", "1"}]}], "}"}]}]}], "]"}], "&"}], "/@", "Y"}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"X", " ", "=", " ", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"WinSum", " ", "=", " ", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0.", ",", "XLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"indx", " ", "=", " ", 
+          RowBox[{
+           RowBox[{"Range", "[", 
+            RowBox[{"1", ",", "WinLen"}], "]"}], "+", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"ii", "-", "1"}], ")"}], 
+            RowBox[{"(", 
+             RowBox[{"WinLen", "-", "Overlap"}], ")"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"X", "[", 
-           RowBox[{"[", "indx", "]"}], "]"}], "+", 
-          RowBox[{"Win", " ", 
-           RowBox[{"XMat", "[", 
-            RowBox[{"[", "ii", "]"}], "]"}]}]}]}], ";", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{"WinSum", "[", 
-          RowBox[{"[", "indx", "]"}], "]"}], " ", "=", " ", 
+           RowBox[{"[", "indx", "]"}], "]"}], " ", "=", " ", 
+          RowBox[{
+           RowBox[{"X", "[", 
+            RowBox[{"[", "indx", "]"}], "]"}], "+", 
+           RowBox[{"Win", " ", 
+            RowBox[{"XMat", "[", 
+             RowBox[{"[", "ii", "]"}], "]"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"WinSum", "[", 
-           RowBox[{"[", "indx", "]"}], "]"}], " ", "+", " ", 
-          SuperscriptBox["Win", "2"]}]}], ";"}], "\[IndentingNewLine]", ",", 
-       RowBox[{"{", 
-        RowBox[{"ii", ",", "1", ",", 
-         RowBox[{"Length", "[", "Y", "]"}]}], "}"}]}], "]"}], ";", 
-     "\[IndentingNewLine]", 
-     FractionBox[
-      RowBox[{"X", "[", 
-       RowBox[{"[", 
+           RowBox[{"[", "indx", "]"}], "]"}], " ", "=", " ", 
+          RowBox[{
+           RowBox[{"WinSum", "[", 
+            RowBox[{"[", "indx", "]"}], "]"}], " ", "+", " ", 
+           SuperscriptBox["Win", "2"]}]}], ";"}], "\[IndentingNewLine]", ",", 
+        
+        RowBox[{"{", 
+         RowBox[{"ii", ",", "1", ",", 
+          RowBox[{"Length", "[", "Y", "]"}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      FractionBox[
+       RowBox[{"X", "[", 
+        RowBox[{"[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
+          RowBox[{"(", 
+           RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}], 
+       RowBox[{"WinSum", "[", 
+        RowBox[{"[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
+          RowBox[{"(", 
+           RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}]]}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"addTFs", "[", 
+   RowBox[{"H1_", ",", "H2_", ",", 
+    RowBox[{"mode_:", " ", "\"\<Correlated\>\""}]}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "sum", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Switch", "[", 
+      RowBox[{
+      "mode", ",", "\[IndentingNewLine]", "\"\<Correlated\>\"", ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"sum", "=", 
+        SuperscriptBox[
+         RowBox[{"Abs", "[", 
+          RowBox[{"H1", "+", "H2"}], "]"}], "2"]}], ",", 
+       "\[IndentingNewLine]", "\"\<Uncorrelated\>\"", ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"sum", "=", 
         RowBox[{
-         RowBox[{"(", 
-          RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
-         RowBox[{"(", 
-          RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}], 
-      RowBox[{"WinSum", "[", 
-       RowBox[{"[", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{"HopLen", "+", "1"}], ")"}], ";;", 
-         RowBox[{"(", 
-          RowBox[{"XLen", "-", "Overlap"}], ")"}]}], "]"}], "]"}]]}]}], 
-   "\[IndentingNewLine]", "]"}]}]}], "Input",
+         SuperscriptBox[
+          RowBox[{"Abs", "[", "H1", "]"}], "2"], "+", 
+         SuperscriptBox[
+          RowBox[{"Abs", "[", "H2", "]"}], "2"]}]}]}], "\[IndentingNewLine]", 
+      "]"}], ";", "\[IndentingNewLine]", "sum"}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input",
  CellChangeTimes->{
   3.6964254067997217`*^9, {3.696426245240288*^9, 3.696426289308839*^9}, {
    3.69642640587595*^9, 3.696426452128778*^9}, {3.6964269747974367`*^9, 
@@ -2858,8 +2898,9 @@ Cell[BoxData[{
    3.7560536369074707`*^9}, 3.7597436601056223`*^9, {3.759743743199274*^9, 
    3.759743836090808*^9}, {3.7597440767885857`*^9, 3.759744077105986*^9}, {
    3.765839295271883*^9, 3.7658393952011633`*^9}, {3.76584531375529*^9, 
-   3.765845351276671*^9}, {3.765846340494928*^9, 
-   3.765846522433868*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+   3.765845351276671*^9}, {3.765846340494928*^9, 3.765846522433868*^9}, {
+   3.767529490146439*^9, 3.767529490527382*^9}, {3.767529538790599*^9, 
+   3.767529544604847*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
 50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -2919,24 +2960,24 @@ Cell[2559, 69, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b
 Cell[2653, 71, 317, 7, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
 Cell[2995, 82, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3114, 84, 23016, 416, 3470, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[3114, 84, 23643, 426, 3575, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[26179, 506, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
-Cell[26282, 508, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[26806, 516, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
+Cell[26909, 518, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[26560, 517, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
-Cell[26660, 519, 95797, 2343, 11593, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[27187, 527, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
+Cell[27287, 529, 97011, 2374, 11812, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[122506, 2868, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
-Cell[122607, 2870, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[124347, 2909, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
+Cell[124448, 2911, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[122750, 2876, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
-Cell[122850, 2878, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[124591, 2917, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
+Cell[124691, 2919, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }

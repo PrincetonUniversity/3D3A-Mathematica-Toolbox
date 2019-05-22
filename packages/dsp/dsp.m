@@ -177,6 +177,10 @@ StyleBox[\",\",\nFontSlant->\"Italic\"]\)\!\(\*
 StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\)] specifies the smoothing window \!\(\*
 StyleBox[\"wfun\",\nFontSlant->\"Italic\"]\) which was applied to each partition."
 
+addTFs::usage=
+"addTFs[H1,H2] takes as inputs two transfer functions and returns the magnitude square of their sum (i.e., Abs[H1+H2\!\(\*SuperscriptBox[\(]\), \(2\)]\)). This command may also be specified as addTFs[H1,H2,\"Correlated\"]
+addTFs[H1,H2,\"Uncorrelated\"] returns Abs[H1\!\(\*SuperscriptBox[\(]\), \(2\)]\)+Abs[H2\!\(\*SuperscriptBox[\(]\), \(2\)]\) instead."
+
 
 Begin["`Private`"]
 
@@ -693,6 +697,16 @@ X[[indx]] = X[[indx]]+Win XMat[[ii]];
 WinSum[[indx]] = WinSum[[indx]] + Win^2;
 ,{ii,1,Length[Y]}];
 X[[(HopLen+1);;(XLen-Overlap)]]/WinSum[[(HopLen+1);;(XLen-Overlap)]]
+]
+
+addTFs[H1_,H2_,mode_: "Correlated"]:=Module[{sum},
+Switch[mode,
+"Correlated",
+sum=Abs[H1+H2]^2,
+"Uncorrelated",
+sum=Abs[H1]^2+Abs[H2]^2
+];
+sum
 ]
 
 
