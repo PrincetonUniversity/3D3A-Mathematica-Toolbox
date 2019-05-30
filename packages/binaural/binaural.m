@@ -74,6 +74,21 @@ smoothHRTFLogMagSpec::usage=
 OPTIONAL INPUTS:
 	1. \"Smoothing Factor\" \[RightArrow] specifies the smoothing factor to use. Values range between 0 (max. smoothing) and 1 (no smoothing). The default value is 0.2."
 
+windowIRPair::usage=
+"
+windowIRPair[IRL,IRR,Fs] windows a pair of IRs specified at sampling rate Fs (in Hz). The default window parameters are: 1) Duration - 0.01 seconds, 2) Pre-onset delay - 0.001 seconds, 3) Window type - \"Tukey\". The windowing is performed such that the window for each IR is applied starting at \"Pre-onset delay\" samples before the onset of that IR, followed by appropriate zero padding to retain the relative delay between the IRs.
+
+windowIRPair[IRL,IRR,Fs,windowDuration] optionally specifies the window duration in seconds.
+
+windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay] optionally specifies the pre-onset delay in seconds.
+
+windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType] optionally specifies the window type. The two options are: 1) \"Rect\" - rectangular window and 2) \"Tukey\" - Tukey window.
+
+windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType,keepOnsetFlag] optionally specifies whether or not to retain the absolute onsets of the original IRs. If set to True (default), the original onsets are retained. If set to False, the minimum onset of the windowed IRs is set to 1 sample, with the other windowed IR appropriately shifted to retain the relative delays between IRs.
+
+windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType,keepOnsetFlag,keepLenFlag] optionally specifies whether or not the windowed IRs should have a length of windowDuration (set keepLenFlag to True - default) or the length of the original, input IRs (keepLenFlag = False). 
+"
+
 
 Begin["`Private`"]
 
@@ -239,6 +254,72 @@ smoothedHRTFHalf=Table[Total[fourierSeriesCoeffs[[;;smoothingIndex]] Cos[(2\[Pi]
 smoothedHRTF=10^(Join[smoothedHRTFHalf,Drop[Reverse[Drop[smoothedHRTFHalf,1]],1]]);
 zeroPhIR=TFtoIR[smoothedHRTF];
 minPhIR=PadRight[minPhaseIR[zeroPhIR],Length[inputHRIR]]
+]
+
+windowIRPair[IRL_,IRR_,Fs_,windowDuration_:0.01,preOnsetDelay_:0.001,winType_:"Tukey",keepOnsetFlag_: True,keepLenFlag_:True]:=Module[{irL,irR,IRLen,winLen,maxOnset,effWinLen,preOnsetDelaySamp,preOnsetDelaySec,winVec,onsetL,onsetR,onsetMin,tempIRL,tempIRR,startIndx,stopIndx,outIRL,outIRR},
+IRLen = Length[IRL];
+winLen = Round[Fs windowDuration];
+onsetL = signalOnset[IRL];
+onsetR = signalOnset[IRR];
+maxOnset=Max[onsetL,onsetR];
+If[keepLenFlag,
+effWinLen=winLen-maxOnset;
+,
+effWinLen=winLen;
+];
+If[IRLen<(effWinLen+maxOnset),
+irL=PadRight[IRL,effWinLen+maxOnset];
+irR=PadRight[IRR,effWinLen+maxOnset];
+IRLen=effWinLen+maxOnset;
+,
+irL=IRL;
+irR=IRR;
+];
+
+preOnsetDelaySamp = Round[Fs preOnsetDelay];
+onsetMin=Min[onsetL,onsetR];
+If[preOnsetDelaySamp>=onsetMin,
+preOnsetDelaySamp=onsetMin-1;
+preOnsetDelaySec=preOnsetDelaySamp/Fs;
+,
+preOnsetDelaySec=preOnsetDelaySamp/Fs;
+];
+Switch[winType
+,"Rect",
+winVec = ConstantArray[1.,effWinLen];
+,"Tukey",
+winVec =tukeyWin[effWinLen,(2.preOnsetDelaySec)/(effWinLen/Fs)];
+,_,
+MessageDialog["Unrecognized input. Aborting..."];
+Abort[];
+];
+startIndx=onsetL-preOnsetDelaySamp+1;
+stopIndx=startIndx+effWinLen-1;
+tempIRL=PadRight[irL[[startIndx;;stopIndx]]winVec,IRLen];
+startIndx=onsetR-preOnsetDelaySamp+1;
+stopIndx=startIndx+effWinLen-1;
+tempIRR=PadRight[irR[[startIndx;;stopIndx]]winVec,IRLen];
+Switch[keepOnsetFlag
+,False,
+If[onsetL>=onsetR,
+outIRL = RotateRight[tempIRL,onsetL-onsetR];
+outIRR = tempIRR;
+,
+outIRL = tempIRL;
+outIRR = RotateRight[tempIRR,onsetR-onsetL];
+];
+,True,
+outIRL=RotateRight[tempIRL,onsetL-preOnsetDelaySamp];
+outIRR=RotateRight[tempIRR,onsetR-preOnsetDelaySamp];
+,_,
+MessageDialog["Unrecognized input. Aborting..."];
+Abort[];
+];
+If[keepLenFlag,
+outIRL=outIRL[[;;winLen]];
+outIRR=outIRR[[;;winLen]];
+];
+{outIRL,outIRR}
 ]
 
 
