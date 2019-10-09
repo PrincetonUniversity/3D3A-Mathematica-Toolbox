@@ -259,8 +259,8 @@ minPhIR=PadRight[minPhaseIR[zeroPhIR],Length[inputHRIR]]
 windowIRPair[IRL_,IRR_,Fs_,windowDuration_:0.01,preOnsetDelay_:0.001,winType_:"Tukey",keepOnsetFlag_: True,keepLenFlag_:True]:=Module[{irL,irR,IRLen,winLen,maxOnset,effWinLen,preOnsetDelaySamp,preOnsetDelaySec,winVec,onsetL,onsetR,onsetMin,tempIRL,tempIRR,startIndx,stopIndx,outIRL,outIRR},
 IRLen = Length[IRL];
 winLen = Round[Fs windowDuration];
-onsetL = signalOnset[IRL];
-onsetR = signalOnset[IRR];
+onsetL = signalOnset[IRL,"Threshold"->20];
+onsetR = signalOnset[IRR,"Threshold"->20];
 maxOnset=Max[onsetL,onsetR];
 If[keepLenFlag,
 effWinLen=winLen-maxOnset;
