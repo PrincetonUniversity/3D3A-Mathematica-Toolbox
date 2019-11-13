@@ -84,7 +84,7 @@ windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay] optionally specifies the p
 
 windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType] optionally specifies the window type. The two options are: 1) \"Rect\" - rectangular window and 2) \"Tukey\" - Tukey window.
 
-windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType,keepOnsetFlag] optionally specifies whether or not to retain the absolute onsets of the original IRs. If set to True (default), the original onsets are retained. If set to False, the minimum onset of the windowed IRs is set to 1 sample, with the other windowed IR appropriately shifted to retain the relative delays between IRs.
+windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType,keepOnsetFlag] optionally specifies whether or not to retain the absolute onsets of the original IRs. If set to True (default), the original onsets are retained. If set to False, the minimum onset of the windowed IRs is set to 1 sample (excluding any pre-onset delay), with the other windowed IR appropriately shifted to retain the relative delays between IRs.
 
 windowIRPair[IRL,IRR,Fs,windowDuration,preOnsetDelay,winType,keepOnsetFlag,keepLenFlag] optionally specifies whether or not the windowed IRs should have a length of windowDuration (set keepLenFlag to True - default) or the length of the original, input IRs (keepLenFlag = False). 
 "
