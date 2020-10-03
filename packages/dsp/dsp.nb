@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    126633,       3015]
-NotebookOptionsPosition[    124971,       2958]
-NotebookOutlinePosition[    125904,       2987]
-CellTagsIndexPosition[    125861,       2984]
+NotebookDataLength[    140210,       3242]
+NotebookOptionsPosition[    137724,       3185]
+NotebookOutlinePosition[    138653,       3214]
+CellTagsIndexPosition[    138610,       3211]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -74,13 +74,18 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"BeginPackage", "[", 
   RowBox[{"\"\<dsp`\>\"", ",", 
-   RowBox[{"{", "\"\<general`\>\"", "}"}]}], "]"}]], "Input",
+   RowBox[{"{", 
+    RowBox[{"\"\<general`\>\"", ",", "\"\<math`\>\""}], "}"}]}], 
+  "]"}]], "Input",
  CellChangeTimes->{{3.6964764554807577`*^9, 3.6964764599256163`*^9}, {
-  3.710989528225996*^9, 3.710989528435109*^9}},
- ExpressionUUID -> "71729209-1ef9-4b73-8904-8ce8c08cb755"],
+  3.710989528225996*^9, 3.710989528435109*^9}, {3.8104640143836613`*^9, 
+  3.810464016979322*^9}},ExpressionUUID->"71729209-1ef9-4b73-8904-\
+8ce8c08cb755"],
 
 Cell[BoxData["\<\"dsp`\"\>"], "Output",
- CellChangeTimes->{3.779646507425295*^9}]
+ CellChangeTimes->{
+  3.779646507425295*^9},ExpressionUUID->"524696a5-3c47-423a-8594-\
+2467a7286acb"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -287,10 +292,16 @@ The default value is \[Pi].\>\""}],
    "\"\<inverseFilter[h] computes the impulse response of the inverse filter \
 corresponding to the input impulse response, h.\n\nOPTIONAL INPUTS:\n\t1. \
 \\\"Regularization\\\" \[RightArrow] specifies the type of regularization to \
-apply with \\\"None\\\" (default) and \\\"Piecewise\\\" being the two \
-options.\n\t2. \\\"Regularization Ranges\\\" \[RightArrow] list of triples \
-{W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] \
-in the range {W1, W2}. \nEXAMPLE:\n\tinvFilt = \
+apply with \\\"None\\\" (default), \\\"Piecewise\\\", and \\\"Custom\\\" \
+being the three options.\n\t2. \\\"Regularization Ranges\\\" \[RightArrow] \
+list of triples {W1, W2, \[Epsilon]} which specifies the regularization \
+parameter \[Epsilon] in the range {W1, W2}. This option is only required when \
+\\\"Regularization\\\" is set to \\\"Piecewise\\\".\n\t3. \\\"SampleRate\\\" \
+\[RightArrow] sampling rate in Hz. This option is only required when \
+\\\"Regularization\\\" is set to \\\"Custom\\\".\n\t4. \\\"FreqRange\\\" \
+\[RightArrow] frequency range, in Hz, over which direct inversion is to be \
+performed. This option is only required when \\\"Regularization\\\" is set to \
+\\\"Custom\\\".\nEXAMPLE:\n\tinvFilt = \
 inverseFilter[filt,\\\"Regularization\\\"\[Rule]\\\"Piecewise\\\",\\\"\
 Regularization Ranges\\\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -389,9 +400,18 @@ dB. If refSPL is not specified, 105 dB is assumed.\>\""}],
 2) in AIFF format with the (n-1)th channel containing the sweep signal and \
 the nth channel containing a sweep trigger signal (containing p triggers for \
 each of p sweeps, with p > 0), deconvolves all preceding channels by the \
-sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of \
-lists).\n\nOptionally, sweepToIR[sweepFilePath,\\\"WAV\\\"] assumes the sweep \
-file is in WAV format.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+sweep signal, and exports the results as an (n-2)-by-p matrix of IRs (i.e. \
+list of lists).\n\nsweepToIR[sweepFilePath,fsFlag] allows the option of \
+requesting that the sampling rate, in Hz, be returned as a second output. \
+When fsFlag is set to 1, the sampling rate is returned. When fsFlag is set to \
+0, only the matrix of IRs is returned.\n\nsweepToIR[sweepFilePath,fsFlag,OPT] \
+allows the option of specifying whether or not to use a short pre-delay for \
+the IRs or maintain their natural pre-delay by specifying OPT as one of the \
+following:\n\t1. \\\"short\\\" (default) - the IRs will be windowed (using a \
+rectangular window) such that the IR with the shortest natural onset will \
+have a pre-delay of 4 ms or the natural onset, whichever is smaller.\n\t2. \\\
+\"natural\\\" - the natural onsets of all the IRs will be preserved.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"sweepToIR2", "::", "usage"}], "=", "\[IndentingNewLine]", 
@@ -399,70 +419,54 @@ file is in WAV format.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
 2) in AIFF format with the (n-1)th channel containing the sweep signal and \
 the nth channel containing a sweep trigger signal (containing p triggers for \
 each of p sweeps, with p > 0), deconvolves all preceding channels by the \
-sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of \
-lists) as well as the absolute delay of the earliest signal. Estimated \
-pre-onset delay and background noise signals are also returned.\n\n\
-Optionally, sweepToIR2[sweepFilePath,\\\"WAV\\\"] assumes the sweep file is \
-in WAV format.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+sweep signal, and exports the results as an (n-2)-by-p matrix of IRs (i.e. \
+list of lists) as well as the absolute delay of the earliest signal and the \
+estimated pre-onset delay.\n\nsweepToIR2[sweepFilePath,numOuts] specifies the \
+number of outputs to return. numOuts can take a scalar value between 1 and 5 \
+and the following outputs are returned in each case:\n\t1. numOuts = 1: IRs\n\
+\t2. numOuts = 2: {IRs,first onset}\n\t3. numOuts = 3 (Default): {IRs,first \
+onset,pre-onset delay}\n\t4. numOuts = 4: {IRs,first onset,pre-onset \
+delay,background noise estimate}\n\t5. numOuts = 5: {IRs,first \
+onset,pre-onset delay,background noise estimate,sampling rate in Hz}\n\n\
+sweepToIR2[sweepFilePath,numOuts,OPT] allows the option of specifying whether \
+or not to use a short pre-delay for the IRs or maintain their natural \
+pre-delay by specifying OPT as one of the following:\n\t1. \\\"short\\\" \
+(default) - the IRs will be windowed (using a rectangular window) such that \
+the IR with the shortest natural onset will have a pre-delay of 4 ms or the \
+natural onset, whichever is smaller.\n\t2. \\\"natural\\\" - the natural \
+onsets of all the IRs will be preserved.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"getForwardSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<getForwardSTFT[x,\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)] computes the STFT of \!\(\*
-StyleBox[\"x\",
-FontSlant->\"Italic\"]\) using overlapping partitions of length \!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\) and \!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\) overlapping samples.\n\nOptionally, \
-getForwardSTFT[\!\(\*
-StyleBox[\"x\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\",\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\)] applies a smoothing window \!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\) to each partition.\>\""}], 
+   "\"\<getForwardSTFT[x,\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"p\",FontSlant->\"Italic\"]\)] computes the STFT of \!\(\*StyleBox[\
+\"x\",FontSlant->\"Italic\"]\) using overlapping partitions of length \
+\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\) and \
+\!\(\*StyleBox[\"p\",FontSlant->\"Italic\"]\) overlapping samples.\n\n\
+Optionally, getForwardSTFT[\!\(\*StyleBox[\"x\",FontSlant->\"Italic\"]\),\!\(\
+\*StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\)] applies a smoothing window \!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\) to each partition.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"getInverseSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
-   "\"\<getInverseSTFT[\!\(\*
-StyleBox[\"Y\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)] computes the inverse STFT of the spectrogram \!\(\*
-StyleBox[\"Y\",
-FontSlant->\"Italic\"]\), which was computed using overlapping partitions of \
-length \!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\) and \!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\) overlapping samples.\n\nOptionally, \
-getInverseSTFT[\!\(\*
-StyleBox[\"list\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"n\",
-FontSlant->\"Italic\"]\),\!\(\*
-StyleBox[\"p\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\",\",
-FontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\)] specifies the smoothing window \!\(\*
-StyleBox[\"wfun\",
-FontSlant->\"Italic\"]\) which was applied to each partition.\>\""}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+   "\"\<getInverseSTFT[\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)] computes the inverse STFT of the spectrogram \
+\!\(\*StyleBox[\"Y\",FontSlant->\"Italic\"]\), which was computed using \
+overlapping partitions of length \
+\!\(\*StyleBox[\"n\",FontSlant->\"Italic\"]\) and \
+\!\(\*StyleBox[\"p\",FontSlant->\"Italic\"]\) overlapping samples.\n\n\
+Optionally, \
+getInverseSTFT[\!\(\*StyleBox[\"list\",FontSlant->\"Italic\"]\),\!\(\*\
+StyleBox[\"n\",FontSlant->\"Italic\"]\),\!\(\*StyleBox[\"p\",FontSlant->\"\
+Italic\"]\)\!\(\*StyleBox[\",\",FontSlant->\"Italic\"]\)\!\(\*StyleBox[\"wfun\
+\",FontSlant->\"Italic\"]\)] specifies the smoothing window \
+\!\(\*StyleBox[\"wfun\",FontSlant->\"Italic\"]\) which was applied to each \
+partition.\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"addTFs", "::", "usage"}], "=", "\[IndentingNewLine]", 
   "\"\<addTFs[H1,H2] takes as inputs two transfer functions and returns the \
@@ -540,8 +544,11 @@ Abs[H1\!\(\*SuperscriptBox[\(]\), \(2\)]\)+Abs[H2\!\(\*SuperscriptBox[\(]\), \
    3.7526108760726137`*^9, 3.752611167603908*^9}, {3.759743690735177*^9, 
    3.759743696155362*^9}, {3.759743929804028*^9, 3.75974395660716*^9}, {
    3.767529503301136*^9, 3.7675295154452047`*^9}, {3.767529556020381*^9, 
-   3.7675297080334673`*^9}},
- ExpressionUUID -> "307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+   3.7675297080334673`*^9}, {3.810461484547017*^9, 3.810461627906789*^9}, {
+   3.810654636005515*^9, 3.810655115493989*^9}, {3.810655168845299*^9, 
+   3.8106552323705*^9}, {3.8106552651967583`*^9, 
+   3.810655266231963*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 
@@ -552,8 +559,9 @@ Cell["Begin the `Private context", "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9
 Cell[BoxData[
  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}]], "Input",
  CellChangeTimes->{{3.696425423841115*^9, 3.6964254312154617`*^9}, {
-  3.6964764641976767`*^9, 3.696476464485498*^9}},
- ExpressionUUID -> "713d542c-4ab3-4ce7-b436-007adbaf716e"],
+  3.6964764641976767`*^9, 
+  3.696476464485498*^9}},ExpressionUUID->"713d542c-4ab3-4ce7-b436-\
+007adbaf716e"],
 
 Cell[CellGroupData[{
 
@@ -1658,7 +1666,11 @@ Cell[BoxData[{
      RowBox[{"\"\<Regularization Ranges\>\"", "\[Rule]", 
       RowBox[{"{", 
        RowBox[{"{", 
-        RowBox[{"0", ",", "1", ",", "0"}], "}"}], "}"}]}]}], "}"}]}], 
+        RowBox[{"0", ",", "1", ",", "0"}], "}"}], "}"}]}], ",", 
+     RowBox[{"\"\<SampleRate\>\"", "\[Rule]", "96000"}], ",", 
+     RowBox[{"\"\<FreqRange\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"200", ",", "24000"}], "}"}]}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1668,7 +1680,11 @@ Cell[BoxData[{
    RowBox[{"Module", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"IRLen", ",", "H", ",", "z", ",", "\[Epsilon]"}], "}"}], ",", 
+      RowBox[{
+      "IRLen", ",", "H", ",", "z", ",", "\[Epsilon]", ",", "Fs", ",", 
+       "fRange", ",", "fVec", ",", "fLIndx", ",", "fUIndx", ",", "HAvg", ",", 
+       "HNorm", ",", "irHalfLen", ",", "tempHInv", ",", "fullHInv", ",", 
+       "clipU", ",", "lPosIndxs", ",", "hPosIndxs"}], "}"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"IRLen", " ", "=", " ", 
@@ -1677,14 +1693,14 @@ Cell[BoxData[{
        RowBox[{"IRtoTF", "[", "h", "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"Switch", "[", 
        RowBox[{
-        RowBox[{"OptionValue", "[", "\"\<Regularization\>\"", "]"}], ",", 
-        "\[IndentingNewLine]", "\"\<None\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{"OptionValue", "[", "\"\<Regularization\>\"", "]"}], 
+        "\[IndentingNewLine]", ",", "\"\<None\>\"", ",", 
+        "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"z", " ", "=", " ", 
           RowBox[{"TFtoIR", "[", 
            FractionBox["1", "H"], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
-        "\[IndentingNewLine]", "\"\<Piecewise\>\"", ",", 
-        "\[IndentingNewLine]", 
+        "\"\<Piecewise\>\"", ",", "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"\[Epsilon]", " ", "=", " ", 
           RowBox[{"piecewiseRegularization", "[", 
@@ -1699,8 +1715,161 @@ Cell[BoxData[{
             RowBox[{
              RowBox[{
               RowBox[{"Conjugate", "[", "H", "]"}], "H"}], "+", 
-             "\[Epsilon]"}]], "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], 
-      ";", "\[IndentingNewLine]", "z"}]}], "\[IndentingNewLine]", "]"}]}], 
+             "\[Epsilon]"}]], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\"\<Custom\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Fs", "=", 
+          RowBox[{"OptionValue", "[", "\"\<SampleRate\>\"", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fRange", "=", 
+          RowBox[{"OptionValue", "[", "\"\<FreqRange\>\"", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fVec", "=", 
+          RowBox[{"freqList", "[", 
+           RowBox[{"IRLen", ",", "Fs"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         
+         RowBox[{"fLIndx", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"fVec", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"fVec", ",", 
+                RowBox[{"Min", "[", "fRange", "]"}]}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fUIndx", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"fVec", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"fVec", ",", 
+                RowBox[{"Max", "[", "fRange", "]"}]}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"HAvg", "=", 
+          RowBox[{"logMean2", "[", 
+           RowBox[{
+            RowBox[{"fVec", "[", 
+             RowBox[{"[", 
+              RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], ",", 
+            RowBox[{"magTodB", "[", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"H", "[", 
+               RowBox[{"[", 
+                RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], "]"}], 
+             "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"HNorm", "=", 
+          RowBox[{"H", "/", 
+           RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"irHalfLen", "=", 
+          RowBox[{"Ceiling", "[", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"IRLen", "+", "1"}], ")"}], "/", "2"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"tempHInv", "=", 
+          RowBox[{"1", "/", 
+           RowBox[{"HNorm", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ";;", "irHalfLen"}], "]"}], "]"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"clipU", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"HNorm", "[", 
+             RowBox[{"[", 
+              RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], "]"}], 
+           "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"lPosIndxs", "=", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{"Position", "[", 
+            RowBox[{
+             RowBox[{"Abs", "[", 
+              RowBox[{"tempHInv", "[", 
+               RowBox[{"[", 
+                RowBox[{"1", ";;", 
+                 RowBox[{"fLIndx", "-", "1"}]}], "]"}], "]"}], "]"}], ",", 
+             RowBox[{"x_", "/;", 
+              RowBox[{"x", ">", "clipU"}]}]}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"hPosIndxs", "=", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{"Position", "[", 
+            RowBox[{
+             RowBox[{"Abs", "[", 
+              RowBox[{"tempHInv", "[", 
+               RowBox[{"[", 
+                RowBox[{
+                 RowBox[{"fUIndx", "+", "1"}], ";;", "irHalfLen"}], "]"}], 
+               "]"}], "]"}], ",", 
+             RowBox[{"x_", "/;", 
+              RowBox[{"x", ">", "clipU"}]}]}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"tempHInv", "[", 
+           RowBox[{"[", "lPosIndxs", "]"}], "]"}], "=", 
+          RowBox[{"clipU", " ", 
+           RowBox[{
+            RowBox[{"tempHInv", "[", 
+             RowBox[{"[", "lPosIndxs", "]"}], "]"}], "/", 
+            RowBox[{"Abs", "[", 
+             RowBox[{"tempHInv", "[", 
+              RowBox[{"[", "lPosIndxs", "]"}], "]"}], "]"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"tempHInv", "[", 
+           RowBox[{"[", 
+            RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], "=", 
+          RowBox[{"clipU", " ", 
+           RowBox[{
+            RowBox[{"tempHInv", "[", 
+             RowBox[{"[", 
+              RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], "/", 
+            RowBox[{"Abs", "[", 
+             RowBox[{"tempHInv", "[", 
+              RowBox[{"[", 
+               RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], 
+             "]"}]}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"EvenQ", "[", "IRLen", "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"fullHInv", "=", 
+             RowBox[{
+              RowBox[{"Join", "[", 
+               RowBox[{"tempHInv", ",", 
+                RowBox[{"Drop", "[", 
+                 RowBox[{
+                  RowBox[{"Reverse", "[", 
+                   RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{"Conjugate", "[", "tempHInv", "]"}], ",", "1"}], 
+                    "]"}], "]"}], ",", "1"}], "]"}]}], "]"}], "/", 
+              RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"fullHInv", "=", 
+             RowBox[{
+              RowBox[{"Join", "[", 
+               RowBox[{"tempHInv", ",", 
+                RowBox[{"Reverse", "[", 
+                 RowBox[{"Drop", "[", 
+                  RowBox[{
+                   RowBox[{"Conjugate", "[", "tempHInv", "]"}], ",", "1"}], 
+                  "]"}], "]"}]}], "]"}], "/", 
+              RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"z", "=", 
+          RowBox[{"TFtoIR", "[", "fullHInv", "]"}]}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", "z"}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2347,7 +2516,8 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"sweepToIR", "[", 
     RowBox[{"sweepFilePath_", ",", 
-     RowBox[{"fsFlag_:", "0"}]}], "]"}], ":=", 
+     RowBox[{"fsFlag_:", "0"}], ",", 
+     RowBox[{"preOnsetOpt_:", "\"\<short\>\""}]}], "]"}], ":=", 
    RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", "outData", "}"}], "\[IndentingNewLine]", ",", 
@@ -2361,24 +2531,25 @@ Cell[BoxData[{
           RowBox[{"Pick", "[", 
            RowBox[{
             RowBox[{"sweepToIR2", "[", 
-             RowBox[{"sweepFilePath", ",", "5"}], "]"}], ",", 
+             RowBox[{"sweepFilePath", ",", "5", ",", "preOnsetOpt"}], "]"}], 
+            ",", 
             RowBox[{"{", 
              RowBox[{"1", ",", "0", ",", "0", ",", "0", ",", "1"}], "}"}], 
             ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
         "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"outData", "=", 
-          RowBox[{
-           RowBox[{"sweepToIR2", "[", "sweepFilePath", "]"}], "[", 
-           RowBox[{"[", "1", "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
-       "]"}], ";", "\[IndentingNewLine]", "outData"}]}], 
-    "\[IndentingNewLine]", "]"}]}], 
+          RowBox[{"sweepToIR2", "[", 
+           RowBox[{"sweepFilePath", ",", "1", ",", "preOnsetOpt"}], "]"}]}], 
+         ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "outData"}]}], "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"sweepToIR2", "[", 
     RowBox[{"sweepFilePath_", ",", 
-     RowBox[{"numOuts_:", "3"}]}], "]"}], ":=", 
+     RowBox[{"numOuts_:", "3"}], ",", 
+     RowBox[{"preOnsetOpt_:", "\"\<short\>\""}]}], "]"}], ":=", 
    RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
@@ -2482,20 +2653,43 @@ Cell[BoxData[{
                RowBox[{"micIRs", "[", 
                 RowBox[{"[", "ii", "]"}], "]"}], ",", 
                RowBox[{"\"\<Threshold\>\"", "\[Rule]", "10"}]}], "]"}]}], 
-            ";"}], "\[IndentingNewLine]", ",", 
+            ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
            RowBox[{"{", 
-            RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], "]"}], ";", 
+            RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], 
+          "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
          "\[IndentingNewLine]", 
-         RowBox[{"firstOnset", " ", "=", " ", 
-          RowBox[{"Min", "[", "micOnsets", "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"preOnsetDelay", " ", "=", " ", 
-          RowBox[{"Min", "[", 
+         RowBox[{"Switch", "[", 
+          RowBox[{
+          "preOnsetOpt", "\[IndentingNewLine]", ",", "\"\<short\>\"", ",", 
+           "\[IndentingNewLine]", 
            RowBox[{
-            RowBox[{"Round", "[", 
-             RowBox[{"0.004", " ", "Fs"}], "]"}], ",", 
-            RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";", 
-         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"firstOnset", " ", "=", " ", 
+             RowBox[{"Min", "[", "micOnsets", "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"preOnsetDelay", " ", "=", " ", 
+             RowBox[{"Min", "[", 
+              RowBox[{
+               RowBox[{"Round", "[", 
+                RowBox[{"0.004", " ", "Fs"}], "]"}], ",", 
+               RowBox[{"firstOnset", "-", "1"}]}], "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\"\<natural\>\"", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"firstOnset", " ", "=", " ", 
+             RowBox[{"Min", "[", "micOnsets", "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"preOnsetDelay", "=", 
+             RowBox[{"firstOnset", "-", 
+              RowBox[{"triggerPositions", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "_", ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+            "MessageDialog", "[", 
+             "\"\<Invalid OPT specification. Aborting...\>\"", "]"}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
          RowBox[{"If", "[", 
           RowBox[{
            RowBox[{"numSweeps", ">", "1"}], ",", "\[IndentingNewLine]", 
@@ -2597,10 +2791,10 @@ Cell[BoxData[{
                  RowBox[{"[", 
                   RowBox[{"ii", ",", 
                    RowBox[{"startPos", ";;", "endPos"}]}], "]"}], "]"}]}], 
-               ";"}], "\[IndentingNewLine]", ",", 
+               ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
               RowBox[{"{", 
                RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], "]"}], 
-            ";"}], "\[IndentingNewLine]", ",", 
+            ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
            RowBox[{"{", 
             RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], "]"}], ";"}],
          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
@@ -2932,8 +3126,43 @@ Cell[BoxData[{
    3.765839295271883*^9, 3.7658393952011633`*^9}, {3.76584531375529*^9, 
    3.765845351276671*^9}, {3.765846340494928*^9, 3.765846522433868*^9}, {
    3.767529490146439*^9, 3.767529490527382*^9}, {3.767529538790599*^9, 
-   3.767529544604847*^9}},
- ExpressionUUID -> "c183ef61-fc0b-44b0-949b-50c544207a54"]
+   3.767529544604847*^9}, {3.810427053272163*^9, 3.8104270828527937`*^9}, {
+   3.8104271369711647`*^9, 3.810427242141094*^9}, {3.810427279934063*^9, 
+   3.810427328558104*^9}, {3.8104273597169724`*^9, 3.810427449463551*^9}, {
+   3.810427488621455*^9, 3.810427614980276*^9}, {3.810427731259644*^9, 
+   3.8104277378578167`*^9}, 3.810428254139511*^9, {3.8104282902147017`*^9, 
+   3.81042829284258*^9}, {3.81042912471383*^9, 3.8104292602267227`*^9}, {
+   3.810429315059026*^9, 3.810429320834203*^9}, {3.810429358977314*^9, 
+   3.810429366274331*^9}, {3.810429409578082*^9, 3.810429415330119*^9}, {
+   3.810429458583473*^9, 3.810429493945122*^9}, {3.810429626024973*^9, 
+   3.810429722803179*^9}, {3.810429752817326*^9, 3.81042978817456*^9}, {
+   3.810429861114718*^9, 3.810429873475172*^9}, {3.8104299114873047`*^9, 
+   3.810429978666829*^9}, {3.810430129565394*^9, 3.8104301730943403`*^9}, {
+   3.810430405852818*^9, 3.8104304536614923`*^9}, {3.810430485585125*^9, 
+   3.810430530258111*^9}, {3.810430609925188*^9, 3.8104306271504793`*^9}, {
+   3.810430676556678*^9, 3.810430684210545*^9}, {3.8104308078342943`*^9, 
+   3.8104308707228203`*^9}, {3.8104309256808977`*^9, 3.81043093291969*^9}, {
+   3.8104309734107313`*^9, 3.810431034611189*^9}, {3.81043114997519*^9, 
+   3.810431190546062*^9}, {3.810431390376824*^9, 3.810431403271152*^9}, {
+   3.8104315133721733`*^9, 3.8104315460653543`*^9}, {3.810431632764103*^9, 
+   3.8104316508723288`*^9}, 3.810431884712111*^9, {3.810432169253186*^9, 
+   3.810432254073941*^9}, {3.810432450351179*^9, 3.810432458891692*^9}, {
+   3.810432515979851*^9, 3.810432519877388*^9}, {3.8104325992668858`*^9, 
+   3.8104326474119062`*^9}, {3.8104628821505527`*^9, 3.810462886873413*^9}, {
+   3.810463310415073*^9, 3.810463338578052*^9}, {3.810466889021833*^9, 
+   3.8104669212644653`*^9}, {3.810509516781872*^9, 3.810509649524181*^9}, {
+   3.8105097034715633`*^9, 3.81050975207821*^9}, {3.8105098020717993`*^9, 
+   3.8105098746936197`*^9}, {3.810511374061656*^9, 3.810511392098283*^9}, {
+   3.810511529492962*^9, 3.8105115414868717`*^9}, {3.810511604991826*^9, 
+   3.810511615925839*^9}, {3.810511711814683*^9, 3.810511724627407*^9}, {
+   3.810511850520482*^9, 3.810511858474324*^9}, {3.810547323460594*^9, 
+   3.810547324472225*^9}, {3.810548358092197*^9, 3.8105483838266277`*^9}, {
+   3.81054866380368*^9, 3.810548664372929*^9}, 3.810548840862136*^9, {
+   3.8106542646905947`*^9, 3.8106544307177143`*^9}, {3.810654477798892*^9, 
+   3.810654564456009*^9}, {3.8106591758602257`*^9, 3.810659177842029*^9}, {
+   3.810659282348537*^9, 3.810659305742317*^9}, {3.81065941931649*^9, 
+   3.810659422178658*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 
@@ -2942,8 +3171,7 @@ Cell[CellGroupData[{
 Cell["End the `Private context", "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
 
 Cell[BoxData[
- RowBox[{"End", "[", "]"}]], "Input",
- ExpressionUUID -> "e8b95233-aef3-4c13-b826-1a71099026dd"]
+ RowBox[{"End", "[", "]"}]], "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2951,8 +3179,7 @@ Cell[CellGroupData[{
 Cell["End the package context", "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
 
 Cell[BoxData[
- RowBox[{"EndPackage", "[", "]"}]], "Input",
- ExpressionUUID -> "aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+ RowBox[{"EndPackage", "[", "]"}]], "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -2960,8 +3187,8 @@ AutoGeneratedPackage->Automatic,
 WindowSize->{1440, 851},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 SpellingDictionaries->{"CorrectWords"->{"dsp"}},
-FrontEndVersion->"9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, \
-2013)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -2972,7 +3199,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Input"], InitializationCell -> True]}, Visible -> False, 
   FrontEndVersion -> 
-  "9.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 25, 2013)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 (* End of Notebook Content *)
@@ -2987,34 +3214,34 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 175, 2, 92, "Title"],
-Cell[758, 26, 1776, 39, 600, "Text"],
+Cell[580, 22, 175, 2, 98, "Title",ExpressionUUID->"1ca595f7-a740-41d1-8dfc-2047e2c71c21"],
+Cell[758, 26, 1776, 39, 725, "Text",ExpressionUUID->"dca19e92-ab53-460e-aff2-921c62d34d07"],
 Cell[CellGroupData[{
-Cell[2559, 69, 91, 0, 80, "Section"],
+Cell[2559, 69, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b5d7a1890a"],
 Cell[CellGroupData[{
-Cell[2675, 73, 316, 6, 28, "Input"],
-Cell[2994, 81, 81, 1, 28, "Output"]
+Cell[2675, 73, 405, 9, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
+Cell[3083, 84, 141, 3, 34, "Output",ExpressionUUID->"524696a5-3c47-423a-8594-2467a7286acb"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3112, 87, 116, 0, 44, "Subsection"],
-Cell[3231, 89, 23656, 454, 2889, "Input"]
+Cell[3261, 92, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
+Cell[3380, 94, 25829, 456, 4058, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[26936, 549, 100, 0, 80, "Section"],
-Cell[27039, 551, 252, 4, 28, "Input"],
+Cell[29258, 556, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
+Cell[29361, 558, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[27316, 559, 97, 0, 44, "Subsection"],
-Cell[27416, 561, 97013, 2374, 9816, "Input"]
+Cell[29639, 567, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
+Cell[29739, 569, 107451, 2595, 12547, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[124478, 2941, 98, 0, 80, "Section"],
-Cell[124579, 2943, 110, 2, 28, "Input"]
+Cell[137239, 3170, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
+Cell[137340, 3172, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[124726, 2950, 97, 0, 80, "Section"],
-Cell[124826, 2952, 117, 2, 28, "Input"]
+Cell[137483, 3178, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
+Cell[137583, 3180, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }

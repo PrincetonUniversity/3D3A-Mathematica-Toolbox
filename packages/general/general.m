@@ -243,7 +243,7 @@ numChannels=0;
 ];
 getSamplingRate[fileName_]:=Import[fileName][[1,2]];
 ,
-writeAudioToFile[fileName_,exportData_,samplingRate_,commentString_]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];];
+writeAudioToFile[fileName_,exportData_,samplingRate_,commentString_: " "]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];];
 exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
 exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
@@ -270,7 +270,6 @@ MessageDialog["Maximum amplitude exceeds 1. Data normalized prior to export."];
 exportData=data;
 ];
 writeAudioToFile[fileName<>ext,exportData,samplingRate,commentString];
-(*Export[fileName<>ext,ListPlay[exportData,PlayRange\[Rule]{-1,1},SampleRate\[Rule]samplingRate],"AudioEncoding"\[Rule]"Integer24",MetaInformation\[Rule]{"Comment"\[Rule]commentString}];*)
 ];
 importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
 importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
@@ -280,11 +279,6 @@ importAudio[fileName_]:=Module[
 readExt=FileExtension[fileName];
 If[(readExt=="aiff")||(readExt=="AIFF")||(readExt=="aif")||(readExt=="AIF")||(readExt=="wav")||(readExt=="WAV"),
 numChannels=Import[fileName,"AudioChannels"];
-(*If[numChannels<2,
-outputData=List[Import[fileName,"Data"]];
-,
-outputData=Import[fileName,"Data"];
-];*)
 outputData=Import[fileName,"Data"];
 ,
 MessageDialog["Specified file for import is not an AIFF or WAV file."];

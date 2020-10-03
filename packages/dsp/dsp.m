@@ -19,7 +19,7 @@
 
 
 
-BeginPackage["dsp`",{"general`"}]
+BeginPackage["dsp`",{"general`","math`"}]
 
 
 applyButterHPF::usage=
@@ -91,8 +91,10 @@ inverseFilter::usage=
 "inverseFilter[h] computes the impulse response of the inverse filter corresponding to the input impulse response, h.
 
 OPTIONAL INPUTS:
-	1. \"Regularization\" \[RightArrow] specifies the type of regularization to apply with \"None\" (default) and \"Piecewise\" being the two options.
-	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the range {W1, W2}. 
+	1. \"Regularization\" \[RightArrow] specifies the type of regularization to apply with \"None\" (default), \"Piecewise\", and \"Custom\" being the three options.
+	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the range {W1, W2}. This option is only required when \"Regularization\" is set to \"Piecewise\".
+	3. \"SampleRate\" \[RightArrow] sampling rate in Hz. This option is only required when \"Regularization\" is set to \"Custom\".
+	4. \"FreqRange\" \[RightArrow] frequency range, in Hz, over which direct inversion is to be performed. This option is only required when \"Regularization\" is set to \"Custom\".
 EXAMPLE:
 	invFilt = inverseFilter[filt,\"Regularization\"\[Rule]\"Piecewise\",\"Regularization Ranges\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];."
 
@@ -135,14 +137,27 @@ getSPLNorm::usage=
 "getSPLNorm[refSPL] returns the normalization factor required to normalize transfer functions to represent magnitude responses in dB SPL. The required input to the function, refSPL, must specify the SPL corresponding to 0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 dB. If refSPL is not specified, 105 dB is assumed."
 
 sweepToIR::usage=
-"sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists).
+"sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix of IRs (i.e. list of lists).
 
-Optionally, sweepToIR[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
+sweepToIR[sweepFilePath,fsFlag] allows the option of requesting that the sampling rate, in Hz, be returned as a second output. When fsFlag is set to 1, the sampling rate is returned. When fsFlag is set to 0, only the matrix of IRs is returned.
+
+sweepToIR[sweepFilePath,fsFlag,OPT] allows the option of specifying whether or not to use a short pre-delay for the IRs or maintain their natural pre-delay by specifying OPT as one of the following:
+	1. \"short\" (default) - the IRs will be windowed (using a rectangular window) such that the IR with the shortest natural onset will have a pre-delay of 4 ms or the natural onset, whichever is smaller.
+	2. \"natural\" - the natural onsets of all the IRs will be preserved."
 
 sweepToIR2::usage=
-"sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) as well as the absolute delay of the earliest signal. Estimated pre-onset delay and background noise signals are also returned.
+"sweepToIR2[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix of IRs (i.e. list of lists) as well as the absolute delay of the earliest signal and the estimated pre-onset delay.
 
-Optionally, sweepToIR2[sweepFilePath,\"WAV\"] assumes the sweep file is in WAV format."
+sweepToIR2[sweepFilePath,numOuts] specifies the number of outputs to return. numOuts can take a scalar value between 1 and 5 and the following outputs are returned in each case:
+	1. numOuts = 1: IRs
+	2. numOuts = 2: {IRs,first onset}
+	3. numOuts = 3 (Default): {IRs,first onset,pre-onset delay}
+	4. numOuts = 4: {IRs,first onset,pre-onset delay,background noise estimate}
+	5. numOuts = 5: {IRs,first onset,pre-onset delay,background noise estimate,sampling rate in Hz}
+
+sweepToIR2[sweepFilePath,numOuts,OPT] allows the option of specifying whether or not to use a short pre-delay for the IRs or maintain their natural pre-delay by specifying OPT as one of the following:
+	1. \"short\" (default) - the IRs will be windowed (using a rectangular window) such that the IR with the shortest natural onset will have a pre-delay of 4 ms or the natural onset, whichever is smaller.
+	2. \"natural\" - the natural onsets of all the IRs will be preserved."
 
 getForwardSTFT::usage=
 "getForwardSTFT[x,\!\(\*
@@ -438,17 +453,37 @@ unwrappedPhase[[ii+1;;]]=unwrappedPhase[[ii+1;;]]-2 tol;
 unwrappedPhase
 ]
 
-Options[inverseFilter]={"Regularization"->"None","Regularization Ranges"->{{0,1,0}}};
-inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon]},
+Options[inverseFilter]={"Regularization"->"None","Regularization Ranges"->{{0,1,0}},"SampleRate"->96000,"FreqRange"->{200,24000}};
+inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon],Fs,fRange,fVec,fLIndx,fUIndx,HAvg,HNorm,irHalfLen,tempHInv,fullHInv,clipU,lPosIndxs,hPosIndxs},
 IRLen = Length[h];
 H = IRtoTF[h];
-Switch[OptionValue["Regularization"],
-"None",
+Switch[OptionValue["Regularization"]
+,"None",
 z = TFtoIR[1/H];
-,
-"Piecewise",
+,"Piecewise",
 \[Epsilon] = piecewiseRegularization[IRLen,OptionValue["Regularization Ranges"]];
 z = TFtoIR[Conjugate[H]/(Conjugate[H]H+\[Epsilon])];
+,"Custom",
+Fs=OptionValue["SampleRate"];
+fRange=OptionValue["FreqRange"];
+fVec=freqList[IRLen,Fs];
+fLIndx=Position[fVec,Nearest[fVec,Min[fRange]][[1]]][[1,1]];
+fUIndx=Position[fVec,Nearest[fVec,Max[fRange]][[1]]][[1,1]];
+HAvg=logMean2[fVec[[fLIndx;;fUIndx]],magTodB[Abs[H[[fLIndx;;fUIndx]]]]];
+HNorm=H/dBToMag[HAvg];
+irHalfLen=Ceiling[(IRLen+1)/2];
+tempHInv=1/HNorm[[1;;irHalfLen]];
+clipU=Max[Abs[HNorm[[fLIndx;;fUIndx]]]];
+lPosIndxs=Flatten[Position[Abs[tempHInv[[1;;fLIndx-1]]],x_/;x>clipU]];
+hPosIndxs=Flatten[Position[Abs[tempHInv[[fUIndx+1;;irHalfLen]]],x_/;x>clipU]];
+tempHInv[[lPosIndxs]]=clipU tempHInv[[lPosIndxs]]/Abs[tempHInv[[lPosIndxs]]];
+tempHInv[[fUIndx+hPosIndxs]]=clipU tempHInv[[fUIndx+hPosIndxs]]/Abs[tempHInv[[fUIndx+hPosIndxs]]];
+If[EvenQ[IRLen],
+fullHInv=Join[tempHInv,Drop[Reverse[Drop[Conjugate[tempHInv],1]],1]]/dBToMag[HAvg];
+,
+fullHInv=Join[tempHInv,Reverse[Drop[Conjugate[tempHInv],1]]]/dBToMag[HAvg];
+];
+z=TFtoIR[fullHInv];
 ];
 z
 ]
@@ -585,18 +620,18 @@ sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[in
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
-sweepToIR[sweepFilePath_,fsFlag_:0]:=Module[
+sweepToIR[sweepFilePath_,fsFlag_:0,preOnsetOpt_:"short"]:=Module[
 {outData}
 ,
 If[fsFlag==1,
-outData=Pick[sweepToIR2[sweepFilePath,5],{1,0,0,0,1},1];
+outData=Pick[sweepToIR2[sweepFilePath,5,preOnsetOpt],{1,0,0,0,1},1];
 ,
-outData=sweepToIR2[sweepFilePath][[1]];
+outData=sweepToIR2[sweepFilePath,1,preOnsetOpt];
 ];
 outData
 ]
 
-sweepToIR2[sweepFilePath_,numOuts_:3]:=Module[
+sweepToIR2[sweepFilePath_,numOuts_:3,preOnsetOpt_:"short"]:=Module[
 {rawData,numCh,numMics,fileLen,FFTLen,rawMicData,sweepSignal,triggerSignal,triggerPositions,interSweepDelay,numSweeps,micIRs,micOnsets,firstOnset,IRLen,preOnsetDelay,IRList,startPos,endPos,indxLen,Fs,backgroundNoiseList,backgroundNoiseLen,availableBGNoiseLen,outData}
 ,
 If[StringQ[sweepFilePath],
@@ -620,9 +655,21 @@ micOnsets = ConstantArray[0.,numMics];
 Do[
 micIRs[[ii]] = deconv[PadRight[rawMicData[[ii]],FFTLen],PadRight[sweepSignal,FFTLen]];
 micOnsets[[ii]] = signalOnset[micIRs[[ii]],"Threshold"->10];
-,{ii,1,numMics}];
+,
+{ii,1,numMics}
+];
+
+Switch[preOnsetOpt
+,"short",
 firstOnset = Min[micOnsets];
 preOnsetDelay = Min[Round[0.004 Fs],firstOnset-1];
+,"natural",
+firstOnset = Min[micOnsets];
+preOnsetDelay=firstOnset-triggerPositions[[1]];
+,_,
+MessageDialog["Invalid OPT specification. Aborting..."];
+Abort[];
+];
 
 If[numSweeps>1,
 IRLen = interSweepDelay;
@@ -651,8 +698,10 @@ indxLen = endPos-startPos+1;
 Do[
 IRList[[ii,jj]] = ConstantArray[0.,IRLen];
 IRList[[ii,jj,1;;indxLen]] = micIRs[[ii,startPos;;endPos]];
-,{ii,1,numMics}];
-,{jj,1,numSweeps}];
+,
+{ii,1,numMics}];
+,
+{jj,1,numSweeps}];
 ,
 MessageDialog["Operation Canceled!"];
 IRList={};
