@@ -196,24 +196,29 @@ addTFs::usage=
 "addTFs[H1,H2] takes as inputs two transfer functions and returns the magnitude square of their sum (i.e., Abs[H1+H2\!\(\*SuperscriptBox[\(]\), \(2\)]\)). This command may also be specified as addTFs[H1,H2,\"Correlated\"]
 addTFs[H1,H2,\"Uncorrelated\"] returns Abs[H1\!\(\*SuperscriptBox[\(]\), \(2\)]\)+Abs[H2\!\(\*SuperscriptBox[\(]\), \(2\)]\) instead."
 
+forceConjugateSymmetry::usage=
+"forceConjugateSymmetry[H] takes an input complex transfer function and returns a conjugate symmetric version."
+
 
 Begin["`Private`"]
 
 
-applyButterHPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,HPF,y},
+applyButterHPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,HPF,hpfIR,y},
 IRLen = Length[x];
-xp = RotateRight[PadRight[x,2IRLen],IRLen/2];
+xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
 HPF = 1-1/Sqrt[1+(W/Wn)^(2filterOrder)];
-y = RotateLeft[TFtoIR[IRtoTF[xp]HPF],IRLen/2][[;;IRLen]]
+hpfIR=TFtoIR[HPF];
+y=RotateLeft[conv[xp,RotateRight[hpfIR,IRLen]],IRLen][[;;IRLen]]
 ]
 
-applyButterLPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,LPF,y},
+applyButterLPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,LPF,lpfIR,y},
 IRLen = Length[x];
-xp = RotateRight[PadRight[x,2IRLen],IRLen/2];
+xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
 LPF = 1/Sqrt[1+(W/Wn)^(2filterOrder)];
-y = RotateLeft[TFtoIR[IRtoTF[xp]LPF],IRLen/2][[;;IRLen]]
+lpfIR=TFtoIR[LPF];
+y=RotateLeft[conv[xp,RotateRight[lpfIR,IRLen]],IRLen][[;;IRLen]]
 ]
 
 autoCorrFunc[signal_,rectWinLen_: 0]:=Module[
@@ -756,6 +761,20 @@ sum=Abs[H1+H2]^2,
 sum=Abs[H1]^2+Abs[H2]^2
 ];
 sum
+]
+
+forceConjugateSymmetry[H_]:=Module[
+{hLen,HSym},
+hLen=Length[H];
+HSym=H; (* Initialize *)
+HSym[[1]]=Re[H[[1]]]; (* DC is real *)
+If[EvenQ[hLen],
+HSym[[(hLen/2)+1]]=Re[H[[(hLen/2)+1]]]; (* Nyquist is real *)
+HSym[[(hLen/2)+2;;hLen]]=Conjugate[Reverse[H[[2;;(hLen/2)]]]];
+,
+HSym[[((hLen+1)/2)+1;;hLen]]=Conjugate[Reverse[H[[2;;((hLen+1)/2)]]]];
+];
+HSym
 ]
 
 
