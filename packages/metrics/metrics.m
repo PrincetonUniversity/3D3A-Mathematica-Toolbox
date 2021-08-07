@@ -23,27 +23,13 @@ BeginPackage["metrics`",{"dsp`","general`"}]
 
 
 computeAllISSI::usage=
-"computeAllISSI[M,mode] takes as input a 4-by-4-by-N array, P, of length N transfer functions and returns a 2-by-6-by-N array, I, of inter sweet-spot isolation (ISSI) spectra (these are magnitude-squared spectra) assuming two binaural sweet-spots (i.e., each sweet-spot consists of binaural microphones that record incident sound waves). Specifically, P is a 4-by-4 matrix of transfer functions between 4 loudspeakers (columns) and 4 microphones (rows) split evenly across 2 sweet-spots (\"Driver\" and \"Passenger\" in some applications). Loudspeakers and mics. 1 (\"Left\") and 2 (\"Right\") are for sweet-spot 1 (\"Driver\"), and 3 (\"Left\") and 4 (\"Right\") are for sweet-spot 2 (\"Passenger\"). Similarly, I is a 2-by-6 matrix of magnitude-squared ISSI spectra where the two rows correspond to the two sweet-spots and the 6 columns correspond to the following:
-
-Column 1 - ISSI computed between mics. 1 and 4 (also called \"Outer Ears\" for some applications)
-Column 2 - ISSI computed between mics. 2 and 3 (\"Inner Ears\")
-Column 3 - ISSI computed between mics. 1 and 3 (\"Left Ears\")
-Column 4 - ISSI computed between mics. 2 and 4 (\"Right Ears\")
-Column 5 - Per-frequency geometric mean (spectrum) across columns 1-4.
-Column 6 - Per-frequency minimum (spectrum) across columns 1-4.
-
-The second input, mode, can take the following values:
-1. \"Correlated\" - Compute correlated ISSI (see addTFs function in dsp package).
-2. \"Uncorrelated\" - Compute uncorrelated ISSI (see addTFs function in dsp package).
-3. \"Minimum\" - Compute the per-frequency minimum (spectrum) of correlated and uncorrelated ISSI."
+"computeAllISSI[M,mode] takes as input a 4-by-4-by-N array, P, of length N transfer functions and returns a 2-by-6-by-N array, I, of inter sweet-spot isolation (ISSI) spectra (these are magnitude-squared spectra) assuming two binaural sweet-spots (i.e., each sweet-spot consists of binaural microphones that record incident sound waves). Specifically, P is a 4-by-4 matrix of transfer functions between 4 loudspeakers (columns) and 4 microphones (rows) split evenly across 2 sweet-spots (\"Driver\" and \"Passenger\" in some applications). Loudspeakers and mics. 1 (\"Left\") and 2 (\"Right\") are for sweet-spot 1 (\"Driver\"), and 3 (\"Left\") and 4 (\"Right\") are for sweet-spot 2 (\"Passenger\"). Similarly, I is a 2-by-6 matrix of magnitude-squared ISSI spectra where the two rows correspond to the two sweet-spots and the 6 columns correspond to the following: Column 1 - ISSI computed between mics. 1 and 4 (also called \"Outer Ears\" for some applications); Column 2 - ISSI computed between mics. 2 and 3 (\"Inner Ears\"); Column 3 - ISSI computed between mics. 1 and 3 (\"Left Ears\"); Column 4 - ISSI computed between mics. 2 and 4 (\"Right Ears\"); Column 5 - Per-frequency geometric mean (spectrum) across columns 1-4.; Column 6 - Per-frequency minimum (spectrum) across columns 1-4. The second input, mode, can take the following values: 1. \"Correlated\" - Compute correlated ISSI (see addTFs function in dsp package); 2. \"Uncorrelated\" - Compute uncorrelated ISSI (see addTFs function in dsp package); 3. \"Minimum\" - Compute the per-frequency minimum (spectrum) of correlated and uncorrelated ISSI."
 
 computeAllIPI::usage=
 "computeAllIPI[M,mode] operates in exactly the same way as the computeAllISSI function but returns the transpose of the array returned by computeAllISSI. For more information, see the help for computeAllISSI. Note that IPI stands for \"inter program isolation.\""
 
 computePointIPI::usage=
-"computePointIPI[M,mode] takes as input either a 1-by-4-by-N array or a 4-by-N matrix of transfer functions and returns a 2-by-N matrix of (magnitude-squared) IPI (inter program isolation) spectra. If the input is a 1-by-4-by-N array, the array is squeezed down to a 4-by-N matrix. The 4 rows of the matrix correspond to 4 loudspeakers split evenly across 2 sweet-spots (\"Driver\" and \"Passenger\" in some applications). Loudspeakers 1 (\"Left\") and 2 (\"Right\") correspond to sweet-spot 1 (\"Driver\") and 3 (\"Left\") and 4 (\"Right\") to sweet-spot 2 (\"Passenger\"). The two rows of the output matrix correspond to the two sweet-spots. Point IPI spectra computed for sweet-spot 1 (or 2) correspond roughly to the ratio, at a point in space, of total acoustical energy from loudspeakers 1 (or 3) and 2 (or 4) to that from loudspeakers 3 (or 1) and 4 (or 2).
-
-The second input, mode, takes the same values as described in the help for the computeAllISSI function."
+"computePointIPI[M,mode] takes as input either a 1-by-4-by-N array or a 4-by-N matrix of transfer functions and returns a 2-by-N matrix of (magnitude-squared) IPI (inter program isolation) spectra. If the input is a 1-by-4-by-N array, the array is squeezed down to a 4-by-N matrix. The 4 rows of the matrix correspond to 4 loudspeakers split evenly across 2 sweet-spots (\"Driver\" and \"Passenger\" in some applications). Loudspeakers 1 (\"Left\") and 2 (\"Right\") correspond to sweet-spot 1 (\"Driver\") and 3 (\"Left\") and 4 (\"Right\") to sweet-spot 2 (\"Passenger\"). The two rows of the output matrix correspond to the two sweet-spots. Point IPI spectra computed for sweet-spot 1 (or 2) correspond roughly to the ratio, at a point in space, of total acoustical energy from loudspeakers 1 (or 3) and 2 (or 4) to that from loudspeakers 3 (or 1) and 4 (or 2). The second input, mode, takes the same values as described in the help for the computeAllISSI function."
 
 
 Begin["`Private`"]

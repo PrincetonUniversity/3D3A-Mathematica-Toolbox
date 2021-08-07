@@ -199,12 +199,12 @@ exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {readExt,ext}
 ,
 readExt=FileExtension[fileName];
-If[readExt=="",
-ext=".wav";
-,
+If[(readExt=="wav")||(readExt=="WAV"),
 ext="";
+,
+ext=".wav";
 ];
-exportAudio[fileName<>ext,data,samplingRate,commentString] (* For backwards compatibility only. *)
+exportAudio[fileName<>ext,data,samplingRate,commentString]
 ];
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {Output,readExt,ext,maxAmp,exportData}
@@ -244,8 +244,18 @@ numChannels=0;
 getSamplingRate[fileName_]:=Import[fileName][[1,2]];
 ,
 writeAudioToFile[fileName_,exportData_,samplingRate_,commentString_: " "]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];];
-exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
-exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString]; (* For backwards compatibility only. *)
+exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString];
+exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
+{readExt,ext}
+,
+readExt=FileExtension[fileName];
+If[(readExt=="wav")||(readExt=="WAV"),
+ext="";
+,
+ext=".wav";
+];
+exportAudio[fileName<>ext,data,samplingRate,commentString]
+];
 exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
 {Rescale=#1&,readExt,ext,maxAmp,exportData}
 ,

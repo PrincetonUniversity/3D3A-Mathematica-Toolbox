@@ -29,16 +29,10 @@ listIntegrate::usage=
 "listIntegrate[listData] computes the numerical integral of listData using the trapezoidal rule. listData must be a two-dimensional list of data where the first dimension contains data corresponding to the independent variable and the other to the dependent variable." 
 
 logMean::usage=
-"(*** DEPRECATED! Use logMean2 instead ***) logMean[f,df,Q] computes the logarithmically-weighted mean of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
+"logMean[f,Q] computes the logarithmically-weighted mean of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
 
 logSTD::usage=
-"(*** DEPRECATED! Use logSTD2 instead ***) logSTD[f,df,Q] computes the logarithmically-weighted standard deviation of the list Q given f and df, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified, and df is the average separation between the values in f. Typically, f is monotonically increasing with its values having a uniform separation df."
-
-logMean2::usage=
-"logMean2[f,Q] computes the logarithmically-weighted mean of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
-
-logSTD2::usage=
-"logSTD2[f,Q] computes the logarithmically-weighted standard deviation of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
+"logSTD[f,Q] computes the logarithmically-weighted standard deviation of the list Q given f, where f is a list of the same length as Q containing the values at which the corresponding values of Q are specified. Typically, f is monotonically increasing with its values having a uniform separation."
 
 
 Begin["`Private`"]
@@ -65,30 +59,33 @@ ydataShift = Drop[RotateLeft[ydata,1],-1];
 totalIntegral=N[Total[((Drop[ydata,-1]+ydataShift)/2) (xdataShift-Drop[xdata,-1])]]
 ]
 
-logMean[f_,df_,Q_]:=Module[{W,fZeroPosIndxs,finalF,finalQ},
-fZeroPosIndxs=Position[N[f],0.];
-finalF=Delete[f,fZeroPosIndxs];
-finalQ=Delete[Q,fZeroPosIndxs];
-W=Log[10,(finalF+df/2)/(finalF-df/2)];
-Total[W finalQ]/Total[W]
-]
-
-logMean2[f_,Q_]:=Module[{fZeroPosIndxs,finalF,finalQ},
+logMean[f_,Q_]:=Module[{fZeroPosIndxs,finalF,finalQ},
 fZeroPosIndxs=Position[N[f],0.];
 finalF=Delete[f,fZeroPosIndxs];
 finalQ=Delete[Q,fZeroPosIndxs];
 Total[finalQ/finalF]/Total[1/finalF]
 ]
 
-logSTD[f_,df_,Q_]:=Module[{Qbar},
-Qbar=logMean[f,df,Q];
-Sqrt[logMean[f,df,(Q-Qbar)^2]]
+logSTD[f_,Q_]:=Module[{Qbar},
+Qbar = logMean[f,Q];
+Sqrt[logMean[f,(Q-Qbar)^2]]
 ]
 
-logSTD2[f_,Q_]:=Module[{Qbar},
-Qbar = logMean2[f,Q];
-Sqrt[logMean2[f,(Q-Qbar)^2]]
-]
+(* DEPRECATED FUNCTIONS *)
+
+(*logMean[f_,df_,Q_]:=Module[{W,fZeroPosIndxs,finalF,finalQ},
+MessageDialog["The logMean function is deprecated. Use logMean2 instead."];
+fZeroPosIndxs=Position[N[f],0.];
+finalF=Delete[f,fZeroPosIndxs];
+finalQ=Delete[Q,fZeroPosIndxs];
+W=Log[10,(finalF+df/2)/(finalF-df/2)];
+Total[W finalQ]/Total[W]
+]*)
+
+(*logSTD[f_,df_,Q_]:=Module[{Qbar},
+Qbar=logMean[f,df,Q];
+Sqrt[logMean[f,df,(Q-Qbar)^2]]
+]*)
 
 
 End[]
