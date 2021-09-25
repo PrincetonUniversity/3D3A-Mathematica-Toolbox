@@ -22,11 +22,13 @@
 BeginPackage["dsp`",{"general`","math`"}]
 
 
+getButterworthFIR::usage="getButterworthFIR[filtLen,filterOrder,Wn] returns an FIR approximation of a Butterworth low-pass filter. The length, in samples, of the FIR is given by filtLen, the filter order is given by filterOrder, and the normalized (relative to the Nyquist frequency) cutoff frequency is given by Wn. getButterworthFIR[filtLen,filterOrder,Wn,filtType] optionally allows specification of a filter type. filtType can be \"Lowpass\", \"Highpass\", or \"Bandpass\". If filtType is \"Bandpass\", Wn must be a two-element list specifying the low and high cutoff frequencies. getButterworthFIR[filtLen,filterOrder,Wn,filtType,\"Linear\"] returns a zero-phase Butterworth filter instead."
+
 applyButterHPF::usage=
-"applyButterHPF[x,filterOrder,Wn] applies a zero-phase Butterworth high-pass filter of order filterOrder and normalized cut-off frequency Wn to the input signal x (must be a 1D List). Wn must be specified such that 1 corresponds to the Nyquist frequency. The output is the filtered signal that has the same length as x. Filtering is done in the frequency domain with FourierParameters set to {1, -1}."
+"applyButterHPF[x,filterOrder,Wn] or applyButterHPF[x,filterOrder,Wn,\"Linear\"] applies a zero-phase Butterworth high-pass filter of order filterOrder and normalized cut-off frequency Wn to the input signal x (must be a 1D List). Wn must be specified such that 1 corresponds to the Nyquist frequency. The output is the filtered signal that has the same length as x. Filtering is done in the frequency domain with FourierParameters set to {1, -1}. applyButterHPF[x,filterOrder,Wn,\"Original\"] applies a Butterworth high-pass filter with its original nonlinear phase response instead."
 
 applyButterLPF::usage=
-"applyButterLPF[x,filterOrder,Wn] applies a zero-phase Butterworth low-pass filter of order filterOrder and normalized cut-off frequency Wn to the input signal x (must be a 1D List). Wn must be specified such that 1 corresponds to the Nyquist frequency. The output is the filtered signal that has the same length as x. Filtering is done in the frequency domain with FourierParameters set to {1, -1}."
+"applyButterLPF[x,filterOrder,Wn] or applyButterLPF[x,filterOrder,Wn,\"Linear\"] applies a zero-phase Butterworth low-pass filter of order filterOrder and normalized cut-off frequency Wn to the input signal x (must be a 1D List). Wn must be specified such that 1 corresponds to the Nyquist frequency. The output is the filtered signal that has the same length as x. Filtering is done in the frequency domain with FourierParameters set to {1, -1}. applyButterLPF[x,filterOrder,Wn,\"Original\"] applies a Butterworth low-pass filter with its original nonlinear phase response instead."
 
 autoCorrFunc::usage=
 "autoCorrFunc[signal] computes the autocorrelation function of signal. autoCorrFunc[signal,rectWinLen] optionally specifies the length, in samples, of the rectangular window to apply to signal prior to computing the autocorrelation function. The default length of the window is the length of signal itself (i.e. no windowing). Additionally, signal is not centered and normalized prior to computation, as is done in the built-in CorrelationFunction[] function). For more on the algorithm used here, see Makhoul (1975) - Linear Prediction: A Tutorial Review."
@@ -87,9 +89,11 @@ inverseFilter::usage=
 
 OPTIONAL INPUTS:
 	1. \"Regularization\" \[RightArrow] specifies the type of regularization to apply with \"None\" (default), \"Piecewise\", and \"Custom\" being the three options.
-	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the normalized frequency range {W1, W2} where 0 \[LessEqual] W1,W2 \[LessEqual] 1 and where 1 corresponds to the Nyquist frequency. This option is only required when \"Regularization\" is set to \"Piecewise\".
-	3. \"SampleRate\" \[RightArrow] sampling rate in Hz. This option is only required when \"Regularization\" is set to \"Custom\".
-	4. \"FreqRange\" \[RightArrow] frequency range, in Hz, over which direct inversion is to be performed. This option is only required when \"Regularization\" is set to \"Custom\".
+	2. \"Regularization Ranges\" \[RightArrow] list of triples {W1, W2, \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the normalized frequency range {W1, W2} where 0 \[LessEqual] W1,W2 \[LessEqual] 1 and where 1 corresponds to the Nyquist frequency. This option is only required when \"Regularization\" is set to \"Piecewise\". The default values are {{0,1,0}} and correspond to no regularization.
+	3. \"SampleRate\" \[RightArrow] sampling rate in Hz. This option is only required when \"Regularization\" is set to \"Custom\". The default values is 96000.
+	4. \"AvgFreqRange\" \[RightArrow] frequency range, in Hz, over which log-weighted average level is computed prior to inversion. This option is only required when \"Regularization\" is set to \"Custom\". The default values are {100,18000}.
+	5. \"InvFreqRange\" \[RightArrow] frequency range, in Hz, over which direct inversion is performed. This option is only required when \"Regularization\" is set to \"Custom\". The default values are {20,20000}.
+	6. \"MaxDynRange\" \[RightArrow] maximum dynamic range, in dB, of the inverse filter. This option is only required when \"Regularization\" is set to \"Custom\". If the dynamic range of the inverse filter within AvgFreqRange is less than the specified value, then that dynamic range supersedes the value specified here. The default value is 24 dB.
 EXAMPLE:
 	invFilt = inverseFilter[filt,\"Regularization\"\[Rule]\"Piecewise\",\"Regularization Ranges\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];."
 
@@ -132,7 +136,7 @@ getSPLNorm::usage=
 "getSPLNorm[refSPL] returns the normalization factor required to normalize transfer functions to represent magnitude responses in dB SPL. The required input to the function, refSPL, must specify the SPL corresponding to 0 dBFS. In the 3D3A Lab at Princeton University, the typical calibration results in 94 dBSPL corresponding to -11 dBFS, giving a refSPL value of 105 dB. If refSPL is not specified, 105 dB is assumed."
 
 sweepToIR::usage=
-"sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF or WAV format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) of IRs. sweepToIR[sweepFilePath,numOuts] specifies the number of outputs to return. numOuts can take a scalar value between 1 and 4 and the following outputs are returned in each case: (1) - IRs, (2) - {IRs,Fs}, (3) - {IRs,Fs,sweepSignal}, (4) - {IRs,Fs,sweepSignal,snrSpec}, where Fs is the sampling rate in Hz, snrSpec contains estimates of the signal-to-noise ratio spectra (in absolute magnitude units) for each microphone channel, and sweepSignal is a 1D List containing the input sweep signal used during the original measurement. As such, zero-padding the output IRs and circularly convolving with sweepSignal should give an estimate of the raw microphone signals captured during the sweep measurement. sweepToIR[sweepFilePath,numOuts,{FL,FU}] optionally specifies the sweep start (FL) and end (FU) frequencies, in Hz, so that a bandpass filter with these cut-off frequencies is applied to the deconvolved signal. FL and FU must satisfy the following: 0 < FL < FU and FL < FU < Fs/2."
+"sweepToIR[sweepFilePath] imports an n-channel sweep file (where n > 2) in AIFF or WAV format with the (n-1)th channel containing the sweep signal and the nth channel containing a sweep trigger signal (containing p triggers for each of p sweeps, with p > 0), deconvolves all preceding channels by the sweep signal, and exports the results as an (n-2)-by-p matrix (i.e. list of lists) of IRs. sweepToIR[sweepFilePath,numOuts] specifies the number of outputs to return. numOuts can take a scalar value between 1 and 4 and the following outputs are returned in each case: (1) - IRs, (2) - {IRs,Fs}, (3) - {IRs,Fs,sweepSignal}, (4) - {IRs,Fs,sweepSignal,snrSpec}, where Fs is the sampling rate in Hz, snrSpec contains estimates of the signal-to-noise ratio spectra (in absolute magnitude units) for each microphone channel, and sweepSignal is a 1D List containing the input sweep signal used during the original measurement. As such, zero-padding the output IRs and circularly convolving with sweepSignal should give an estimate of the raw microphone signals captured during the sweep measurement. sweepToIR[sweepFilePath,numOuts,{FL,FU}] optionally specifies the sweep start (FL) and end (FU) frequencies, in Hz, so that a Butterworth bandpass filter with these cut-off frequencies is applied to the deconvolved signal. FL and FU must satisfy the following: 0 < FL < FU and FL < FU < Fs/2. If FL = 0 and FU = Fs/2 are specifed, a bandpass filter is not applied. sweepToIR[sweepFilePath,numOuts,{FL,FU},sweepDur] specifies the duration of the sweep in seconds. This enables a more accurate estimate of snrSpec. If snrSpec is not requested at the output, specifying sweepDur has no effect. To use the default (e.g., if the sweep duration is unknown), sweepDur may be specified as 0. Finally, sweepToIR[sweepFilePath,numOuts,{FL,FU},sweepDur,phaseFlag] specifies whether or not the applied Butterworth bandpass filter should retain its original phase response (phaseFlag = 0 - default) or be made to have linear phase (phaseFlag = 1)."
 
 getForwardSTFT::usage=
 "getForwardSTFT[x,\!\(\*
@@ -175,22 +179,77 @@ forceConjugateSymmetry::usage=
 Begin["`Private`"]
 
 
-applyButterHPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,HPF,hpfIR,y},
+getButterworthFIR[filtLen_,filterOrder_,Wn_,filtType_:"Lowpass",phaseType_: "Original"]:=Module[
+{dtf,filtIR,n,s,z}
+,
+dtf=Chop[ToDiscreteTimeModel[ButterworthFilterModel[{filtType,filterOrder, N[2 Pi Wn]},s],0.5,z]];
+filtIR=Flatten[Re[OutputResponse[dtf,KroneckerDelta[n],{n,0.,(filtLen-1.)/2.}]]];
+If[phaseType=="Linear",
+filtIR=RotateRight[TFtoIR[Abs[IRtoTF[filtIR]]],Floor[filtLen/2]];
+];
+filtIR
+]
+
+applyButterHPF[x_,filterOrder_,Wn_,phaseType_: "Linear"]:=Module[
+{IRLen,IRLenPad,dtf,hpfIR,y,n,s,z}
+,
 IRLen = Length[x];
+If[EvenQ[IRLen],
+IRLenPad=IRLen+1;
+,
+IRLenPad=IRLen;
+];
+dtf=Chop[ToDiscreteTimeModel[ButterworthFilterModel[{"Highpass",filterOrder, N[2 Pi Wn]},s],0.5,z]];
+hpfIR=Flatten[Re[OutputResponse[dtf,KroneckerDelta[n],{n,0.,(IRLenPad-1.)/2.}]]];
+Switch[phaseType,
+"Linear",
+hpfIR=RotateRight[TFtoIR[Abs[IRtoTF[hpfIR]]],Floor[IRLenPad/2]];
+y=RotateLeft[conv[x,hpfIR,"lin"],Floor[IRLenPad/2]][[;;IRLen]]
+,"Original",
+y=conv[x,hpfIR,"lin"][[;;IRLen]];
+,_,
+MessageDialog["Invalid phaseType specification in function applyButterHPF. Aborting..."];
+Abort[];
+];
+y
+
+(*IRLen = Length[x];
 xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
 HPF = 1-1/Sqrt[1+(W/Wn)^(2filterOrder)];
 hpfIR=TFtoIR[HPF];
-y=RotateLeft[conv[xp,RotateRight[hpfIR,IRLen]],IRLen][[;;IRLen]]
+y=RotateLeft[conv[xp,RotateRight[hpfIR,IRLen]],IRLen][[;;IRLen]]*)
 ]
 
-applyButterLPF[x_,filterOrder_,Wn_]:=Module[{IRLen,xp,W,LPF,lpfIR,y},
+applyButterLPF[x_,filterOrder_,Wn_,phaseType_:"Linear"]:=Module[
+{IRLen,IRLenPad,dtf,lpfIR,y,n,s,z}
+,
 IRLen = Length[x];
+If[EvenQ[IRLen],
+IRLenPad=IRLen+1;
+,
+IRLenPad=IRLen;
+];
+dtf=Chop[ToDiscreteTimeModel[ButterworthFilterModel[{"Lowpass",filterOrder, N[2 Pi Wn]},s],0.5,z]];
+lpfIR=Flatten[Re[OutputResponse[dtf,KroneckerDelta[n],{n,0.,(IRLenPad-1.)/2.}]]];
+Switch[phaseType,
+"Linear",
+lpfIR=RotateRight[TFtoIR[Abs[IRtoTF[lpfIR]]],Floor[IRLenPad/2]];
+y=RotateLeft[conv[x,lpfIR,"lin"],Floor[IRLenPad/2]][[;;IRLen]]
+,"Original",
+y=conv[x,lpfIR,"lin"][[;;IRLen]];
+,_,
+MessageDialog["Invalid phaseType specification in function applyButterLPF. Aborting..."];
+Abort[];
+];
+y
+
+(*IRLen = Length[x];
 xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
 LPF = 1/Sqrt[1+(W/Wn)^(2filterOrder)];
 lpfIR=TFtoIR[LPF];
-y=RotateLeft[conv[xp,RotateRight[lpfIR,IRLen]],IRLen][[;;IRLen]]
+y=RotateLeft[conv[xp,RotateRight[lpfIR,IRLen]],IRLen][[;;IRLen]]*)
 ]
 
 autoCorrFunc[signal_,rectWinLen_: 0]:=Module[
@@ -201,7 +260,7 @@ signalLen=Length[signal];
 ,
 signalLen=Clip[rectWinLen,{1, Length[signal]}];
 ];
-acf=ConstantArray[0,signalLen];
+acf=ConstantArray[0.,signalLen];
 Do[
 acf[[ii]]=Total[Drop[signal RotateLeft[signal,ii-1],-(ii-1)]];
 ,
@@ -210,7 +269,7 @@ acf[[ii]]=Total[Drop[signal RotateLeft[signal,ii-1],-(ii-1)]];
 acf
 ]
 
-avgGroupDelay[inputIR_,fS_,avgRange_:{0,0}]:=Module[
+avgGroupDelay[inputIR_,fS_,avgRange_:{0.,0.}]:=Module[
 {inputIRLen,fVec,avgR,avgRL,avgRR,fIndices,grpDSpec,avgGrpDel}
 ,
 inputIRLen=Length[inputIR];
@@ -229,28 +288,26 @@ Round[avgGrpDel]
 ]
 
 conv[x_,y_,type_:"circ"]:=Module[
-{yLen,xLen,output,padLen,yPad,xPad,outputPad}
+{yLen,xLen,output,padLen,yPad,xPad}
 ,
 yLen=Length[y];
 xLen=Length[x];
-If[type=="circ",
+Switch[type,
+"circ",
 If[xLen==yLen,
 output=TFtoIR[IRtoTF[x] IRtoTF[y]];
 ,
 MessageDialog["Sequences must be of the same length for circular convolution. Otherwise choose the linear convolution option."];
 Abort[];
 ]
-,
-If[type=="lin",
-padLen=nextPowTwo[xLen+yLen-1];
-yPad=PadRight[y,padLen];
-xPad=PadRight[x,padLen];
-outputPad=TFtoIR[IRtoTF[xPad] IRtoTF[yPad]];
-output=outputPad[[;;xLen+yLen-1]];
-,
+,"lin",
+padLen=xLen+yLen-1;
+yPad=PadRight[y,padLen,0.];
+xPad=PadRight[x,padLen,0.];
+output=TFtoIR[IRtoTF[xPad] IRtoTF[yPad]];
+,_,
 MessageDialog["Unrecognized input. See function help for valid inputs."];
 Abort[];
-]
 ];
 output
 ]
@@ -260,22 +317,23 @@ deconv[y_,x_,type_:"circ"]:=Module[
 ,
 yLen=Length[y];
 xLen=Length[x];
+
 If[xLen>yLen,
 MessageDialog["The length of x cannot exceed that of y."];
 Abort[];
 ];
-If[type=="circ",
-xPad=PadRight[x,yLen];
+
+Switch[type,
+"circ",
+xPad=PadRight[x,yLen,0.];
 output=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
-,
-If[type=="lin",
-xPad=PadRight[x,yLen];
+,"lin",
+xPad=PadRight[x,yLen,0.];
 outputPad=TFtoIR[Quiet[IRtoTF[y]/ IRtoTF[xPad]]/.ComplexInfinity->0.];
 output=outputPad[[;;yLen-xLen+1]];
-,
+,_,
 MessageDialog["Unrecognized input. See function help for valid inputs."];
 Abort[];
-]
 ];
 output
 ]
@@ -284,39 +342,39 @@ groupDelaySpec[inputIR_]:=Module[
 {inputIRLen,ramp,grpDSpec}
 ,
 inputIRLen=Length[inputIR];
-ramp=Range[0.,inputIRLen-1];
+ramp=Range[0.,inputIRLen-1.];
 grpDSpec=Re[Quiet[IRtoTF[inputIR ramp]/IRtoTF[inputIR]]/.ComplexInfinity->0.]
 ]
 
 IRtoTF[IR_]:=Fourier[IR,FourierParameters->{1,-1}]
 
-Options[KaiserLPFIR]={"PB Gain"->-1,"SB Gain"->-30};
+Options[KaiserLPFIR]={"PB Gain"->-1.,"SB Gain"->-30.};
 KaiserLPFIR[irLen_,pbCutoff_,sbCutoff_,OptionsPattern[]]:=Module[
 {\[Delta]1,\[Delta]2,\[Delta],\[Omega]c,d\[Omega],A,\[Beta],M,filterLen,\[Alpha],filterIR}
 ,
-\[Delta]1=1-(10^(OptionValue["PB Gain"]/20));
-\[Delta]2=10^(OptionValue["SB Gain"]/20);
+\[Delta]1=1.-(10.^(OptionValue["PB Gain"]/20.));
+\[Delta]2=10.^(OptionValue["SB Gain"]/20.);
 \[Delta]=Min[\[Delta]1,\[Delta]2];
-\[Omega]c=(pbCutoff+sbCutoff)/2;
+\[Omega]c=(pbCutoff+sbCutoff)/2.;
 d\[Omega]=sbCutoff-pbCutoff;
-A=-20Log10[\[Delta]];
+A=-20.Log10[\[Delta]];
 If[A>50,
 \[Beta]=0.1102 (A-8.7);
 ,
 If[A>=21&&A<=50,
-\[Beta]=0.5842 (A-21)^0.4+0.07886 (A-21);
+\[Beta]=0.5842 (A-21.)^0.4+0.07886 (A-21.);
 ,
-\[Beta]=0;
+\[Beta]=0.;
 ]
 ];
-M=Round[(A-8)/(2.285 d\[Omega])];
+M=Round[(A-8.)/(2.285 d\[Omega])];
 filterLen=irLen;
 If[filterLen<(M+1),
 filterLen=M+1;
 ];
-\[Alpha]=M/2;
-filterIR=ConstantArray[0,filterLen];
-filterIR[[;;M+1]]=Sinc[\[Omega]c (Range[0,M]-\[Alpha])](\[Omega]c/\[Pi])(BesselI[0,N[\[Beta]] Sqrt[1-((Range[0,M]-\[Alpha])/\[Alpha])^2]]/BesselI[0,N[\[Beta]]]);
+\[Alpha]=M/2.;
+filterIR=ConstantArray[0.,filterLen];
+filterIR[[;;M+1]]=Sinc[\[Omega]c (Range[0.,M]-\[Alpha])](\[Omega]c/N[Pi])(BesselI[0,N[\[Beta]] Sqrt[1.-((Range[0.,M]-\[Alpha])/\[Alpha])^2.]]/BesselI[0,N[\[Beta]]]);
 filterIR=RotateRight[filterIR,Floor[(filterLen-(M+1))/2]]
 ]
 
@@ -327,7 +385,7 @@ autoCorrList=autoCorrFunc[signal,p+1];
 autoCorrMat=ToeplitzMatrix[autoCorrList[[2;;]]];
 aVec=Inverse[autoCorrMat] . (-autoCorrList[[2;;]]);
 lpRes=signal;
-predVec=LowerTriangularize[ToeplitzMatrix[signal[[;;-2]]]] . PadRight[aVec,Length[signal]-1];
+predVec=LowerTriangularize[ToeplitzMatrix[signal[[;;-2]]]] . PadRight[aVec,Length[signal]-1,0.];
 lpRes[[2;;]]=signal[[2;;]]+predVec;
 lpRes
 ]
@@ -335,17 +393,17 @@ lpRes
 raisedCosWin[winLen_,r_: {0.25,0.25}]:=Module[
 {x,winVec,rFinal}
 ,
-x=Range[0,1-(1/winLen),(1/winLen)];
-winVec=ConstantArray[1,winLen];
+x=Range[0.,1.-(1./winLen),(1./winLen)];
+winVec=ConstantArray[1.,winLen];
 rFinal=Clip[Abs[r],{0,1}];
 If[Mean[rFinal]>0.5,
 rFinal=Clip[rFinal,{0,Clip[Min[rFinal],{0,0.5}]}];
 ];
 If[rFinal[[1]]!=0,
-winVec[[;;Round[winLen rFinal[[1]]]]]=0.5(1+Cos[Pi/rFinal[[1]] (x[[;;Round[winLen rFinal[[1]]]]]-rFinal[[1]])]);
+winVec[[;;Round[winLen rFinal[[1]]]]]=0.5(1.+Cos[N[Pi]/rFinal[[1]] (x[[;;Round[winLen rFinal[[1]]]]]-rFinal[[1]])]);
 ];
 If[rFinal[[2]]!=0,
-winVec[[winLen-Round[winLen rFinal[[2]]]+1;;]]=0.5(1+Cos[Pi/rFinal[[2]] (x[[winLen-Round[winLen rFinal[[2]]]+1;;]]-1+rFinal[[2]])]);
+winVec[[winLen-Round[winLen rFinal[[2]]]+1;;]]=0.5(1.+Cos[N[Pi]/rFinal[[2]] (x[[winLen-Round[winLen rFinal[[2]]]+1;;]]-1+rFinal[[2]])]);
 ];
 winVec
 ]
@@ -362,24 +420,24 @@ inputSignalLen=Length[inputSignal];
 upsampSignal=Upsample[inputSignal,L];
 upsampSigLen=Length[upsampSignal];
 cutoff=Min[Pi/L,Pi/M];
-lpfIR=L KaiserLPFIR[upsampSigLen,0.95cutoff,cutoff,"SB Gain"->-60];
+lpfIR=L KaiserLPFIR[upsampSigLen,0.95cutoff,cutoff,"SB Gain"->-60.];
 lpfIRLen=Length[lpfIR];
 maxLen=Max[upsampSigLen,lpfIRLen];
-upsampSignalPad=PadRight[upsampSignal,maxLen];
-lpfIRPad=PadRight[lpfIR,maxLen];
+upsampSignalPad=PadRight[upsampSignal,maxLen,0.];
+lpfIRPad=PadRight[lpfIR,maxLen,0.];
 interpSignal=RotateLeft[conv[upsampSignalPad,lpfIRPad],Floor[maxLen/2]];
 outputSignal=Downsample[interpSignal[[;;upsampSigLen]],M];
 ];
 outputSignal
 ]
 
-Options[signalOnset]={"Threshold"->20,"Resampling"->1};
+Options[signalOnset]={"Threshold"->20.,"Resampling"->1.};
 signalOnset[inputSignal_,OptionsPattern[]]:=Module[
 {resampling,interpSignal,threshold,onsetSample}
 ,
 resampling=OptionValue["Resampling"];
-interpSignal=resample[inputSignal,1,resampling];
-threshold = (OptionValue["Threshold"]/100) Max[Abs[interpSignal]];
+interpSignal=resample[inputSignal,1.,resampling];
+threshold = (OptionValue["Threshold"]/100.) Max[Abs[interpSignal]];
 onsetSample = Position[interpSignal,_?(Abs[#]>=threshold &)][[1,1]]/resampling
 ]
 
@@ -388,11 +446,11 @@ TFtoIR[TF_]:=Re[InverseFourier[TF,FourierParameters->{1,-1}]]
 tukeyWin[winLen_,r_: 0.5]:=Module[
 {x,winVec}
 ,
-x=Range[0,1-(1/winLen),(1/winLen)];
-winVec=ConstantArray[1,winLen];
+x=Range[0.,1.-(1./winLen),(1./winLen)];
+winVec=ConstantArray[1.,winLen];
 If[r!=0,
-winVec[[;;Round[winLen r/2]]]=0.5(1+Cos[(2Pi)/r (x[[;;Round[winLen r/2]]]-r/2)]);
-winVec[[winLen-Round[winLen r/2]+1;;]]=0.5(1+Cos[(2Pi)/r (x[[winLen-Round[winLen r/2]+1;;]]-1+r/2)]);
+winVec[[;;Round[winLen r/2]]]=0.5(1.+Cos[(2.N[Pi])/r (x[[;;Round[winLen r/2]]]-r/2)]);
+winVec[[winLen-Round[winLen r/2]+1;;]]=0.5(1.+Cos[(2.N[Pi])/r (x[[winLen-Round[winLen r/2]+1;;]]-1+r/2)]);
 ];
 winVec
 ]
@@ -412,35 +470,46 @@ unwrappedPhase[[ii+1;;]]=unwrappedPhase[[ii+1;;]]-2 tol;
 unwrappedPhase
 ]
 
-Options[inverseFilter]={"Regularization"->"None","Regularization Ranges"->{{0,1,0}},"SampleRate"->96000,"FreqRange"->{200,24000}};
-inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon],Fs,fRange,fVec,fLIndx,fUIndx,HAvg,HNorm,irHalfLen,tempHInv,fullHInv,clipU,lPosIndxs,hPosIndxs},
+Options[inverseFilter]={"Regularization"->"None","Regularization Ranges"->{{0.,1.,0.}},"SampleRate"->96000.,"AvgFreqRange"->{100.,18000.},"InvFreqRange"->{20.,20000.},"MaxDynRange"->24.};
+inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon],Fs,avgFRange,invFRange,fVec,fLIndx,fUIndx,magSpec,HAvg,HNorm,irHalfLen,dynRange,maxDynRange,HNormClip,tempHInv,fullHInv,leftConstVal,rightConstVal,WnHPF,WnLPF,filterOrder,W,HPF,LPF},
 IRLen = Length[h];
 H = IRtoTF[h];
 Switch[OptionValue["Regularization"]
 ,"None",
-z = TFtoIR[1/H];
+z = TFtoIR[1./H];
 ,"Piecewise",
 \[Epsilon] = piecewiseRegularization[IRLen,OptionValue["Regularization Ranges"]];
 z = TFtoIR[Conjugate[H]/(Conjugate[H]H+\[Epsilon])];
 ,"Custom",
 Fs=OptionValue["SampleRate"];
-fRange=OptionValue["FreqRange"];
+avgFRange=OptionValue["AvgFreqRange"];
+invFRange=OptionValue["InvFreqRange"];
 fVec=freqList[IRLen,Fs];
-fLIndx=Position[fVec,Nearest[fVec,Min[fRange]][[1]]][[1,1]];
-fUIndx=Position[fVec,Nearest[fVec,Max[fRange]][[1]]][[1,1]];
-HAvg=logMean[fVec[[fLIndx;;fUIndx]],magTodB[Abs[H[[fLIndx;;fUIndx]]]]];
-HNorm=H/dBToMag[HAvg];
+fLIndx=Position[fVec,Nearest[fVec,Min[avgFRange]][[1]]][[1,1]];
+fUIndx=Position[fVec,Nearest[fVec,Max[avgFRange]][[1]]][[1,1]];
+magSpec=Abs[H[[fLIndx;;fUIndx]]];
+HAvg=logMean[fVec[[fLIndx;;fUIndx]],magSpec];
+HNorm=H/HAvg;
+dynRange=magTodB[Max[magSpec]/Min[magSpec]];
+maxDynRange=OptionValue["MaxDynRange"];
 irHalfLen=Ceiling[(IRLen+1)/2];
-tempHInv=1/HNorm[[1;;irHalfLen]];
-clipU=Max[Abs[HNorm[[fLIndx;;fUIndx]]]];
-lPosIndxs=Flatten[Position[Abs[tempHInv[[1;;fLIndx-1]]],x_/;x>clipU]];
-hPosIndxs=Flatten[Position[Abs[tempHInv[[fUIndx+1;;irHalfLen]]],x_/;x>clipU]];
-tempHInv[[lPosIndxs]]=clipU tempHInv[[lPosIndxs]]/Abs[tempHInv[[lPosIndxs]]];
-tempHInv[[fUIndx+hPosIndxs]]=clipU tempHInv[[fUIndx+hPosIndxs]]/Abs[tempHInv[[fUIndx+hPosIndxs]]];
+dynRange=Min[dynRange,maxDynRange];
+HNormClip=dBToMag[Clip[magTodB[Abs[HNorm]],{-dynRange/2.,dynRange/2.}]]Exp[I Arg[HNorm]];
+tempHInv=1./HNormClip[[1;;irHalfLen]];
+fLIndx=Position[fVec,Nearest[fVec,Min[invFRange]][[1]]][[1,1]];
+fUIndx=Position[fVec,Nearest[fVec,Max[invFRange]][[1]]][[1,1]];
+leftConstVal=Abs[tempHInv[[fLIndx]]] dBToMag[3];
+rightConstVal=Abs[tempHInv[[fUIndx]]] dBToMag[3];
+WnHPF=Min[invFRange/(Fs/2.)];
+WnLPF=Max[invFRange/(Fs/2.)];
+HPF=leftConstVal Abs[IRtoTF[getButterworthFIR[IRLen,4,WnHPF,"Highpass"]]];
+LPF=rightConstVal Abs[IRtoTF[getButterworthFIR[IRLen,4,WnHPF,"Lowpass"]]];
+tempHInv[[1;;fLIndx]]=HPF[[1;;fLIndx]] Exp[I Arg[tempHInv[[1;;fLIndx]]]];
+tempHInv[[fUIndx;;irHalfLen]]=LPF[[fUIndx;;irHalfLen]] Exp[I Arg[tempHInv[[fUIndx;;irHalfLen]]]];
 If[EvenQ[IRLen],
-fullHInv=Join[tempHInv,Drop[Reverse[Drop[Conjugate[tempHInv],1]],1]]/dBToMag[HAvg];
+fullHInv=Join[tempHInv,Drop[Reverse[Drop[Conjugate[tempHInv],1]],1]]/HAvg;
 ,
-fullHInv=Join[tempHInv,Reverse[Drop[Conjugate[tempHInv],1]]]/dBToMag[HAvg];
+fullHInv=Join[tempHInv,Reverse[Drop[Conjugate[tempHInv],1]]]/HAvg;
 ];
 z=TFtoIR[fullHInv];
 ];
@@ -450,7 +519,7 @@ z
 piecewiseRegularization[N_,\[Epsilon]List_ ]:=Module[{regPoints,regFn,regHalf,regFull},
 regPoints = DeleteDuplicates[Flatten[Table[{{\[Epsilon]List[[ii,1]],\[Epsilon]List[[ii,3]]},{\[Epsilon]List[[ii,2]],\[Epsilon]List[[ii,3]]}},{ii,1,Length[\[Epsilon]List]}],1]];
 regFn = Interpolation[regPoints,InterpolationOrder->1];
-regHalf = regFn[Range[0,1,2/N]];
+regHalf = regFn[Range[0.,1.,2./N]];
 If[EvenQ[N],
 regFull=Join[regHalf,Reverse[regHalf[[2;;-2]]]];
 ,
@@ -459,7 +528,7 @@ regFull=Join[regHalf,Reverse[regHalf[[2;;-1]]]];
 regFull
 ]
 
-Options[HatzOctaveSmoothPS]={"Smoothing Factor"->3,"Window"->"Hann"};
+Options[HatzOctaveSmoothPS]={"Smoothing Factor"->3.,"Window"->"Hann"};
 HatzOctaveSmoothPS[inputPowerSpectrum_,OptionsPattern[]]:=Module[
 {powerSpectrumLen,nyqIndex,oSFrac,oSWinType,Pf,mk,mkMax,b,Wsm,smoothedPSHalf,smoothedPS}
 ,
@@ -481,8 +550,8 @@ b = 0.54;
 ];
 Wsm=ConstantArray[0,{mkMax,powerSpectrumLen}];
 Do[
-Wsm[[m,1;;m+1]]=(b-(b-1)Cos[(\[Pi]/m)(Range[-m,0])])/(2 b (m+1) -1);
-Wsm[[m,m+2;;2m+1]]=(b-(b-1)Cos[(\[Pi]/m)(Range[2,m+1]-1)])/(2 b (m+1) -1);
+Wsm[[m,1;;m+1]]=(b-(b-1.)Cos[(N[\[Pi]]/m)(Range[-m,0.])])/(2. b (m+1) -1.);
+Wsm[[m,m+2;;2m+1]]=(b-(b-1.)Cos[(N[\[Pi]]/m)(Range[2.,m+1.]-1.)])/(2. b (m+1) -1.);
 ,
 {m,1,mkMax}
 ];
@@ -499,12 +568,12 @@ smoothedPS
 discreteAnalyticSignal[inputSignal_] := Module[
 {inputSignalReal,inputSignalRealDFT,inputSignalRealLength,inputSignalRealHalfLength,hilbertDFT,outputSignal}
 ,
-inputSignalReal=Re[inputSignal];inputSignalRealDFT=IRtoTF[inputSignalReal];inputSignalRealLength=Length[inputSignalReal];inputSignalRealHalfLength=Ceiling[(inputSignalRealLength+1)/2];hilbertDFT=ConstantArray[0,inputSignalRealLength];If[EvenQ[inputSignalRealLength],
-hilbertDFT[[1]]=1;
-hilbertDFT[[2;;inputSignalRealHalfLength-1]]=2;hilbertDFT[[inputSignalRealHalfLength]]=1;
+inputSignalReal=Re[inputSignal];inputSignalRealDFT=IRtoTF[inputSignalReal];inputSignalRealLength=Length[inputSignalReal];inputSignalRealHalfLength=Ceiling[(inputSignalRealLength+1)/2];hilbertDFT=ConstantArray[0.,inputSignalRealLength];If[EvenQ[inputSignalRealLength],
+hilbertDFT[[1]]=1.;
+hilbertDFT[[2;;inputSignalRealHalfLength-1]]=2.;hilbertDFT[[inputSignalRealHalfLength]]=1.;
 , 
-hilbertDFT[[1]]=1;
-hilbertDFT[[2;;inputSignalRealHalfLength]]=2;
+hilbertDFT[[1]]=1.;
+hilbertDFT[[2;;inputSignalRealHalfLength]]=2.;
 ];
 outputSignal=TFtoIR[inputSignalRealDFT hilbertDFT]
 ]
@@ -528,21 +597,21 @@ getMinimumPhaseIR[inputIR_] := Module[
 ,
 irLen=Length[inputIR];
 rCeps=TFtoIR[Log[Abs[IRtoTF[inputIR]]]];
-win=ConstantArray[0,irLen];
+win=ConstantArray[0.,irLen];
 irHalfLen=Ceiling[(irLen+1)/2];
-win[[1]]=1;
-win[[2;;irHalfLen-1]]=2;
+win[[1]]=1.;
+win[[2;;irHalfLen-1]]=2.;
 If[EvenQ[irLen],
-win[[irHalfLen]]=1;
+win[[irHalfLen]]=1.;
 ,
-win[[irHalfLen]]=2;
+win[[irHalfLen]]=2.;
 ];
 minPhaseIR=TFtoIR[Exp[IRtoTF[win rCeps]]]
 ]
 
 realCepstrum[inputSignal_]:=Re[TFtoIR[Log[Abs[IRtoTF[inputSignal]]]]]
 
-Options[getBalancedIR]={"Order"->0,"Sampling Rate"->44100};
+Options[getBalancedIR]={"Order"->0,"Sampling Rate"->44100.};
 getBalancedIR[inputIR_,OptionsPattern[]]:=Module[
 {iR,irLen,order,hankelMat,uMat,sigmaMat,vMat,hatA,hatB,hatC,hatD,fS,sys,sysIR}
 ,
@@ -561,13 +630,13 @@ hatB=Transpose[{vMat[[1,1;;order]]}];
 hatC={iR . vMat[[1;;irLen,1;;order]]};
 hatD={{0}};
 sys=StateSpaceModel[{hatA,hatB,hatC,hatD},SamplingPeriod->1/fS];
-sysIR=RotateLeft[Flatten[OutputResponse[sys,N[Join[{1},ConstantArray[0,Length[inputIR]-1]]]]]]
+sysIR=RotateLeft[Flatten[OutputResponse[sys,Join[{1.},ConstantArray[0.,Length[inputIR]-1]]]]]
 ]
 
 getSPLNorm[refSPL_: 105.]:=10.^(-refSPL/20.)
 
-sweepToIR[sweepFilePath_,numOuts_:1,fRange_:{}]:=Module[
-{rawData,numCh,Fs,numMics,fileLen,FFTLen,filtFlagLP,filtFlagHP,fL,fU,rawMicData,sweepSignal,triggerSignal,meanVals,meanValMat,triggerPositions,interSweepDelay,numSweeps,snrSpec,bNList,bNLen,sigStart,sigEnd,signal,psdSig,psdBN,micIRs,IRLen,IRList,startPos,endPos,indxLen,maxIndx,outData}
+sweepToIR[sweepFilePath_,numOuts_:1,fRange_:{},sweepDur_:{},phaseFlag_:0]:=Module[
+{rawData,numCh,Fs,numMics,fileLen,FFTLen,filtFlagLP,filtFlagHP,fL,fU,rawMicData,sweepSignal,triggerSignal,meanVals,meanValMat,triggerPositions,interSweepDelay,numSweeps,snrSpec,bNList,bNLen,sigStart,sigEnd,signal,psdSig,psdBN,micIRs,IRLen,IRList,startPos,endPos,indxLen,outData,totSigLen,filtLen,hpFiltIR,lpFiltIR,shiftAmt,longPreOnset,roughOnset,fadeLen}
 ,
 If[StringQ[sweepFilePath],
 {rawData,numCh}=importAudio[sweepFilePath];
@@ -575,21 +644,21 @@ Fs=getSamplingRate[sweepFilePath];
 numMics=numCh-2;
 (* Remaining two channels are sweep and trigger signal channels, respectively. *)
 fileLen = Dimensions[rawData][[2]];
-FFTLen = nextPowTwo[fileLen];
+FFTLen = IntegerPart[nextPowTwo[fileLen]];
 
 If[Length[fRange]!=2,
 filtFlagHP=False;
 filtFlagLP=False;
 ,
 fL=Min[fRange];
-If[fL>0,
+If[fL>0.,
 filtFlagHP=True;
 ,
 filtFlagHP=False;
 ];
 
 fU=Max[fRange];
-If[fU>=Fs/2,
+If[fU>=(Fs-1)/2, (* Fs-1 instead of Fs to ensure that the case fU = Fs/2 is not missed due to rounding errors. *)
 filtFlagLP=False;
 ,
 filtFlagLP=True;
@@ -622,13 +691,18 @@ MessageDialog["Signal-to-noise ratio estimate may not be accurate."];
 ];
 
 sigStart=triggerPositions[[1]];
-sigEnd=Min[{fileLen,sigStart+interSweepDelay-1}];
+If[Length[sweepDur]==0,
+totSigLen=sigStart+numSweeps interSweepDelay-1;
+,
+totSigLen=sigStart+(numSweeps-1) interSweepDelay+(sweepDur Fs)-1;
+];
+sigEnd=Min[{fileLen,totSigLen}];
 signal=rawMicData[[All,sigStart;;sigEnd]];
 
 snrSpec=ConstantArray[0.,numMics];
 Do[
-psdBN=PeriodogramArray[bNList[[ii]],bNLen,Ceiling[bNLen/2],HannWindow,interSweepDelay];
-psdSig=PeriodogramArray[signal[[ii]],interSweepDelay,Ceiling[interSweepDelay/2],HannWindow,interSweepDelay];
+psdBN=PeriodogramArray[bNList[[ii]],bNLen,Floor[bNLen/2],HannWindow,interSweepDelay];
+psdSig=PeriodogramArray[signal[[ii]],interSweepDelay,Floor[interSweepDelay/2],HannWindow,interSweepDelay];
 snrSpec[[ii]]=Sqrt[psdSig/psdBN];
 ,
 {ii,1,numMics}
@@ -641,7 +715,7 @@ snrSpec={};
 (* Perform "exact" deconvolution *)
 micIRs = ConstantArray[0.,numMics];
 Do[
-micIRs[[ii]] = deconv[PadRight[rawMicData[[ii]],FFTLen],PadRight[sweepSignal,FFTLen]];
+micIRs[[ii]] = deconv[PadRight[rawMicData[[ii]],FFTLen,0.],PadRight[sweepSignal,FFTLen,0.]];
 ,
 {ii,1,numMics}
 ];
@@ -669,10 +743,24 @@ MessageDialog["Invalid sweep file path. Aborting..."];
 Abort[];
 ];
 
+If[EvenQ[IRLen],
+filtLen=IRLen+1;
+,
+filtLen=IRLen;
+];
+
 (* Apply high-pass filter if required *)
 If[filtFlagHP,
+hpFiltIR=getButterworthFIR[filtLen,4,fL/(Fs/2.),"Highpass"];
+If[phaseFlag==1,
+shiftAmt=Floor[filtLen/2];
+hpFiltIR=RotateRight[TFtoIR[Abs[IRtoTF[hpFiltIR]]],shiftAmt];
+,
+shiftAmt=0;
+];
 Do[
-IRList[[ii,jj]]=applyButterHPF[IRList[[ii,jj]],4,fL/(Fs/2)];
+IRList[[ii,jj]]=RotateLeft[conv[IRList[[ii,jj]],hpFiltIR,"lin"],shiftAmt];
+IRList[[ii,jj]]=IRList[[ii,jj,1;;IRLen]];
 ,
 {ii,1,numMics},
 {jj,1,numSweeps}
@@ -681,18 +769,28 @@ IRList[[ii,jj]]=applyButterHPF[IRList[[ii,jj]],4,fL/(Fs/2)];
 
 (* Apply low-pass filter if required *)
 If[filtFlagLP,
+lpFiltIR=getButterworthFIR[filtLen,4,fU/(Fs/2.),"Lowpass"];
+If[phaseFlag==1,
+shiftAmt=Floor[filtLen/2];
+lpFiltIR=RotateRight[TFtoIR[Abs[IRtoTF[lpFiltIR]]],shiftAmt];
+,
+shiftAmt=0;
+];
 Do[
-IRList[[ii,jj]]=applyButterLPF[IRList[[ii,jj]],4,fU/(Fs/2)];
+IRList[[ii,jj]]=RotateLeft[conv[IRList[[ii,jj]],lpFiltIR,"lin"],shiftAmt];
+IRList[[ii,jj]]=IRList[[ii,jj,1;;IRLen]];
 ,
 {ii,1,numMics},
 {jj,1,numSweeps}
 ]
 ];
 
-(* Window IRs *)
+(* Window IRs to remove any early artifacts due to above filtering *)
+longPreOnset=Round[15. Fs/1000.]; (* 15 ms - sound travels approx. 5 m in this time *)
 Do[
-maxIndx=signalOnset[IRList[[ii,jj]],"Threshold"->100];
-IRList[[ii,jj]]=IRList[[ii,jj]]tukeyWin[IRLen,maxIndx/IRLen];
+roughOnset=signalOnset[IRList[[ii,jj]],"Threshold"->50.];
+fadeLen=Max[0.,roughOnset-longPreOnset];
+IRList[[ii,jj]]=IRList[[ii,jj]]raisedCosWin[IRLen,{fadeLen/IRLen,0.05}];
 ,
 {ii,1,numMics},
 {jj,1,numSweeps}
@@ -718,12 +816,12 @@ getForwardSTFT[X_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{XLen,HopLen
 XLen = Length[X];
 HopLen = WinLen - Overlap;
 XPadLen = (Ceiling[(XLen+WinLen-Overlap)/HopLen]-1)HopLen + WinLen;
-XPad = PadRight[PadLeft[X,XLen+HopLen],XPadLen];
+XPad = PadRight[PadLeft[X,XLen+HopLen,0.],XPadLen,0.];
 SpectrogramArray[XPad,WinLen,WinLen-Overlap,WinFun]
 ]
 
 getInverseSTFT[Y_,WinLen_,Overlap_,WinFun_:DirichletWindow]:=Module[{Win,HopLen,XLen,XMat,X,WinSum,indx},
-Win = WinFun[Range[-0.5,0.5,1/(WinLen-1)]];
+Win = WinFun[Range[-0.5,0.5,1./(WinLen-1.)]]; 
 HopLen = WinLen-Overlap;
 XLen = (Length[Y]-1)HopLen+WinLen;
 XMat=Chop[InverseFourier[# ,FourierParameters->{1,-1}]&/@Y];
@@ -732,17 +830,19 @@ WinSum = ConstantArray[0.,XLen];
 Do[
 indx = Range[1,WinLen]+(ii-1)(WinLen-Overlap);
 X[[indx]] = X[[indx]]+Win XMat[[ii]];
-WinSum[[indx]] = WinSum[[indx]] + Win^2;
-,{ii,1,Length[Y]}];
+WinSum[[indx]] = WinSum[[indx]] + Win^2.;
+,
+{ii,1,Length[Y]}
+];
 X[[(HopLen+1);;(XLen-Overlap)]]/WinSum[[(HopLen+1);;(XLen-Overlap)]]
 ]
 
 addTFs[H1_,H2_,mode_: "Correlated"]:=Module[{sum},
 Switch[mode,
 "Correlated",
-sum=Abs[H1+H2]^2,
+sum=Abs[H1+H2]^2.,
 "Uncorrelated",
-sum=Abs[H1]^2+Abs[H2]^2
+sum=Abs[H1]^2.+Abs[H2]^2.
 ];
 sum
 ]

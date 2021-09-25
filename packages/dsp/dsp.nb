@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    166343,       3777]
-NotebookOptionsPosition[    163954,       3724]
-NotebookOutlinePosition[    164912,       3752]
-CellTagsIndexPosition[    164869,       3749]
+NotebookDataLength[    192790,       4314]
+NotebookOptionsPosition[    190401,       4261]
+NotebookOutlinePosition[    191359,       4289]
+CellTagsIndexPosition[    191316,       4286]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -88,16 +88,33 @@ Cell["Usage messages for the public functions", "Subsection",ExpressionUUID->"73
 Cell[BoxData[{
  RowBox[{
   RowBox[{
+   RowBox[{"getButterworthFIR", "::", "usage"}], "=", 
+   "\"\<getButterworthFIR[filtLen,filterOrder,Wn] returns an FIR \
+approximation of a Butterworth low-pass filter. The length, in samples, of \
+the FIR is given by filtLen, the filter order is given by filterOrder, and \
+the normalized (relative to the Nyquist frequency) cutoff frequency is given \
+by Wn. getButterworthFIR[filtLen,filterOrder,Wn,filtType] optionally allows \
+specification of a filter type. filtType can be \\\"Lowpass\\\", \\\"Highpass\
+\\\", or \\\"Bandpass\\\". If filtType is \\\"Bandpass\\\", Wn must be a \
+two-element list specifying the low and high cutoff frequencies. \
+getButterworthFIR[filtLen,filterOrder,Wn,filtType,\\\"Linear\\\"] returns a \
+zero-phase Butterworth filter instead.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    StyleBox[
     RowBox[{"applyButterHPF", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
    StyleBox["\[IndentingNewLine]", "MessageName"], 
-   "\"\<applyButterHPF[x,filterOrder,Wn] applies a zero-phase Butterworth \
-high-pass filter of order filterOrder and normalized cut-off frequency Wn to \
-the input signal x (must be a 1D List). Wn must be specified such that 1 \
-corresponds to the Nyquist frequency. The output is the filtered signal that \
-has the same length as x. Filtering is done in the frequency domain with \
-FourierParameters set to {1, -1}.\>\""}], 
+   "\"\<applyButterHPF[x,filterOrder,Wn] or \
+applyButterHPF[x,filterOrder,Wn,\\\"Linear\\\"] applies a zero-phase \
+Butterworth high-pass filter of order filterOrder and normalized cut-off \
+frequency Wn to the input signal x (must be a 1D List). Wn must be specified \
+such that 1 corresponds to the Nyquist frequency. The output is the filtered \
+signal that has the same length as x. Filtering is done in the frequency \
+domain with FourierParameters set to {1, -1}. \
+applyButterHPF[x,filterOrder,Wn,\\\"Original\\\"] applies a Butterworth \
+high-pass filter with its original nonlinear phase response instead.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -105,12 +122,15 @@ FourierParameters set to {1, -1}.\>\""}],
     RowBox[{"applyButterLPF", "::", "usage"}], "MessageName"], 
    StyleBox["=", "MessageName"], 
    StyleBox["\[IndentingNewLine]", "MessageName"], 
-   "\"\<applyButterLPF[x,filterOrder,Wn] applies a zero-phase Butterworth \
-low-pass filter of order filterOrder and normalized cut-off frequency Wn to \
-the input signal x (must be a 1D List). Wn must be specified such that 1 \
-corresponds to the Nyquist frequency. The output is the filtered signal that \
-has the same length as x. Filtering is done in the frequency domain with \
-FourierParameters set to {1, -1}.\>\""}], 
+   "\"\<applyButterLPF[x,filterOrder,Wn] or \
+applyButterLPF[x,filterOrder,Wn,\\\"Linear\\\"] applies a zero-phase \
+Butterworth low-pass filter of order filterOrder and normalized cut-off \
+frequency Wn to the input signal x (must be a 1D List). Wn must be specified \
+such that 1 corresponds to the Nyquist frequency. The output is the filtered \
+signal that has the same length as x. Filtering is done in the frequency \
+domain with FourierParameters set to {1, -1}. \
+applyButterLPF[x,filterOrder,Wn,\\\"Original\\\"] applies a Butterworth \
+low-pass filter with its original nonlinear phase response instead.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -300,12 +320,22 @@ type of regularization to apply with \\\"None\\\" (default), \
 \[Epsilon]} which specifies the regularization parameter \[Epsilon] in the \
 normalized frequency range {W1, W2} where 0 \[LessEqual] W1,W2 \[LessEqual] 1 \
 and where 1 corresponds to the Nyquist frequency. This option is only \
-required when \\\"Regularization\\\" is set to \\\"Piecewise\\\".\n\t3. \
+required when \\\"Regularization\\\" is set to \\\"Piecewise\\\". The default \
+values are {{0,1,0}} and correspond to no regularization.\n\t3. \
 \\\"SampleRate\\\" \[RightArrow] sampling rate in Hz. This option is only \
-required when \\\"Regularization\\\" is set to \\\"Custom\\\".\n\t4. \
-\\\"FreqRange\\\" \[RightArrow] frequency range, in Hz, over which direct \
-inversion is to be performed. This option is only required when \
-\\\"Regularization\\\" is set to \\\"Custom\\\".\nEXAMPLE:\n\tinvFilt = \
+required when \\\"Regularization\\\" is set to \\\"Custom\\\". The default \
+values is 96000.\n\t4. \\\"AvgFreqRange\\\" \[RightArrow] frequency range, in \
+Hz, over which log-weighted average level is computed prior to inversion. \
+This option is only required when \\\"Regularization\\\" is set to \\\"Custom\
+\\\". The default values are {100,18000}.\n\t5. \\\"InvFreqRange\\\" \
+\[RightArrow] frequency range, in Hz, over which direct inversion is \
+performed. This option is only required when \\\"Regularization\\\" is set to \
+\\\"Custom\\\". The default values are {20,20000}.\n\t6. \\\"MaxDynRange\\\" \
+\[RightArrow] maximum dynamic range, in dB, of the inverse filter. This \
+option is only required when \\\"Regularization\\\" is set to \\\"Custom\\\". \
+If the dynamic range of the inverse filter within AvgFreqRange is less than \
+the specified value, then that dynamic range supersedes the value specified \
+here. The default value is 24 dB.\nEXAMPLE:\n\tinvFilt = \
 inverseFilter[filt,\\\"Regularization\\\"\[Rule]\\\"Piecewise\\\",\\\"\
 Regularization Ranges\\\"\[Rule]{{0,0.1,0.001},{0.2,1,0}}];.\>\""}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -414,10 +444,19 @@ original measurement. As such, zero-padding the output IRs and circularly \
 convolving with sweepSignal should give an estimate of the raw microphone \
 signals captured during the sweep measurement. \
 sweepToIR[sweepFilePath,numOuts,{FL,FU}] optionally specifies the sweep start \
-(FL) and end (FU) frequencies, in Hz, so that a bandpass filter with these \
-cut-off frequencies is applied to the deconvolved signal. FL and FU must \
-satisfy the following: 0 < FL < FU and FL < FU < Fs/2.\>\""}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+(FL) and end (FU) frequencies, in Hz, so that a Butterworth bandpass filter \
+with these cut-off frequencies is applied to the deconvolved signal. FL and \
+FU must satisfy the following: 0 < FL < FU and FL < FU < Fs/2. If FL = 0 and \
+FU = Fs/2 are specifed, a bandpass filter is not applied. \
+sweepToIR[sweepFilePath,numOuts,{FL,FU},sweepDur] specifies the duration of \
+the sweep in seconds. This enables a more accurate estimate of snrSpec. If \
+snrSpec is not requested at the output, specifying sweepDur has no effect. To \
+use the default (e.g., if the sweep duration is unknown), sweepDur may be \
+specified as 0. Finally, \
+sweepToIR[sweepFilePath,numOuts,{FL,FU},sweepDur,phaseFlag] specifies whether \
+or not the applied Butterworth bandpass filter should retain its original \
+phase response (phaseFlag = 0 - default) or be made to have linear phase \
+(phaseFlag = 1).\>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"getForwardSTFT", "::", "usage"}], "=", "\[IndentingNewLine]", 
@@ -563,8 +602,16 @@ have the same dimensions as H.\>\""}]}], "Input",
    3.834486976569334*^9}, {3.834487049832412*^9, 3.834487132931973*^9}, {
    3.834487174172942*^9, 3.83448735383248*^9}, {3.834574392485071*^9, 
    3.8345744023543587`*^9}, {3.834574559887548*^9, 3.83457456057953*^9}, {
-   3.8372802360931187`*^9, 
-   3.837280244363316*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
+   3.8372802360931187`*^9, 3.837280244363316*^9}, {3.837421849207756*^9, 
+   3.83742203986968*^9}, {3.837422073719771*^9, 3.837422125144932*^9}, {
+   3.837422741515902*^9, 3.837422842995429*^9}, {3.8374231528615017`*^9, 
+   3.837423152929677*^9}, {3.837596828732802*^9, 3.837596970337901*^9}, {
+   3.8375970863771276`*^9, 3.837597135127062*^9}, {3.837597168371217*^9, 
+   3.837597169906962*^9}, {3.837614134282844*^9, 3.837614426842003*^9}, {
+   3.841569372427335*^9, 3.841569388017845*^9}, {3.8415710651048107`*^9, 
+   3.841571142764937*^9}, {3.841571175569296*^9, 3.8415711967108192`*^9}, {
+   3.841571239208003*^9, 
+   3.841571471220847*^9}},ExpressionUUID->"307a3671-e91d-4952-9cdc-\
 4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
@@ -587,14 +634,147 @@ Cell["Function definitions", "Subsection",ExpressionUUID->"75880e96-35c6-446a-a4
 Cell[BoxData[{
  RowBox[{
   RowBox[{
+   RowBox[{"getButterworthFIR", "[", 
+    RowBox[{"filtLen_", ",", "filterOrder_", ",", "Wn_", ",", 
+     RowBox[{"filtType_", ":", "\"\<Lowpass\>\""}], ",", 
+     RowBox[{"phaseType_", ":", " ", "\"\<Original\>\""}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dtf", ",", "filtIR", ",", "n", ",", "s", ",", "z"}], "}"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"dtf", "=", 
+       RowBox[{"Chop", "[", 
+        RowBox[{"ToDiscreteTimeModel", "[", 
+         RowBox[{
+          RowBox[{"ButterworthFilterModel", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"filtType", ",", "filterOrder", ",", " ", 
+              RowBox[{"N", "[", 
+               RowBox[{"2", " ", "Pi", " ", "Wn"}], "]"}]}], "}"}], ",", 
+            "s"}], "]"}], ",", "0.5", ",", "z"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"filtIR", "=", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Re", "[", 
+         RowBox[{"OutputResponse", "[", 
+          RowBox[{"dtf", ",", 
+           RowBox[{"KroneckerDelta", "[", "n", "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "0.", ",", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"filtLen", "-", "1."}], ")"}], "/", "2."}]}], "}"}]}], 
+          "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"phaseType", "\[Equal]", "\"\<Linear\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"filtIR", "=", 
+          RowBox[{"RotateRight", "[", 
+           RowBox[{
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"IRtoTF", "[", "filtIR", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"Floor", "[", 
+             RowBox[{"filtLen", "/", "2"}], "]"}]}], "]"}]}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", "filtIR"}]}],
+     "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"applyButterHPF", "[", 
-    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_"}], "]"}], ":=", 
-   RowBox[{"Module", "[", 
+    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_", ",", 
+     RowBox[{"phaseType_", ":", " ", "\"\<Linear\>\""}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{
-      "IRLen", ",", "xp", ",", "W", ",", "HPF", ",", "hpfIR", ",", "y"}], 
-      "}"}], ",", "\[IndentingNewLine]", 
+      "IRLen", ",", "IRLenPad", ",", "dtf", ",", "hpfIR", ",", "y", ",", "n", 
+       ",", "s", ",", "z"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"IRLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "IRLen", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"IRLenPad", "=", 
+          RowBox[{"IRLen", "+", "1"}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"IRLenPad", "=", "IRLen"}], ";"}]}], "\[IndentingNewLine]", 
+       "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"dtf", "=", 
+       RowBox[{"Chop", "[", 
+        RowBox[{"ToDiscreteTimeModel", "[", 
+         RowBox[{
+          RowBox[{"ButterworthFilterModel", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"\"\<Highpass\>\"", ",", "filterOrder", ",", " ", 
+              RowBox[{"N", "[", 
+               RowBox[{"2", " ", "Pi", " ", "Wn"}], "]"}]}], "}"}], ",", 
+            "s"}], "]"}], ",", "0.5", ",", "z"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"hpfIR", "=", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Re", "[", 
+         RowBox[{"OutputResponse", "[", 
+          RowBox[{"dtf", ",", 
+           RowBox[{"KroneckerDelta", "[", "n", "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "0.", ",", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"IRLenPad", "-", "1."}], ")"}], "/", "2."}]}], "}"}]}],
+           "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
+       RowBox[{
+       "phaseType", ",", "\[IndentingNewLine]", "\"\<Linear\>\"", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"hpfIR", "=", 
+          RowBox[{"RotateRight", "[", 
+           RowBox[{
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"IRtoTF", "[", "hpfIR", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"Floor", "[", 
+             RowBox[{"IRLenPad", "/", "2"}], "]"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"y", "=", 
+          RowBox[{
+           RowBox[{"RotateLeft", "[", 
+            RowBox[{
+             RowBox[{"conv", "[", 
+              RowBox[{"x", ",", "hpfIR", ",", "\"\<lin\>\""}], "]"}], ",", 
+             RowBox[{"Floor", "[", 
+              RowBox[{"IRLenPad", "/", "2"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", 
+        ",", "\"\<Original\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"y", "=", 
+          RowBox[{
+           RowBox[{"conv", "[", 
+            RowBox[{"x", ",", "hpfIR", ",", "\"\<lin\>\""}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{";;", "IRLen"}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "_", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+         "MessageDialog", "[", 
+          "\"\<Invalid phaseType specification in function applyButterHPF. \
+Aborting...\>\"", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "y"}]}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
      RowBox[{
       RowBox[{"IRLen", " ", "=", " ", 
        RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
@@ -636,18 +816,100 @@ Cell[BoxData[{
              RowBox[{"hpfIR", ",", "IRLen"}], "]"}]}], "]"}], ",", "IRLen"}], 
          "]"}], "[", 
         RowBox[{"[", 
-         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}], "*)"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"applyButterLPF", "[", 
-    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_"}], "]"}], ":=", 
-   RowBox[{"Module", "[", 
+    RowBox[{"x_", ",", "filterOrder_", ",", "Wn_", ",", 
+     RowBox[{"phaseType_", ":", "\"\<Linear\>\""}]}], "]"}], ":=", 
+   RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{
-      "IRLen", ",", "xp", ",", "W", ",", "LPF", ",", "lpfIR", ",", "y"}], 
-      "}"}], ",", "\[IndentingNewLine]", 
+      "IRLen", ",", "IRLenPad", ",", "dtf", ",", "lpfIR", ",", "y", ",", "n", 
+       ",", "s", ",", "z"}], "}"}], "\[IndentingNewLine]", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"IRLen", " ", "=", " ", 
+       RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "IRLen", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"IRLenPad", "=", 
+          RowBox[{"IRLen", "+", "1"}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"IRLenPad", "=", "IRLen"}], ";"}]}], "\[IndentingNewLine]", 
+       "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"dtf", "=", 
+       RowBox[{"Chop", "[", 
+        RowBox[{"ToDiscreteTimeModel", "[", 
+         RowBox[{
+          RowBox[{"ButterworthFilterModel", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"\"\<Lowpass\>\"", ",", "filterOrder", ",", " ", 
+              RowBox[{"N", "[", 
+               RowBox[{"2", " ", "Pi", " ", "Wn"}], "]"}]}], "}"}], ",", 
+            "s"}], "]"}], ",", "0.5", ",", "z"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"lpfIR", "=", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Re", "[", 
+         RowBox[{"OutputResponse", "[", 
+          RowBox[{"dtf", ",", 
+           RowBox[{"KroneckerDelta", "[", "n", "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "0.", ",", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"IRLenPad", "-", "1."}], ")"}], "/", "2."}]}], "}"}]}],
+           "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
+       RowBox[{
+       "phaseType", ",", "\[IndentingNewLine]", "\"\<Linear\>\"", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"lpfIR", "=", 
+          RowBox[{"RotateRight", "[", 
+           RowBox[{
+            RowBox[{"TFtoIR", "[", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"IRtoTF", "[", "lpfIR", "]"}], "]"}], "]"}], ",", 
+            RowBox[{"Floor", "[", 
+             RowBox[{"IRLenPad", "/", "2"}], "]"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"y", "=", 
+          RowBox[{
+           RowBox[{"RotateLeft", "[", 
+            RowBox[{
+             RowBox[{"conv", "[", 
+              RowBox[{"x", ",", "lpfIR", ",", "\"\<lin\>\""}], "]"}], ",", 
+             RowBox[{"Floor", "[", 
+              RowBox[{"IRLenPad", "/", "2"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}], "\[IndentingNewLine]", 
+        ",", "\"\<Original\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"y", "=", 
+          RowBox[{
+           RowBox[{"conv", "[", 
+            RowBox[{"x", ",", "lpfIR", ",", "\"\<lin\>\""}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{";;", "IRLen"}], "]"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "_", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+         "MessageDialog", "[", 
+          "\"\<Invalid phaseType specification in function applyButterLPF. \
+Aborting...\>\"", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "y"}]}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
      RowBox[{
       RowBox[{"IRLen", " ", "=", " ", 
        RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
@@ -688,8 +950,9 @@ Cell[BoxData[{
              RowBox[{"lpfIR", ",", "IRLen"}], "]"}]}], "]"}], ",", "IRLen"}], 
          "]"}], "[", 
         RowBox[{"[", 
-         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+         RowBox[{";;", "IRLen"}], "]"}], "]"}]}]}], "*)"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"autoCorrFunc", "[", 
@@ -718,8 +981,7 @@ Cell[BoxData[{
          ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"acf", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"0", ",", "signalLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      
+        RowBox[{"0.", ",", "signalLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"Do", "[", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{
@@ -748,7 +1010,7 @@ Cell[BoxData[{
     RowBox[{"inputIR_", ",", "fS_", ",", 
      RowBox[{"avgRange_", ":", 
       RowBox[{"{", 
-       RowBox[{"0", ",", "0"}], "}"}]}]}], "]"}], ":=", 
+       RowBox[{"0.", ",", "0."}], "}"}]}]}], "]"}], ":=", 
    RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
@@ -827,16 +1089,15 @@ Cell[BoxData[{
      RowBox[{"{", 
       RowBox[{
       "yLen", ",", "xLen", ",", "output", ",", "padLen", ",", "yPad", ",", 
-       "xPad", ",", "outputPad"}], "}"}], "\[IndentingNewLine]", ",", 
-     "\[IndentingNewLine]", 
+       "xPad"}], "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"yLen", "=", 
        RowBox[{"Length", "[", "y", "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"xLen", "=", 
        RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
-      RowBox[{"If", "[", 
+      RowBox[{"Switch", "[", 
        RowBox[{
-        RowBox[{"type", "\[Equal]", "\"\<circ\>\""}], ",", 
+       "type", ",", "\[IndentingNewLine]", "\"\<circ\>\"", ",", 
         "\[IndentingNewLine]", 
         RowBox[{"If", "[", 
          RowBox[{
@@ -855,45 +1116,34 @@ Cell[BoxData[{
 convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             "\[IndentingNewLine]", 
            RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
-         "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{"type", "\[Equal]", "\"\<lin\>\""}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"padLen", "=", 
-            RowBox[{"nextPowTwo", "[", 
-             RowBox[{"xLen", "+", "yLen", "-", "1"}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"yPad", "=", 
-            RowBox[{"PadRight", "[", 
-             RowBox[{"y", ",", "padLen"}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"xPad", "=", 
-            RowBox[{"PadRight", "[", 
-             RowBox[{"x", ",", "padLen"}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"outputPad", "=", 
-            RowBox[{"TFtoIR", "[", 
-             RowBox[{
-              RowBox[{"IRtoTF", "[", "xPad", "]"}], " ", 
-              RowBox[{"IRtoTF", "[", "yPad", "]"}]}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"output", "=", 
-            RowBox[{"outputPad", "[", 
-             RowBox[{"[", 
-              RowBox[{";;", 
-               RowBox[{"xLen", "+", "yLen", "-", "1"}]}], "]"}], "]"}]}], 
-           ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{
+         "\[IndentingNewLine]", ",", "\"\<lin\>\"", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"padLen", "=", 
+          RowBox[{"xLen", "+", "yLen", "-", "1"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"yPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"y", ",", "padLen", ",", "0."}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"xPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"x", ",", "padLen", ",", "0."}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"output", "=", 
+          RowBox[{"TFtoIR", "[", 
            RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Unrecognized input. See function help for valid inputs.\>\"",
-             "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-      "output"}]}], "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+            RowBox[{"IRtoTF", "[", "xPad", "]"}], " ", 
+            RowBox[{"IRtoTF", "[", "yPad", "]"}]}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", "_", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+         "MessageDialog", "[", 
+          "\"\<Unrecognized input. See function help for valid inputs.\>\"", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "output"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"deconv", "[", 
@@ -911,6 +1161,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
        RowBox[{"Length", "[", "y", "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"xLen", "=", 
        RowBox[{"Length", "[", "x", "]"}]}], ";", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{"xLen", ">", "yLen"}], ",", "\[IndentingNewLine]", 
@@ -920,15 +1171,16 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
           "\"\<The length of x cannot exceed that of y.\>\"", "]"}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
-      ";", "\[IndentingNewLine]", 
-      RowBox[{"If", "[", 
+      ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Switch", "[", 
        RowBox[{
-        RowBox[{"type", "\[Equal]", "\"\<circ\>\""}], ",", 
+       "type", ",", "\[IndentingNewLine]", "\"\<circ\>\"", ",", 
         "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"xPad", "=", 
           RowBox[{"PadRight", "[", 
-           RowBox[{"x", ",", "yLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"x", ",", "yLen", ",", "0."}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
          RowBox[{"output", "=", 
           RowBox[{"TFtoIR", "[", 
            RowBox[{
@@ -937,40 +1189,35 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
               RowBox[{"IRtoTF", "[", "y", "]"}], "/", " ", 
               RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
             RowBox[{"ComplexInfinity", "\[Rule]", "0."}]}], "]"}]}], ";"}], 
-        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-        RowBox[{"If", "[", 
-         RowBox[{
-          RowBox[{"type", "\[Equal]", "\"\<lin\>\""}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{
-           RowBox[{"xPad", "=", 
-            RowBox[{"PadRight", "[", 
-             RowBox[{"x", ",", "yLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-           
-           RowBox[{"outputPad", "=", 
-            RowBox[{"TFtoIR", "[", 
-             RowBox[{
-              RowBox[{"Quiet", "[", 
-               RowBox[{
-                RowBox[{"IRtoTF", "[", "y", "]"}], "/", " ", 
-                RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
-              RowBox[{"ComplexInfinity", "\[Rule]", "0."}]}], "]"}]}], ";", 
-           "\[IndentingNewLine]", 
-           RowBox[{"output", "=", 
-            RowBox[{"outputPad", "[", 
-             RowBox[{"[", 
-              RowBox[{";;", 
-               RowBox[{"yLen", "-", "xLen", "+", "1"}]}], "]"}], "]"}]}], 
-           ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{
+        "\[IndentingNewLine]", ",", "\"\<lin\>\"", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"xPad", "=", 
+          RowBox[{"PadRight", "[", 
+           RowBox[{"x", ",", "yLen", ",", "0."}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"outputPad", "=", 
+          RowBox[{"TFtoIR", "[", 
            RowBox[{
-           "MessageDialog", "[", 
-            "\"\<Unrecognized input. See function help for valid inputs.\>\"",
-             "]"}], ";", "\[IndentingNewLine]", 
-           RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", 
-         "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
-      "output"}]}], "\[IndentingNewLine]", "]"}]}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+            RowBox[{"Quiet", "[", 
+             RowBox[{
+              RowBox[{"IRtoTF", "[", "y", "]"}], "/", " ", 
+              RowBox[{"IRtoTF", "[", "xPad", "]"}]}], "]"}], "/.", 
+            RowBox[{"ComplexInfinity", "\[Rule]", "0."}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"output", "=", 
+          RowBox[{"outputPad", "[", 
+           RowBox[{"[", 
+            RowBox[{";;", 
+             RowBox[{"yLen", "-", "xLen", "+", "1"}]}], "]"}], "]"}]}], ";"}],
+         "\[IndentingNewLine]", ",", "_", ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+         "MessageDialog", "[", 
+          "\"\<Unrecognized input. See function help for valid inputs.\>\"", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+      ";", "\[IndentingNewLine]", "output"}]}], "\[IndentingNewLine]", 
+    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"groupDelaySpec", "[", "inputIR_", "]"}], ":=", 
@@ -986,7 +1233,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
       RowBox[{"ramp", "=", 
        RowBox[{"Range", "[", 
         RowBox[{"0.", ",", 
-         RowBox[{"inputIRLen", "-", "1"}]}], "]"}]}], ";", 
+         RowBox[{"inputIRLen", "-", "1."}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"grpDSpec", "=", 
        RowBox[{"Re", "[", 
@@ -1015,9 +1262,9 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
    RowBox[{"{", 
     RowBox[{
      RowBox[{"\"\<PB Gain\>\"", "\[Rule]", 
-      RowBox[{"-", "1"}]}], ",", 
+      RowBox[{"-", "1."}]}], ",", 
      RowBox[{"\"\<SB Gain\>\"", "\[Rule]", 
-      RowBox[{"-", "30"}]}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+      RowBox[{"-", "30."}]}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"KaiserLPFIR", "[", 
@@ -1033,18 +1280,18 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
      "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"\[Delta]1", "=", 
-       RowBox[{"1", "-", 
+       RowBox[{"1.", "-", 
         RowBox[{"(", 
-         RowBox[{"10", "^", 
+         RowBox[{"10.", "^", 
           RowBox[{"(", 
            RowBox[{
-            RowBox[{"OptionValue", "[", "\"\<PB Gain\>\"", "]"}], "/", "20"}],
-            ")"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"OptionValue", "[", "\"\<PB Gain\>\"", "]"}], "/", 
+            "20."}], ")"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"\[Delta]2", "=", 
-       RowBox[{"10", "^", 
+       RowBox[{"10.", "^", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"OptionValue", "[", "\"\<SB Gain\>\"", "]"}], "/", "20"}], 
+          RowBox[{"OptionValue", "[", "\"\<SB Gain\>\"", "]"}], "/", "20."}], 
          ")"}]}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"\[Delta]", "=", 
        RowBox[{"Min", "[", 
@@ -1053,13 +1300,13 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
       RowBox[{"\[Omega]c", "=", 
        RowBox[{
         RowBox[{"(", 
-         RowBox[{"pbCutoff", "+", "sbCutoff"}], ")"}], "/", "2"}]}], ";", 
+         RowBox[{"pbCutoff", "+", "sbCutoff"}], ")"}], "/", "2."}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"d\[Omega]", "=", 
        RowBox[{"sbCutoff", "-", "pbCutoff"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"A", "=", 
        RowBox[{
-        RowBox[{"-", "20"}], 
+        RowBox[{"-", "20."}], 
         RowBox[{"Log10", "[", "\[Delta]", "]"}]}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
@@ -1083,19 +1330,19 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
              RowBox[{"0.5842", " ", 
               SuperscriptBox[
                RowBox[{"(", 
-                RowBox[{"A", "-", "21"}], ")"}], "0.4"]}], "+", 
+                RowBox[{"A", "-", "21."}], ")"}], "0.4"]}], "+", 
              RowBox[{"0.07886", " ", 
               RowBox[{"(", 
-               RowBox[{"A", "-", "21"}], ")"}]}]}]}], ";"}], 
+               RowBox[{"A", "-", "21."}], ")"}]}]}]}], ";"}], 
           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"\[Beta]", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
+           RowBox[{"\[Beta]", "=", "0."}], ";"}]}], "\[IndentingNewLine]", 
          "]"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"M", "=", 
        RowBox[{"Round", "[", 
         RowBox[{
          RowBox[{"(", 
-          RowBox[{"A", "-", "8"}], ")"}], "/", 
+          RowBox[{"A", "-", "8."}], ")"}], "/", 
          RowBox[{"(", 
           RowBox[{"2.285", " ", "d\[Omega]"}], ")"}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
@@ -1110,11 +1357,10 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
           RowBox[{"M", "+", "1"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], 
       ";", "\[IndentingNewLine]", 
       RowBox[{"\[Alpha]", "=", 
-       RowBox[{"M", "/", "2"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"M", "/", "2."}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"filterIR", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"0", ",", "filterLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
-      
+        RowBox[{"0.", ",", "filterLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"filterIR", "[", 
         RowBox[{"[", 
@@ -1126,10 +1372,11 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
           RowBox[{"(", 
            RowBox[{
             RowBox[{"Range", "[", 
-             RowBox[{"0", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}]}], 
+             RowBox[{"0.", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}]}], 
          "]"}], 
         RowBox[{"(", 
-         FractionBox["\[Omega]c", "\[Pi]"], ")"}], 
+         FractionBox["\[Omega]c", 
+          RowBox[{"N", "[", "Pi", "]"}]], ")"}], 
         RowBox[{"(", 
          FractionBox[
           RowBox[{"BesselI", "[", 
@@ -1137,15 +1384,15 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             RowBox[{
              RowBox[{"N", "[", "\[Beta]", "]"}], " ", 
              RowBox[{"Sqrt", "[", 
-              RowBox[{"1", "-", 
+              RowBox[{"1.", "-", 
                SuperscriptBox[
                 RowBox[{"(", 
                  RowBox[{
                   RowBox[{"(", 
                    RowBox[{
                     RowBox[{"Range", "[", 
-                    RowBox[{"0", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}], 
-                  "/", "\[Alpha]"}], ")"}], "2"]}], "]"}]}]}], "]"}], 
+                    RowBox[{"0.", ",", "M"}], "]"}], "-", "\[Alpha]"}], ")"}],
+                   "/", "\[Alpha]"}], ")"}], "2."]}], "]"}]}]}], "]"}], 
           RowBox[{"BesselI", "[", 
            RowBox[{"0", ",", 
             RowBox[{"N", "[", "\[Beta]", "]"}]}], "]"}]], ")"}]}]}], ";", 
@@ -1204,8 +1451,8 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         RowBox[{"PadRight", "[", 
          RowBox[{"aVec", ",", 
           RowBox[{
-           RowBox[{"Length", "[", "signal", "]"}], "-", "1"}]}], "]"}]}]}], 
-      ";", "\[IndentingNewLine]", 
+           RowBox[{"Length", "[", "signal", "]"}], "-", "1"}], ",", "0."}], 
+         "]"}]}]}], ";", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"lpRes", "[", 
         RowBox[{"[", 
@@ -1231,16 +1478,16 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
      RowBox[{
       RowBox[{"x", "=", 
        RowBox[{"Range", "[", 
-        RowBox[{"0", ",", 
-         RowBox[{"1", "-", 
+        RowBox[{"0.", ",", 
+         RowBox[{"1.", "-", 
           RowBox[{"(", 
-           RowBox[{"1", "/", "winLen"}], ")"}]}], ",", 
+           RowBox[{"1.", "/", "winLen"}], ")"}]}], ",", 
          RowBox[{"(", 
-          RowBox[{"1", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
+          RowBox[{"1.", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"winVec", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"1", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"1.", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"rFinal", "=", 
        RowBox[{"Clip", "[", 
         RowBox[{
@@ -1284,10 +1531,11 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
           
           RowBox[{"0.5", 
            RowBox[{"(", 
-            RowBox[{"1", "+", 
+            RowBox[{"1.", "+", 
              RowBox[{"Cos", "[", 
               RowBox[{
-               FractionBox["Pi", 
+               FractionBox[
+                RowBox[{"N", "[", "Pi", "]"}], 
                 RowBox[{"rFinal", "[", 
                  RowBox[{"[", "1", "]"}], "]"}]], 
                RowBox[{"(", 
@@ -1323,10 +1571,11 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             "]"}], "]"}], "=", 
           RowBox[{"0.5", 
            RowBox[{"(", 
-            RowBox[{"1", "+", 
+            RowBox[{"1.", "+", 
              RowBox[{"Cos", "[", 
               RowBox[{
-               FractionBox["Pi", 
+               FractionBox[
+                RowBox[{"N", "[", "Pi", "]"}], 
                 RowBox[{"rFinal", "[", 
                  RowBox[{"[", "2", "]"}], "]"}]], 
                RowBox[{"(", 
@@ -1399,8 +1648,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             RowBox[{"upsampSigLen", ",", 
              RowBox[{"0.95", "cutoff"}], ",", "cutoff", ",", 
              RowBox[{"\"\<SB Gain\>\"", "\[Rule]", 
-              RowBox[{"-", "60"}]}]}], "]"}]}]}], ";", "\[IndentingNewLine]", 
-         
+              RowBox[{"-", "60."}]}]}], "]"}]}]}], ";", "\[IndentingNewLine]", 
          RowBox[{"lpfIRLen", "=", 
           RowBox[{"Length", "[", "lpfIR", "]"}]}], ";", "\[IndentingNewLine]", 
          RowBox[{"maxLen", "=", 
@@ -1409,11 +1657,11 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
          "\[IndentingNewLine]", 
          RowBox[{"upsampSignalPad", "=", 
           RowBox[{"PadRight", "[", 
-           RowBox[{"upsampSignal", ",", "maxLen"}], "]"}]}], ";", 
+           RowBox[{"upsampSignal", ",", "maxLen", ",", "0."}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"lpfIRPad", "=", 
           RowBox[{"PadRight", "[", 
-           RowBox[{"lpfIR", ",", "maxLen"}], "]"}]}], ";", 
+           RowBox[{"lpfIR", ",", "maxLen", ",", "0."}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"interpSignal", "=", 
           RowBox[{"RotateLeft", "[", 
@@ -1437,8 +1685,8 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
    RowBox[{"Options", "[", "signalOnset", "]"}], "=", 
    RowBox[{"{", 
     RowBox[{
-     RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20"}], ",", 
-     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}]}], "}"}]}], 
+     RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20."}], ",", 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1458,14 +1706,14 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
       "\[IndentingNewLine]", 
       RowBox[{"interpSignal", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputSignal", ",", "1", ",", "resampling"}], "]"}]}], ";", 
+        RowBox[{"inputSignal", ",", "1.", ",", "resampling"}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"threshold", " ", "=", " ", 
        RowBox[{
         RowBox[{"(", 
          RowBox[{
           RowBox[{"OptionValue", "[", "\"\<Threshold\>\"", "]"}], "/", 
-          "100"}], ")"}], " ", 
+          "100."}], ")"}], " ", 
         RowBox[{"Max", "[", 
          RowBox[{"Abs", "[", "interpSignal", "]"}], "]"}]}]}], ";", 
       "\[IndentingNewLine]", 
@@ -1508,16 +1756,16 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
      RowBox[{
       RowBox[{"x", "=", 
        RowBox[{"Range", "[", 
-        RowBox[{"0", ",", 
-         RowBox[{"1", "-", 
+        RowBox[{"0.", ",", 
+         RowBox[{"1.", "-", 
           RowBox[{"(", 
-           RowBox[{"1", "/", "winLen"}], ")"}]}], ",", 
+           RowBox[{"1.", "/", "winLen"}], ")"}]}], ",", 
          RowBox[{"(", 
-          RowBox[{"1", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
+          RowBox[{"1.", "/", "winLen"}], ")"}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"winVec", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"1", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"1.", ",", "winLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{"r", "\[NotEqual]", "0"}], ",", "\[IndentingNewLine]", 
@@ -1531,11 +1779,12 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
                RowBox[{"r", "/", "2"}]}], "]"}]}], "]"}], "]"}], "=", 
           RowBox[{"0.5", 
            RowBox[{"(", 
-            RowBox[{"1", "+", 
+            RowBox[{"1.", "+", 
              RowBox[{"Cos", "[", 
               RowBox[{
                FractionBox[
-                RowBox[{"2", "Pi"}], "r"], 
+                RowBox[{"2.", 
+                 RowBox[{"N", "[", "Pi", "]"}]}], "r"], 
                RowBox[{"(", 
                 RowBox[{
                  RowBox[{"x", "[", 
@@ -1557,11 +1806,12 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
            "]"}], "=", 
           RowBox[{"0.5", 
            RowBox[{"(", 
-            RowBox[{"1", "+", 
+            RowBox[{"1.", "+", 
              RowBox[{"Cos", "[", 
               RowBox[{
                FractionBox[
-                RowBox[{"2", "Pi"}], "r"], 
+                RowBox[{"2.", 
+                 RowBox[{"N", "[", "Pi", "]"}]}], "r"], 
                RowBox[{"(", 
                 RowBox[{
                  RowBox[{"x", "[", 
@@ -1633,11 +1883,15 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
      RowBox[{"\"\<Regularization Ranges\>\"", "\[Rule]", 
       RowBox[{"{", 
        RowBox[{"{", 
-        RowBox[{"0", ",", "1", ",", "0"}], "}"}], "}"}]}], ",", 
-     RowBox[{"\"\<SampleRate\>\"", "\[Rule]", "96000"}], ",", 
-     RowBox[{"\"\<FreqRange\>\"", "\[Rule]", 
+        RowBox[{"0.", ",", "1.", ",", "0."}], "}"}], "}"}]}], ",", 
+     RowBox[{"\"\<SampleRate\>\"", "\[Rule]", "96000."}], ",", 
+     RowBox[{"\"\<AvgFreqRange\>\"", "\[Rule]", 
       RowBox[{"{", 
-       RowBox[{"200", ",", "24000"}], "}"}]}]}], "}"}]}], 
+       RowBox[{"100.", ",", "18000."}], "}"}]}], ",", 
+     RowBox[{"\"\<InvFreqRange\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"20.", ",", "20000."}], "}"}]}], ",", 
+     RowBox[{"\"\<MaxDynRange\>\"", "\[Rule]", "24."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1649,10 +1903,12 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
      RowBox[{"{", 
       RowBox[{
       "IRLen", ",", "H", ",", "z", ",", "\[Epsilon]", ",", "Fs", ",", 
-       "fRange", ",", "fVec", ",", "fLIndx", ",", "fUIndx", ",", "HAvg", ",", 
-       "HNorm", ",", "irHalfLen", ",", "tempHInv", ",", "fullHInv", ",", 
-       "clipU", ",", "lPosIndxs", ",", "hPosIndxs"}], "}"}], ",", 
-     "\[IndentingNewLine]", 
+       "avgFRange", ",", "invFRange", ",", "fVec", ",", "fLIndx", ",", 
+       "fUIndx", ",", "magSpec", ",", "HAvg", ",", "HNorm", ",", "irHalfLen", 
+       ",", "dynRange", ",", "maxDynRange", ",", "HNormClip", ",", "tempHInv",
+        ",", "fullHInv", ",", "leftConstVal", ",", "rightConstVal", ",", 
+       "WnHPF", ",", "WnLPF", ",", "filterOrder", ",", "W", ",", "HPF", ",", 
+       "LPF"}], "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"IRLen", " ", "=", " ", 
        RowBox[{"Length", "[", "h", "]"}]}], ";", "\[IndentingNewLine]", 
@@ -1666,8 +1922,8 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         RowBox[{
          RowBox[{"z", " ", "=", " ", 
           RowBox[{"TFtoIR", "[", 
-           FractionBox["1", "H"], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
-        "\"\<Piecewise\>\"", ",", "\[IndentingNewLine]", 
+           FractionBox["1.", "H"], "]"}]}], ";"}], "\[IndentingNewLine]", 
+        ",", "\"\<Piecewise\>\"", ",", "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{"\[Epsilon]", " ", "=", " ", 
           RowBox[{"piecewiseRegularization", "[", 
@@ -1688,8 +1944,11 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
          RowBox[{"Fs", "=", 
           RowBox[{"OptionValue", "[", "\"\<SampleRate\>\"", "]"}]}], ";", 
          "\[IndentingNewLine]", 
-         RowBox[{"fRange", "=", 
-          RowBox[{"OptionValue", "[", "\"\<FreqRange\>\"", "]"}]}], ";", 
+         RowBox[{"avgFRange", "=", 
+          RowBox[{"OptionValue", "[", "\"\<AvgFreqRange\>\"", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"invFRange", "=", 
+          RowBox[{"OptionValue", "[", "\"\<InvFreqRange\>\"", "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"fVec", "=", 
           RowBox[{"freqList", "[", 
@@ -1702,7 +1961,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
              RowBox[{
               RowBox[{"Nearest", "[", 
                RowBox[{"fVec", ",", 
-                RowBox[{"Min", "[", "fRange", "]"}]}], "]"}], "[", 
+                RowBox[{"Min", "[", "avgFRange", "]"}]}], "]"}], "[", 
               RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
            RowBox[{"[", 
             RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
@@ -1714,10 +1973,16 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
              RowBox[{
               RowBox[{"Nearest", "[", 
                RowBox[{"fVec", ",", 
-                RowBox[{"Max", "[", "fRange", "]"}]}], "]"}], "[", 
+                RowBox[{"Max", "[", "avgFRange", "]"}]}], "]"}], "[", 
               RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
            RowBox[{"[", 
             RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"magSpec", "=", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"H", "[", 
+            RowBox[{"[", 
+             RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"HAvg", "=", 
           RowBox[{"logMean", "[", 
@@ -1725,15 +1990,17 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             RowBox[{"fVec", "[", 
              RowBox[{"[", 
               RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], ",", 
-            RowBox[{"magTodB", "[", 
-             RowBox[{"Abs", "[", 
-              RowBox[{"H", "[", 
-               RowBox[{"[", 
-                RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], "]"}], 
-             "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+            "magSpec"}], "]"}]}], ";", "\[IndentingNewLine]", 
          RowBox[{"HNorm", "=", 
-          RowBox[{"H", "/", 
-           RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";", 
+          RowBox[{"H", "/", "HAvg"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"dynRange", "=", 
+          RowBox[{"magTodB", "[", 
+           RowBox[{
+            RowBox[{"Max", "[", "magSpec", "]"}], "/", 
+            RowBox[{"Min", "[", "magSpec", "]"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"maxDynRange", "=", 
+          RowBox[{"OptionValue", "[", "\"\<MaxDynRange\>\"", "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{"irHalfLen", "=", 
           RowBox[{"Ceiling", "[", 
@@ -1741,69 +2008,126 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             RowBox[{"(", 
              RowBox[{"IRLen", "+", "1"}], ")"}], "/", "2"}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
+         RowBox[{"dynRange", "=", 
+          RowBox[{"Min", "[", 
+           RowBox[{"dynRange", ",", "maxDynRange"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"HNormClip", "=", 
+          RowBox[{
+           RowBox[{"dBToMag", "[", 
+            RowBox[{"Clip", "[", 
+             RowBox[{
+              RowBox[{"magTodB", "[", 
+               RowBox[{"Abs", "[", "HNorm", "]"}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"-", "dynRange"}], "/", "2."}], ",", 
+                RowBox[{"dynRange", "/", "2."}]}], "}"}]}], "]"}], "]"}], 
+           RowBox[{"Exp", "[", 
+            RowBox[{"I", " ", 
+             RowBox[{"Arg", "[", "HNorm", "]"}]}], "]"}]}]}], ";", 
+         "\[IndentingNewLine]", 
          RowBox[{"tempHInv", "=", 
-          RowBox[{"1", "/", 
-           RowBox[{"HNorm", "[", 
+          RowBox[{"1.", "/", 
+           RowBox[{"HNormClip", "[", 
             RowBox[{"[", 
              RowBox[{"1", ";;", "irHalfLen"}], "]"}], "]"}]}]}], ";", 
          "\[IndentingNewLine]", 
-         RowBox[{"clipU", "=", 
-          RowBox[{"Max", "[", 
+         RowBox[{"fLIndx", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"fVec", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"fVec", ",", 
+                RowBox[{"Min", "[", "invFRange", "]"}]}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fUIndx", "=", 
+          RowBox[{
+           RowBox[{"Position", "[", 
+            RowBox[{"fVec", ",", 
+             RowBox[{
+              RowBox[{"Nearest", "[", 
+               RowBox[{"fVec", ",", 
+                RowBox[{"Max", "[", "invFRange", "]"}]}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}]}], "]"}], "[", 
+           RowBox[{"[", 
+            RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"leftConstVal", "=", 
+          RowBox[{
            RowBox[{"Abs", "[", 
-            RowBox[{"HNorm", "[", 
-             RowBox[{"[", 
-              RowBox[{"fLIndx", ";;", "fUIndx"}], "]"}], "]"}], "]"}], 
-           "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"lPosIndxs", "=", 
-          RowBox[{"Flatten", "[", 
-           RowBox[{"Position", "[", 
-            RowBox[{
-             RowBox[{"Abs", "[", 
-              RowBox[{"tempHInv", "[", 
-               RowBox[{"[", 
-                RowBox[{"1", ";;", 
-                 RowBox[{"fLIndx", "-", "1"}]}], "]"}], "]"}], "]"}], ",", 
-             RowBox[{"x_", "/;", 
-              RowBox[{"x", ">", "clipU"}]}]}], "]"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"hPosIndxs", "=", 
-          RowBox[{"Flatten", "[", 
-           RowBox[{"Position", "[", 
-            RowBox[{
-             RowBox[{"Abs", "[", 
-              RowBox[{"tempHInv", "[", 
-               RowBox[{"[", 
-                RowBox[{
-                 RowBox[{"fUIndx", "+", "1"}], ";;", "irHalfLen"}], "]"}], 
-               "]"}], "]"}], ",", 
-             RowBox[{"x_", "/;", 
-              RowBox[{"x", ">", "clipU"}]}]}], "]"}], "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{
-          RowBox[{"tempHInv", "[", 
-           RowBox[{"[", "lPosIndxs", "]"}], "]"}], "=", 
-          RowBox[{"clipU", " ", 
-           RowBox[{
             RowBox[{"tempHInv", "[", 
-             RowBox[{"[", "lPosIndxs", "]"}], "]"}], "/", 
-            RowBox[{"Abs", "[", 
-             RowBox[{"tempHInv", "[", 
-              RowBox[{"[", "lPosIndxs", "]"}], "]"}], "]"}]}]}]}], ";", 
+             RowBox[{"[", "fLIndx", "]"}], "]"}], "]"}], " ", 
+           RowBox[{"dBToMag", "[", "3", "]"}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"rightConstVal", "=", 
+          RowBox[{
+           RowBox[{"Abs", "[", 
+            RowBox[{"tempHInv", "[", 
+             RowBox[{"[", "fUIndx", "]"}], "]"}], "]"}], " ", 
+           RowBox[{"dBToMag", "[", "3", "]"}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"WnHPF", "=", 
+          RowBox[{"Min", "[", 
+           RowBox[{"invFRange", "/", 
+            RowBox[{"(", 
+             RowBox[{"Fs", "/", "2."}], ")"}]}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
+         RowBox[{"WnLPF", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"invFRange", "/", 
+            RowBox[{"(", 
+             RowBox[{"Fs", "/", "2."}], ")"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"HPF", "=", 
+          RowBox[{"leftConstVal", " ", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"IRtoTF", "[", 
+             RowBox[{"getButterworthFIR", "[", 
+              RowBox[{
+              "IRLen", ",", "4", ",", "WnHPF", ",", "\"\<Highpass\>\""}], 
+              "]"}], "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"LPF", "=", 
+          RowBox[{"rightConstVal", " ", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"IRtoTF", "[", 
+             RowBox[{"getButterworthFIR", "[", 
+              RowBox[{
+              "IRLen", ",", "4", ",", "WnHPF", ",", "\"\<Lowpass\>\""}], 
+              "]"}], "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"tempHInv", "[", 
            RowBox[{"[", 
-            RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], "=", 
-          RowBox[{"clipU", " ", 
-           RowBox[{
-            RowBox[{"tempHInv", "[", 
-             RowBox[{"[", 
-              RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], "/", 
-            RowBox[{"Abs", "[", 
-             RowBox[{"tempHInv", "[", 
-              RowBox[{"[", 
-               RowBox[{"fUIndx", "+", "hPosIndxs"}], "]"}], "]"}], 
-             "]"}]}]}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"1", ";;", "fLIndx"}], "]"}], "]"}], "=", 
+          RowBox[{
+           RowBox[{"HPF", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ";;", "fLIndx"}], "]"}], "]"}], " ", 
+           RowBox[{"Exp", "[", 
+            RowBox[{"I", " ", 
+             RowBox[{"Arg", "[", 
+              RowBox[{"tempHInv", "[", 
+               RowBox[{"[", 
+                RowBox[{"1", ";;", "fLIndx"}], "]"}], "]"}], "]"}]}], 
+            "]"}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"tempHInv", "[", 
+           RowBox[{"[", 
+            RowBox[{"fUIndx", ";;", "irHalfLen"}], "]"}], "]"}], "=", 
+          RowBox[{
+           RowBox[{"LPF", "[", 
+            RowBox[{"[", 
+             RowBox[{"fUIndx", ";;", "irHalfLen"}], "]"}], "]"}], " ", 
+           RowBox[{"Exp", "[", 
+            RowBox[{"I", " ", 
+             RowBox[{"Arg", "[", 
+              RowBox[{"tempHInv", "[", 
+               RowBox[{"[", 
+                RowBox[{"fUIndx", ";;", "irHalfLen"}], "]"}], "]"}], "]"}]}], 
+            "]"}]}]}], ";", "\[IndentingNewLine]", 
          RowBox[{"If", "[", 
           RowBox[{
            RowBox[{"EvenQ", "[", "IRLen", "]"}], ",", "\[IndentingNewLine]", 
@@ -1818,9 +2142,8 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
                    RowBox[{"Drop", "[", 
                     RowBox[{
                     RowBox[{"Conjugate", "[", "tempHInv", "]"}], ",", "1"}], 
-                    "]"}], "]"}], ",", "1"}], "]"}]}], "]"}], "/", 
-              RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";"}], 
-           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                    "]"}], "]"}], ",", "1"}], "]"}]}], "]"}], "/", "HAvg"}]}],
+             ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
            RowBox[{
             RowBox[{"fullHInv", "=", 
              RowBox[{
@@ -1830,8 +2153,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
                  RowBox[{"Drop", "[", 
                   RowBox[{
                    RowBox[{"Conjugate", "[", "tempHInv", "]"}], ",", "1"}], 
-                  "]"}], "]"}]}], "]"}], "/", 
-              RowBox[{"dBToMag", "[", "HAvg", "]"}]}]}], ";"}]}], 
+                  "]"}], "]"}]}], "]"}], "/", "HAvg"}]}], ";"}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
          RowBox[{"z", "=", 
           RowBox[{"TFtoIR", "[", "fullHInv", "]"}]}], ";"}]}], 
@@ -1885,8 +2207,9 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
       RowBox[{"regHalf", " ", "=", " ", 
        RowBox[{"regFn", "[", 
         RowBox[{"Range", "[", 
-         RowBox[{"0", ",", "1", ",", 
-          FractionBox["2", "N"]}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"0.", ",", "1.", ",", 
+          FractionBox["2.", "N"]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{"EvenQ", "[", "N", "]"}], ",", "\[IndentingNewLine]", 
@@ -1917,7 +2240,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
    RowBox[{"Options", "[", "HatzOctaveSmoothPS", "]"}], "=", 
    RowBox[{"{", 
     RowBox[{
-     RowBox[{"\"\<Smoothing Factor\>\"", "\[Rule]", "3"}], ",", 
+     RowBox[{"\"\<Smoothing Factor\>\"", "\[Rule]", "3."}], ",", 
      RowBox[{"\"\<Window\>\"", "\[Rule]", "\"\<Hann\>\""}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -2003,19 +2326,21 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
            RowBox[{"b", "-", 
             RowBox[{
              RowBox[{"(", 
-              RowBox[{"b", "-", "1"}], ")"}], 
+              RowBox[{"b", "-", "1."}], ")"}], 
              RowBox[{"Cos", "[", 
               RowBox[{
                RowBox[{"(", 
-                RowBox[{"\[Pi]", "/", "m"}], ")"}], 
+                RowBox[{
+                 RowBox[{"N", "[", "\[Pi]", "]"}], "/", "m"}], ")"}], 
                RowBox[{"(", 
                 RowBox[{"Range", "[", 
                  RowBox[{
-                  RowBox[{"-", "m"}], ",", "0"}], "]"}], ")"}]}], "]"}]}]}], 
+                  RowBox[{"-", "m"}], ",", "0."}], "]"}], ")"}]}], "]"}]}]}], 
+           
            RowBox[{
-            RowBox[{"2", " ", "b", " ", 
+            RowBox[{"2.", " ", "b", " ", 
              RowBox[{"(", 
-              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1"}]]}], ";", 
+              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1."}]]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"Wsm", "[", 
@@ -2029,21 +2354,22 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
            RowBox[{"b", "-", 
             RowBox[{
              RowBox[{"(", 
-              RowBox[{"b", "-", "1"}], ")"}], 
+              RowBox[{"b", "-", "1."}], ")"}], 
              RowBox[{"Cos", "[", 
               RowBox[{
                RowBox[{"(", 
-                RowBox[{"\[Pi]", "/", "m"}], ")"}], 
+                RowBox[{
+                 RowBox[{"N", "[", "\[Pi]", "]"}], "/", "m"}], ")"}], 
                RowBox[{"(", 
                 RowBox[{
                  RowBox[{"Range", "[", 
-                  RowBox[{"2", ",", 
-                   RowBox[{"m", "+", "1"}]}], "]"}], "-", "1"}], ")"}]}], 
+                  RowBox[{"2.", ",", 
+                   RowBox[{"m", "+", "1."}]}], "]"}], "-", "1."}], ")"}]}], 
               "]"}]}]}], 
            RowBox[{
-            RowBox[{"2", " ", "b", " ", 
+            RowBox[{"2.", " ", "b", " ", 
              RowBox[{"(", 
-              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1"}]]}], ";"}], 
+              RowBox[{"m", "+", "1"}], ")"}]}], " ", "-", "1."}]]}], ";"}], 
         "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
         RowBox[{"{", 
          RowBox[{"m", ",", "1", ",", "mkMax"}], "}"}]}], 
@@ -2142,7 +2468,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         "]"}]}], ";", 
       RowBox[{"hilbertDFT", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"0", ",", "inputSignalRealLength"}], "]"}]}], ";", 
+        RowBox[{"0.", ",", "inputSignalRealLength"}], "]"}]}], ";", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{"EvenQ", "[", "inputSignalRealLength", "]"}], ",", 
@@ -2150,28 +2476,29 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         RowBox[{
          RowBox[{
           RowBox[{"hilbertDFT", "[", 
-           RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+           RowBox[{"[", "1", "]"}], "]"}], "=", "1."}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"hilbertDFT", "[", 
            RowBox[{"[", 
             RowBox[{"2", ";;", 
              RowBox[{"inputSignalRealHalfLength", "-", "1"}]}], "]"}], "]"}], 
-          "=", "2"}], ";", 
+          "=", "2."}], ";", 
          RowBox[{
           RowBox[{"hilbertDFT", "[", 
-           RowBox[{"[", "inputSignalRealHalfLength", "]"}], "]"}], "=", "1"}],
-          ";"}], "\[IndentingNewLine]", ",", " ", "\[IndentingNewLine]", 
+           RowBox[{"[", "inputSignalRealHalfLength", "]"}], "]"}], "=", 
+          "1."}], ";"}], "\[IndentingNewLine]", ",", " ", 
+        "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{
           RowBox[{"hilbertDFT", "[", 
-           RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+           RowBox[{"[", "1", "]"}], "]"}], "=", "1."}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"hilbertDFT", "[", 
            RowBox[{"[", 
             RowBox[{"2", ";;", "inputSignalRealHalfLength"}], "]"}], "]"}], 
-          "=", "2"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+          "=", "2."}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"outputSignal", "=", 
        RowBox[{"TFtoIR", "[", 
@@ -2243,7 +2570,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
        "\[IndentingNewLine]", 
       RowBox[{"win", "=", 
        RowBox[{"ConstantArray", "[", 
-        RowBox[{"0", ",", "irLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"0.", ",", "irLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"irHalfLen", "=", 
        RowBox[{"Ceiling", "[", 
         RowBox[{
@@ -2252,13 +2579,13 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
       "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"win", "[", 
-        RowBox[{"[", "1", "]"}], "]"}], "=", "1"}], ";", 
+        RowBox[{"[", "1", "]"}], "]"}], "=", "1."}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"win", "[", 
         RowBox[{"[", 
          RowBox[{"2", ";;", 
-          RowBox[{"irHalfLen", "-", "1"}]}], "]"}], "]"}], "=", "2"}], ";", 
+          RowBox[{"irHalfLen", "-", "1"}]}], "]"}], "]"}], "=", "2."}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
@@ -2266,12 +2593,12 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         RowBox[{
          RowBox[{
           RowBox[{"win", "[", 
-           RowBox[{"[", "irHalfLen", "]"}], "]"}], "=", "1"}], ";"}], 
+           RowBox[{"[", "irHalfLen", "]"}], "]"}], "=", "1."}], ";"}], 
         "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
         RowBox[{
          RowBox[{
           RowBox[{"win", "[", 
-           RowBox[{"[", "irHalfLen", "]"}], "]"}], "=", "2"}], ";"}]}], 
+           RowBox[{"[", "irHalfLen", "]"}], "]"}], "=", "2."}], ";"}]}], 
        "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"minPhaseIR", "=", 
        RowBox[{"TFtoIR", "[", 
@@ -2294,7 +2621,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
    RowBox[{"{", 
     RowBox[{
      RowBox[{"\"\<Order\>\"", "\[Rule]", "0"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2389,15 +2716,14 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
         RowBox[{"Flatten", "[", 
          RowBox[{"OutputResponse", "[", 
           RowBox[{"sys", ",", 
-           RowBox[{"N", "[", 
-            RowBox[{"Join", "[", 
-             RowBox[{
-              RowBox[{"{", "1", "}"}], ",", 
-              RowBox[{"ConstantArray", "[", 
-               RowBox[{"0", ",", 
-                RowBox[{
-                 RowBox[{"Length", "[", "inputIR", "]"}], "-", "1"}]}], 
-               "]"}]}], "]"}], "]"}]}], "]"}], "]"}], "]"}]}]}]}], 
+           RowBox[{"Join", "[", 
+            RowBox[{
+             RowBox[{"{", "1.", "}"}], ",", 
+             RowBox[{"ConstantArray", "[", 
+              RowBox[{"0.", ",", 
+               RowBox[{
+                RowBox[{"Length", "[", "inputIR", "]"}], "-", "1"}]}], 
+              "]"}]}], "]"}]}], "]"}], "]"}], "]"}]}]}]}], 
     "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -2415,7 +2741,10 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
     RowBox[{"sweepFilePath_", ",", 
      RowBox[{"numOuts_", ":", "1"}], ",", 
      RowBox[{"fRange_", ":", 
-      RowBox[{"{", "}"}]}]}], "]"}], ":=", 
+      RowBox[{"{", "}"}]}], ",", 
+     RowBox[{"sweepDur_", ":", 
+      RowBox[{"{", "}"}]}], ",", 
+     RowBox[{"phaseFlag_", ":", "0"}]}], "]"}], ":=", 
    RowBox[{"Module", "[", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"{", 
@@ -2427,9 +2756,10 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
        "interSweepDelay", ",", "numSweeps", ",", "snrSpec", ",", "bNList", 
        ",", "bNLen", ",", "sigStart", ",", "sigEnd", ",", "signal", ",", 
        "psdSig", ",", "psdBN", ",", "micIRs", ",", "IRLen", ",", "IRList", 
-       ",", "startPos", ",", "endPos", ",", "indxLen", ",", "maxIndx", ",", 
-       "outData"}], "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-     
+       ",", "startPos", ",", "endPos", ",", "indxLen", ",", "outData", ",", 
+       "totSigLen", ",", "filtLen", ",", "hpFiltIR", ",", "lpFiltIR", ",", 
+       "shiftAmt", ",", "longPreOnset", ",", "roughOnset", ",", "fadeLen"}], 
+      "}"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"If", "[", 
        RowBox[{
@@ -2459,7 +2789,8 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
            RowBox[{"Dimensions", "[", "rawData", "]"}], "[", 
            RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
          RowBox[{"FFTLen", " ", "=", " ", 
-          RowBox[{"nextPowTwo", "[", "fileLen", "]"}]}], ";", 
+          RowBox[{"IntegerPart", "[", 
+           RowBox[{"nextPowTwo", "[", "fileLen", "]"}], "]"}]}], ";", 
          "\[IndentingNewLine]", "\[IndentingNewLine]", 
          RowBox[{"If", "[", 
           RowBox[{
@@ -2477,7 +2808,7 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             "\[IndentingNewLine]", 
             RowBox[{"If", "[", 
              RowBox[{
-              RowBox[{"fL", ">", "0"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"fL", ">", "0."}], ",", "\[IndentingNewLine]", 
               RowBox[{
                RowBox[{"filtFlagHP", "=", "True"}], ";"}], 
               "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
@@ -2491,7 +2822,21 @@ convolution. Otherwise choose the linear convolution option.\>\"", "]"}], ";",
             RowBox[{"If", "[", 
              RowBox[{
               RowBox[{"fU", "\[GreaterEqual]", 
-               RowBox[{"Fs", "/", "2"}]}], ",", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"Fs", "-", "1"}], ")"}], "/", "2"}]}], ",", " ", 
+              RowBox[{"(*", " ", 
+               RowBox[{
+                RowBox[{"Fs", "-", 
+                 RowBox[{
+                 "1", " ", "instead", " ", "of", " ", "Fs", " ", "to", " ", 
+                  "ensure", " ", "that", " ", "the", " ", "case", " ", 
+                  "fU"}]}], " ", "=", " ", 
+                RowBox[{
+                 RowBox[{"Fs", "/", "2"}], " ", "is", " ", "not", " ", 
+                 "missed", " ", "due", " ", "to", " ", "rounding", " ", 
+                 RowBox[{"errors", "."}]}]}], " ", "*)"}], 
+              "\[IndentingNewLine]", 
               RowBox[{
                RowBox[{"filtFlagLP", "=", "False"}], ";"}], 
               "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
@@ -2596,12 +2941,33 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
                RowBox[{"triggerPositions", "[", 
                 RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
               
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Length", "[", "sweepDur", "]"}], "\[Equal]", "0"}], 
+                ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"totSigLen", "=", 
+                  RowBox[{"sigStart", "+", 
+                   RowBox[{"numSweeps", " ", "interSweepDelay"}], "-", 
+                   "1"}]}], ";"}], "\[IndentingNewLine]", ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"totSigLen", "=", 
+                  RowBox[{"sigStart", "+", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"numSweeps", "-", "1"}], ")"}], " ", 
+                    "interSweepDelay"}], "+", 
+                   RowBox[{"(", 
+                    RowBox[{"sweepDur", " ", "Fs"}], ")"}], "-", "1"}]}], 
+                 ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+              "\[IndentingNewLine]", 
               RowBox[{"sigEnd", "=", 
                RowBox[{"Min", "[", 
                 RowBox[{"{", 
-                 RowBox[{"fileLen", ",", 
-                  RowBox[{"sigStart", "+", "interSweepDelay", "-", "1"}]}], 
-                 "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"fileLen", ",", "totSigLen"}], "}"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
               RowBox[{"signal", "=", 
                RowBox[{"rawMicData", "[", 
                 RowBox[{"[", 
@@ -2620,7 +2986,7 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
                    RowBox[{
                     RowBox[{"bNList", "[", 
                     RowBox[{"[", "ii", "]"}], "]"}], ",", "bNLen", ",", 
-                    RowBox[{"Ceiling", "[", 
+                    RowBox[{"Floor", "[", 
                     RowBox[{"bNLen", "/", "2"}], "]"}], ",", "HannWindow", 
                     ",", "interSweepDelay"}], "]"}]}], ";", 
                  "\[IndentingNewLine]", 
@@ -2630,7 +2996,7 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
                     RowBox[{"signal", "[", 
                     RowBox[{"[", "ii", "]"}], "]"}], ",", "interSweepDelay", 
                     ",", 
-                    RowBox[{"Ceiling", "[", 
+                    RowBox[{"Floor", "[", 
                     RowBox[{"interSweepDelay", "/", "2"}], "]"}], ",", 
                     "HannWindow", ",", "interSweepDelay"}], "]"}]}], ";", 
                  "\[IndentingNewLine]", 
@@ -2666,11 +3032,12 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
                RowBox[{"PadRight", "[", 
                 RowBox[{
                  RowBox[{"rawMicData", "[", 
-                  RowBox[{"[", "ii", "]"}], "]"}], ",", "FFTLen"}], "]"}], 
-               ",", 
+                  RowBox[{"[", "ii", "]"}], "]"}], ",", "FFTLen", ",", "0."}],
+                 "]"}], ",", 
                RowBox[{"PadRight", "[", 
-                RowBox[{"sweepSignal", ",", "FFTLen"}], "]"}]}], "]"}]}], 
-            ";"}], "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+                RowBox[{"sweepSignal", ",", "FFTLen", ",", "0."}], "]"}]}], 
+              "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
            RowBox[{"{", 
             RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}]}], 
           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
@@ -2749,6 +3116,16 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
            "]"}], ";", "\[IndentingNewLine]", 
          RowBox[{"Abort", "[", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
       ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"EvenQ", "[", "IRLen", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"filtLen", "=", 
+          RowBox[{"IRLen", "+", "1"}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"filtLen", "=", "IRLen"}], ";"}]}], "\[IndentingNewLine]", 
+       "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
       RowBox[{"(*", " ", 
        RowBox[{
         RowBox[{"Apply", " ", "high"}], "-", 
@@ -2756,29 +3133,65 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
        "*)"}], "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{"filtFlagHP", ",", "\[IndentingNewLine]", 
-        RowBox[{"Do", "[", "\[IndentingNewLine]", 
-         RowBox[{
+        RowBox[{
+         RowBox[{"hpFiltIR", "=", 
+          RowBox[{"getButterworthFIR", "[", 
+           RowBox[{"filtLen", ",", "4", ",", 
+            RowBox[{"fL", "/", 
+             RowBox[{"(", 
+              RowBox[{"Fs", "/", "2."}], ")"}]}], ",", "\"\<Highpass\>\""}], 
+           "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"phaseFlag", "\[Equal]", "1"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"shiftAmt", "=", 
+             RowBox[{"Floor", "[", 
+              RowBox[{"filtLen", "/", "2"}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"hpFiltIR", "=", 
+             RowBox[{"RotateRight", "[", 
+              RowBox[{
+               RowBox[{"TFtoIR", "[", 
+                RowBox[{"Abs", "[", 
+                 RowBox[{"IRtoTF", "[", "hpFiltIR", "]"}], "]"}], "]"}], ",", 
+               "shiftAmt"}], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"shiftAmt", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Do", "[", "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{
-            RowBox[{"IRList", "[", 
-             RowBox[{"[", 
-              RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
-            RowBox[{"applyButterHPF", "[", 
-             RowBox[{
-              RowBox[{"IRList", "[", 
-               RowBox[{"[", 
-                RowBox[{"ii", ",", "jj"}], "]"}], "]"}], ",", "4", ",", 
-              RowBox[{"fL", "/", 
-               RowBox[{"(", 
-                RowBox[{"Fs", "/", "2"}], ")"}]}]}], "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{"{", 
-           RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{"{", 
-           RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], 
-         "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ";", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
+             RowBox[{"RotateLeft", "[", 
+              RowBox[{
+               RowBox[{"conv", "[", 
+                RowBox[{
+                 RowBox[{"IRList", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"ii", ",", "jj"}], "]"}], "]"}], ",", "hpFiltIR", 
+                 ",", "\"\<lin\>\""}], "]"}], ",", "shiftAmt"}], "]"}]}], ";",
+             "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj", ",", 
+                RowBox[{"1", ";;", "IRLen"}]}], "]"}], "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], ";",
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
       RowBox[{"(*", " ", 
        RowBox[{
         RowBox[{"Apply", " ", "low"}], "-", 
@@ -2786,41 +3199,95 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
        "*)"}], "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{"filtFlagLP", ",", "\[IndentingNewLine]", 
-        RowBox[{"Do", "[", "\[IndentingNewLine]", 
-         RowBox[{
+        RowBox[{
+         RowBox[{"lpFiltIR", "=", 
+          RowBox[{"getButterworthFIR", "[", 
+           RowBox[{"filtLen", ",", "4", ",", 
+            RowBox[{"fU", "/", 
+             RowBox[{"(", 
+              RowBox[{"Fs", "/", "2."}], ")"}]}], ",", "\"\<Lowpass\>\""}], 
+           "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"phaseFlag", "\[Equal]", "1"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"shiftAmt", "=", 
+             RowBox[{"Floor", "[", 
+              RowBox[{"filtLen", "/", "2"}], "]"}]}], ";", 
+            "\[IndentingNewLine]", 
+            RowBox[{"lpFiltIR", "=", 
+             RowBox[{"RotateRight", "[", 
+              RowBox[{
+               RowBox[{"TFtoIR", "[", 
+                RowBox[{"Abs", "[", 
+                 RowBox[{"IRtoTF", "[", "lpFiltIR", "]"}], "]"}], "]"}], ",", 
+               "shiftAmt"}], "]"}]}], ";"}], "\[IndentingNewLine]", ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"shiftAmt", "=", "0"}], ";"}]}], "\[IndentingNewLine]", 
+          "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Do", "[", "\[IndentingNewLine]", 
           RowBox[{
            RowBox[{
-            RowBox[{"IRList", "[", 
-             RowBox[{"[", 
-              RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
-            RowBox[{"applyButterLPF", "[", 
-             RowBox[{
-              RowBox[{"IRList", "[", 
-               RowBox[{"[", 
-                RowBox[{"ii", ",", "jj"}], "]"}], "]"}], ",", "4", ",", 
-              RowBox[{"fU", "/", 
-               RowBox[{"(", 
-                RowBox[{"Fs", "/", "2"}], ")"}]}]}], "]"}]}], ";"}], 
-          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
-          RowBox[{"{", 
-           RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}], ",", 
-          "\[IndentingNewLine]", 
-          RowBox[{"{", 
-           RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], 
-         "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ";", 
-      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
+             RowBox[{"RotateLeft", "[", 
+              RowBox[{
+               RowBox[{"conv", "[", 
+                RowBox[{
+                 RowBox[{"IRList", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"ii", ",", "jj"}], "]"}], "]"}], ",", "lpFiltIR", 
+                 ",", "\"\<lin\>\""}], "]"}], ",", "shiftAmt"}], "]"}]}], ";",
+             "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj"}], "]"}], "]"}], "=", 
+             RowBox[{"IRList", "[", 
+              RowBox[{"[", 
+               RowBox[{"ii", ",", "jj", ",", 
+                RowBox[{"1", ";;", "IRLen"}]}], "]"}], "]"}]}], ";"}], 
+           "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"{", 
+            RowBox[{"jj", ",", "1", ",", "numSweeps"}], "}"}]}], 
+          "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", "]"}], ";",
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
       RowBox[{"(*", " ", 
-       RowBox[{"Window", " ", "IRs"}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+       "Window", " ", "IRs", " ", "to", " ", "remove", " ", "any", " ", 
+        "early", " ", "artifacts", " ", "due", " ", "to", " ", "above", " ", 
+        "filtering"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"longPreOnset", "=", 
+       RowBox[{"Round", "[", 
+        RowBox[{"15.", " ", 
+         RowBox[{"Fs", "/", "1000."}]}], "]"}]}], ";", " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"15", " ", "ms"}], " ", "-", " ", 
+        RowBox[{"sound", " ", "travels", " ", 
+         RowBox[{"approx", ".", " ", "5"}], " ", "m", " ", "in", " ", "this", 
+         " ", "time"}]}], " ", "*)"}], "\[IndentingNewLine]", 
       RowBox[{"Do", "[", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{
-         RowBox[{"maxIndx", "=", 
+         RowBox[{"roughOnset", "=", 
           RowBox[{"signalOnset", "[", 
            RowBox[{
             RowBox[{"IRList", "[", 
              RowBox[{"[", 
               RowBox[{"ii", ",", "jj"}], "]"}], "]"}], ",", 
-            RowBox[{"\"\<Threshold\>\"", "\[Rule]", "100"}]}], "]"}]}], ";", 
+            RowBox[{"\"\<Threshold\>\"", "\[Rule]", "50."}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fadeLen", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"0.", ",", 
+            RowBox[{"roughOnset", "-", "longPreOnset"}]}], "]"}]}], ";", 
          "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"IRList", "[", 
@@ -2830,10 +3297,13 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
            RowBox[{"IRList", "[", 
             RowBox[{"[", 
              RowBox[{"ii", ",", "jj"}], "]"}], "]"}], 
-           RowBox[{"tukeyWin", "[", 
+           RowBox[{"raisedCosWin", "[", 
             RowBox[{"IRLen", ",", 
-             RowBox[{"maxIndx", "/", "IRLen"}]}], "]"}]}]}], ";"}], 
-        "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"fadeLen", "/", "IRLen"}], ",", "0.05"}], "}"}]}], 
+            "]"}]}]}], ";"}], "\[IndentingNewLine]", ",", 
+        "\[IndentingNewLine]", 
         RowBox[{"{", 
          RowBox[{"ii", ",", "1", ",", "numMics"}], "}"}], ",", 
         "\[IndentingNewLine]", 
@@ -2902,8 +3372,8 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
         RowBox[{
          RowBox[{"PadLeft", "[", 
           RowBox[{"X", ",", 
-           RowBox[{"XLen", "+", "HopLen"}]}], "]"}], ",", "XPadLen"}], 
-        "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"XLen", "+", "HopLen"}], ",", "0."}], "]"}], ",", 
+         "XPadLen", ",", "0."}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"SpectrogramArray", "[", 
        RowBox[{"XPad", ",", "WinLen", ",", 
         RowBox[{"WinLen", "-", "Overlap"}], ",", "WinFun"}], "]"}]}]}], 
@@ -2926,8 +3396,8 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
         RowBox[{"Range", "[", 
          RowBox[{
           RowBox[{"-", "0.5"}], ",", "0.5", ",", 
-          FractionBox["1", 
-           RowBox[{"WinLen", "-", "1"}]]}], "]"}], "]"}]}], ";", 
+          FractionBox["1.", 
+           RowBox[{"WinLen", "-", "1."}]]}], "]"}], "]"}]}], ";", " ", 
       "\[IndentingNewLine]", 
       RowBox[{"HopLen", " ", "=", " ", 
        RowBox[{"WinLen", "-", "Overlap"}]}], ";", "\[IndentingNewLine]", 
@@ -2984,12 +3454,12 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
           RowBox[{
            RowBox[{"WinSum", "[", 
             RowBox[{"[", "indx", "]"}], "]"}], " ", "+", " ", 
-           SuperscriptBox["Win", "2"]}]}], ";"}], "\[IndentingNewLine]", ",", 
-        
+           SuperscriptBox["Win", "2."]}]}], ";"}], "\[IndentingNewLine]", ",",
+         "\[IndentingNewLine]", 
         RowBox[{"{", 
          RowBox[{"ii", ",", "1", ",", 
-          RowBox[{"Length", "[", "Y", "]"}]}], "}"}]}], "]"}], ";", 
-      "\[IndentingNewLine]", 
+          RowBox[{"Length", "[", "Y", "]"}]}], "}"}]}], "\[IndentingNewLine]",
+        "]"}], ";", "\[IndentingNewLine]", 
       FractionBox[
        RowBox[{"X", "[", 
         RowBox[{"[", 
@@ -3023,17 +3493,18 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
         RowBox[{"sum", "=", 
          SuperscriptBox[
           RowBox[{"Abs", "[", 
-           RowBox[{"H1", "+", "H2"}], "]"}], "2"]}], ",", 
+           RowBox[{"H1", "+", "H2"}], "]"}], "2."]}], ",", 
         "\[IndentingNewLine]", "\"\<Uncorrelated\>\"", ",", 
         "\[IndentingNewLine]", 
         RowBox[{"sum", "=", 
          RowBox[{
           SuperscriptBox[
-           RowBox[{"Abs", "[", "H1", "]"}], "2"], "+", 
+           RowBox[{"Abs", "[", "H1", "]"}], "2."], "+", 
           SuperscriptBox[
-           RowBox[{"Abs", "[", "H2", "]"}], "2"]}]}]}], "\[IndentingNewLine]",
-        "]"}], ";", "\[IndentingNewLine]", "sum"}]}], "\[IndentingNewLine]", 
-    "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+           RowBox[{"Abs", "[", "H2", "]"}], "2."]}]}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", "sum"}]}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"forceConjugateSymmetry", "[", "H_", "]"}], ":=", 
@@ -3700,7 +4171,73 @@ accurate.\>\"", "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], ";",
    3.837281410954047*^9, 3.8372814543959312`*^9}, {3.837296368527791*^9, 
    3.837296374494851*^9}, {3.837296425624633*^9, 3.8372964842882957`*^9}, {
    3.837296527248426*^9, 3.8372965400851927`*^9}, {3.8372965748306637`*^9, 
-   3.837296576295376*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
+   3.837296576295376*^9}, {3.837384221295444*^9, 3.8373842245687943`*^9}, {
+   3.837384705595839*^9, 3.837384721389225*^9}, {3.837384964048147*^9, 
+   3.837385003000049*^9}, 3.837385043476531*^9, {3.837385301162086*^9, 
+   3.837385348110214*^9}, {3.837385415806777*^9, 3.83738541829956*^9}, {
+   3.8373856072739687`*^9, 3.83738568928694*^9}, {3.8373857683717937`*^9, 
+   3.837385828732036*^9}, {3.8373860085072317`*^9, 3.837386022289791*^9}, {
+   3.837386107843622*^9, 3.837386138566311*^9}, {3.837386201480721*^9, 
+   3.837386233136899*^9}, {3.837386438610165*^9, 3.837386451700526*^9}, {
+   3.837386489221073*^9, 3.837386542410995*^9}, {3.837386578536744*^9, 
+   3.837386685261498*^9}, {3.837387074049371*^9, 3.837387194963834*^9}, 
+   3.8373872374095907`*^9, {3.837387269958992*^9, 3.837387389567724*^9}, {
+   3.837387421999617*^9, 3.837387501276917*^9}, {3.837387669205282*^9, 
+   3.837387694827829*^9}, {3.837387828895505*^9, 3.8373878379419413`*^9}, {
+   3.837388009577108*^9, 3.837388077208001*^9}, {3.837421485531608*^9, 
+   3.837421576252161*^9}, {3.8374216187568207`*^9, 3.837421619652401*^9}, {
+   3.8374216725613194`*^9, 3.8374216925494423`*^9}, {3.837422734726131*^9, 
+   3.837422735052555*^9}, {3.837422862630718*^9, 3.837422862941532*^9}, {
+   3.837422894380397*^9, 3.837423016536654*^9}, {3.8374231064688396`*^9, 
+   3.837423132891596*^9}, {3.837545892784092*^9, 3.837545957381126*^9}, {
+   3.8375945136916637`*^9, 3.83759461732342*^9}, {3.837594994004978*^9, 
+   3.83759503725734*^9}, {3.8375954054932137`*^9, 3.837595455246171*^9}, 
+   3.837595545184287*^9, {3.837595587919883*^9, 3.8375956245905943`*^9}, {
+   3.837595670029059*^9, 3.8375956884684553`*^9}, {3.837595722843986*^9, 
+   3.837595768718313*^9}, {3.837595869026277*^9, 3.8375958743883963`*^9}, {
+   3.8375959256842613`*^9, 3.8375959982619143`*^9}, {3.837596137925725*^9, 
+   3.83759617284231*^9}, {3.8375962037086077`*^9, 3.837596246927641*^9}, {
+   3.83759627973804*^9, 3.8375963923043947`*^9}, {3.837596624471003*^9, 
+   3.83759671385532*^9}, {3.837596768867244*^9, 3.837596792324316*^9}, {
+   3.837596985654017*^9, 3.837597062620371*^9}, {3.837597204820243*^9, 
+   3.837597231939898*^9}, {3.837600669492547*^9, 3.837600720479937*^9}, {
+   3.837600896848693*^9, 3.837600911823608*^9}, {3.837600995215966*^9, 
+   3.8376010084401712`*^9}, {3.837601114610567*^9, 3.837601157843775*^9}, {
+   3.837601232851337*^9, 3.837601254801413*^9}, {3.837601289426097*^9, 
+   3.837601330730927*^9}, {3.8376013853677692`*^9, 3.837601443992051*^9}, {
+   3.8376022271893167`*^9, 3.8376022300985727`*^9}, {3.837602397565269*^9, 
+   3.837602400003821*^9}, 3.837602443102113*^9, {3.837602473107635*^9, 
+   3.837602476117963*^9}, {3.837602530791793*^9, 3.837602532462165*^9}, {
+   3.837602627119776*^9, 3.837602628429994*^9}, {3.8376026623676987`*^9, 
+   3.837602668758442*^9}, {3.837602699165187*^9, 3.837602714038197*^9}, {
+   3.837602765597535*^9, 3.8376028406589622`*^9}, {3.837602871614903*^9, 
+   3.837602874362158*^9}, {3.837602922538878*^9, 3.837602938758977*^9}, {
+   3.837602971924013*^9, 3.8376029810976152`*^9}, {3.8376030619903917`*^9, 
+   3.837603126093557*^9}, {3.837603173079677*^9, 3.83760325003191*^9}, {
+   3.837603282486413*^9, 3.837603308742979*^9}, {3.837603353227811*^9, 
+   3.8376034193889503`*^9}, {3.837603480836097*^9, 3.837603706220743*^9}, {
+   3.8376037710914383`*^9, 3.8376038324496202`*^9}, 3.837605632794971*^9, {
+   3.83761378026792*^9, 3.837613889895405*^9}, {3.8376139282636223`*^9, 
+   3.83761403873801*^9}, {3.837614477636745*^9, 3.8376144931430483`*^9}, {
+   3.8376145493553*^9, 3.837614643009465*^9}, {3.837614690549616*^9, 
+   3.837614727263485*^9}, {3.837648553622026*^9, 3.837648554188608*^9}, {
+   3.8376486175280933`*^9, 3.8376486222413483`*^9}, {3.8376486539998617`*^9, 
+   3.8376486547508917`*^9}, {3.837653643058066*^9, 3.837653687282613*^9}, 
+   3.837654590275742*^9, {3.8379832014163437`*^9, 3.8379832164383593`*^9}, {
+   3.8385135408981657`*^9, 3.838513578938855*^9}, {3.838513619253191*^9, 
+   3.838513658302195*^9}, {3.838513701954953*^9, 3.838513719616561*^9}, {
+   3.8385534870265713`*^9, 3.838553517777534*^9}, {3.838580264373505*^9, 
+   3.8385802750048122`*^9}, {3.841566073466289*^9, 3.8415660741288433`*^9}, {
+   3.841566215328479*^9, 3.8415662158807096`*^9}, {3.841568766100852*^9, 
+   3.8415687907156677`*^9}, {3.84156890089755*^9, 3.841568969997149*^9}, {
+   3.841569092674654*^9, 3.841569115916171*^9}, {3.8415691664806623`*^9, 
+   3.841569175401149*^9}, {3.841569331468306*^9, 3.8415693432246437`*^9}, {
+   3.8415701179961348`*^9, 3.841570120455179*^9}, {3.841571506345955*^9, 
+   3.841571665454836*^9}, {3.841571712275238*^9, 3.841571824765367*^9}, {
+   3.841571865026005*^9, 3.841571884800768*^9}, {3.841572022220866*^9, 
+   3.841572107138268*^9}, {3.841572274235387*^9, 3.841572279521975*^9}, {
+   3.841598223000931*^9, 3.841598364579178*^9}, {3.8415983949581413`*^9, 
+   3.841598404723703*^9}},ExpressionUUID->"c183ef61-fc0b-44b0-949b-\
 50c544207a54"]
 }, Open  ]]
 }, Open  ]],
@@ -3759,24 +4296,24 @@ Cell[2611, 70, 91, 0, 67, "Section",ExpressionUUID->"dd1159f4-99cf-44db-8353-e4b
 Cell[2705, 72, 405, 9, 46, "Input",ExpressionUUID->"71729209-1ef9-4b73-8904-8ce8c08cb755"],
 Cell[CellGroupData[{
 Cell[3135, 85, 116, 0, 54, "Subsection",ExpressionUUID->"73d3d877-ffce-4a6d-bbf8-2b74b9a419c4"],
-Cell[3254, 87, 28017, 480, 3659, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
+Cell[3254, 87, 31293, 527, 4100, "Input",ExpressionUUID->"307a3671-e91d-4952-9cdc-4fed5cf9a742"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[31320, 573, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
-Cell[31423, 575, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
+Cell[34596, 620, 100, 0, 67, "Section",ExpressionUUID->"b0cf2bd9-b3e0-40b9-a309-0b141bf1a237"],
+Cell[34699, 622, 253, 5, 46, "Input",ExpressionUUID->"713d542c-4ab3-4ce7-b436-007adbaf716e"],
 Cell[CellGroupData[{
-Cell[31701, 584, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
-Cell[31801, 586, 131619, 3117, 15740, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
+Cell[34977, 631, 97, 0, 54, "Subsection",ExpressionUUID->"75880e96-35c6-446a-a416-0c90d35f9bbc"],
+Cell[35077, 633, 154790, 3607, 17742, "Input",ExpressionUUID->"c183ef61-fc0b-44b0-949b-50c544207a54"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[163469, 3709, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
-Cell[163570, 3711, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
+Cell[189916, 4246, 98, 0, 67, "Section",ExpressionUUID->"0de32096-606b-4cae-bb0b-b3edf5cf1dc6"],
+Cell[190017, 4248, 106, 1, 46, "Input",ExpressionUUID->"e8b95233-aef3-4c13-b826-1a71099026dd"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[163713, 3717, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
-Cell[163813, 3719, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
+Cell[190160, 4254, 97, 0, 67, "Section",ExpressionUUID->"654c1ecb-c242-4239-891d-f4bf8d7d6f08"],
+Cell[190260, 4256, 113, 1, 46, "Input",ExpressionUUID->"aac6bd49-7e85-4e7f-a3d0-f1a840b3db7b"]
 }, Open  ]]
 }, Open  ]]
 }
