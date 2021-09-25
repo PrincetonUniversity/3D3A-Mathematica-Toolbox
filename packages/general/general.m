@@ -86,7 +86,7 @@ findNearest::usage=
 Begin["`Private`"]
 
 
-CIPICToSOFAC[az_,el_,rad_: 1]:=Module[
+CIPICToSOFAC[az_,el_,rad_: 1.]:=Module[
 {x, y, z}
 ,
 x = rad Cos[-az] Cos[el];
@@ -95,13 +95,13 @@ z = rad Cos[-az] Sin[el];
 {x, y, z}
 ]
 
-dBToMag[dB_]:=10^(dB/20)
+dBToMag[dB_]:=10.^(dB/20.)
 
-freqList[vecLen_,fS_]:=Range[0,1-(1/vecLen),1/vecLen]fS
+freqList[vecLen_,fS_]:=Range[0.,1.-(1./vecLen),1./vecLen]fS
 
-magTodB[mag_]:=20Log10[mag]
+magTodB[mag_]:=20.Log10[mag]
 
-nextPowTwo[input_]:=2^Ceiling[Log2[input]]
+nextPowTwo[input_]:=2.^Ceiling[Log2[input]]
 
 SOFACToCIPIC[xTemp_,yTemp_,zTemp_]:=Module[
 {x, y, z, len, az, el, rad}
@@ -112,30 +112,30 @@ x={xTemp}; y={yTemp}; z={zTemp};
 x=xTemp; y=yTemp; z=zTemp;
 ];
 len=Length[x];
-az=ConstantArray[0,len];
-el=ConstantArray[0,len];
-rad=ConstantArray[0,len];
+az=ConstantArray[0.,len];
+el=ConstantArray[0.,len];
+rad=ConstantArray[0.,len];
 Do[
-If[x[[ii]] != 0 || z[[ii]] != 0,
-az[[ii]] = ArcTan[-y[[ii]]/Sqrt[x[[ii]]^2+z[[ii]]^2]];
-el[[ii]] = Mod[ArcTan[x[[ii]],z[[ii]]],2\[Pi]];
+If[x[[ii]]!=0. || z[[ii]]!=0.,
+az[[ii]] = ArcTan[-y[[ii]]/Sqrt[x[[ii]]^2.+z[[ii]]^2.]];
+el[[ii]] = Mod[ArcTan[x[[ii]],z[[ii]]],2.N[\[Pi]]];
 ,
-If[y[[ii]]<0,
-az[[ii]]=\[Pi]/2;
+If[y[[ii]]<0.,
+az[[ii]]=N[\[Pi]]/2;
 ,
-az[[ii]]=-\[Pi]/2;
+az[[ii]]=-N[\[Pi]]/2;
 ];
-el[[ii]]=0;
+el[[ii]]=0.;
 ];
-If[el[[ii]]>3\[Pi]/2,el[[ii]]=el[[ii]]-2\[Pi]];
-rad[[ii]]=Sqrt[x[[ii]]^2+y[[ii]]^2+z[[ii]]^2];
+If[el[[ii]]>3.N[\[Pi]]/2.,el[[ii]]=el[[ii]]-2.N[\[Pi]]];
+rad[[ii]]=Sqrt[x[[ii]]^2.+y[[ii]]^2.+z[[ii]]^2.];
 ,
 {ii,1,len}
 ];
 If[!ListQ[xTemp]&&!ListQ[yTemp]&&!ListQ[zTemp],
 az=az[[1]]; el=el[[1]]; rad=rad[[1]];
 ];
-{az(180/Pi), el(180/Pi), rad}
+{az(180./N[Pi]), el(180./N[Pi]), rad}
 ]
 
 SOFACToSOFAS[xTemp_, yTemp_, zTemp_]:=Module[
@@ -147,32 +147,32 @@ x={xTemp}; y={yTemp}; z={zTemp};
 x=xTemp; y=yTemp; z=zTemp;
 ];
 len=Length[x];
-az=ConstantArray[0,len];
-el=ConstantArray[0,len];
-rad=ConstantArray[0,len];
+az=ConstantArray[0.,len];
+el=ConstantArray[0.,len];
+rad=ConstantArray[0.,len];
 Do[
-If[x[[ii]] != 0 || y[[ii]] != 0, 
-az[[ii]]=Mod[ArcTan[x[[ii]],y[[ii]]],2\[Pi]];
-el[[ii]]=ArcTan[z[[ii]]/Sqrt[x[[ii]]^2+y[[ii]]^2]];
+If[x[[ii]]!=0. || y[[ii]]!=0., 
+az[[ii]]=Mod[ArcTan[x[[ii]],y[[ii]]],2.N[\[Pi]]];
+el[[ii]]=ArcTan[z[[ii]]/Sqrt[x[[ii]]^2.+y[[ii]]^2.]];
 ,
-az[[ii]]=0; 
-If[z[[ii]] < 0,
-el[[ii]]=-\[Pi]/2;
+az[[ii]]=0.; 
+If[z[[ii]] < 0.,
+el[[ii]]=-N[\[Pi]]/2.;
 ,
-el[[ii]]=\[Pi]/2;
+el[[ii]]=N[\[Pi]]/2.;
 ];
 ];
-rad[[ii]]=Sqrt[x[[ii]]^2+y[[ii]]^2+z[[ii]]^2];
+rad[[ii]]=Sqrt[x[[ii]]^2.+y[[ii]]^2.+z[[ii]]^2.];
 ,
 {ii,1,len}
 ];
 If[!ListQ[xTemp]&&!ListQ[yTemp]&&!ListQ[zTemp],
 az=az[[1]]; el=el[[1]]; rad=rad[[1]];
 ];
-{az(180/Pi), el (180/Pi), rad}
+{az(180./N[Pi]), el (180./N[Pi]), rad}
 ]
 
-SOFASToSOFAC[az_, el_, rad_:1]:=Module[
+SOFASToSOFAC[az_, el_, rad_:1.]:=Module[
 {x, y, z}
 ,
 x=rad Cos[el Degree] Cos[az Degree];
@@ -183,7 +183,7 @@ z=rad Sin[el Degree];
 
 squeeze[inputList_List]:=Replace[inputList,{l_List}:>l,{0,Infinity}]
 
-timeList[vecLen_,fS_]:=Range[0,vecLen-1](1/fS)
+timeList[vecLen_,fS_]:=Range[0.,vecLen-1.](1./fS)
 
 transpose[x_]:=If[ArrayDepth[x]==1,Transpose[List[x]],Transpose[x]]
 

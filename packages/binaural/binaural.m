@@ -116,7 +116,7 @@ computedITDSec=computedITDListSec[[1]];
 computedITDSec
 ]
 
-Options[onsetITD]={"Resampling"->1,"Threshold"->20,"Sampling Rate"->44100};
+Options[onsetITD]={"Resampling"->1.,"Threshold"->20.,"Sampling Rate"->44100.};
 onsetITD[inputHRIRLeft_,inputHRIRRight_,OptionsPattern[]]:=Module[
 {resampleFactor,thresholdPercent,leftOnsetSample,rightOnsetSample,thresholdITDSec}
 ,
@@ -127,7 +127,7 @@ rightOnsetSample = signalOnset[inputHRIRRight,"Threshold"->thresholdPercent,"Res
 thresholdITDSec = 1./(resampleFactor OptionValue["Sampling Rate"]) (leftOnsetSample-rightOnsetSample)
 ]
 
-Options[phaseDelayDifferenceITD]={"Averaged"->True,"Averaging Range"->{0.,0.5},"Resampling"->1,"Sampling Rate"->44100};
+Options[phaseDelayDifferenceITD]={"Averaged"->True,"Averaging Range"->{0.,0.5},"Resampling"->1.,"Sampling Rate"->44100.};
 phaseDelayDifferenceITD[inputHRIRLeft_,inputHRIRRight_,OptionsPattern[]]:=Module[
 {resampleFactor,samplingRate,averageITDFlag,averageRange,interpolatedHRIRLeft,interpolatedHRIRRight,interpolatedHRIRLen,phaseLeftRad,phaseRightRad,freqListHz,averagingFreqIndex,lfSampleIndex,hfSampleIndex,phaseDelayDifferenceITDSec,upsampledPhaseDelayDifferenceITDSec}
 ,
@@ -135,8 +135,8 @@ resampleFactor=OptionValue["Resampling"];
 samplingRate=OptionValue["Sampling Rate"];
 averageITDFlag=OptionValue["Averaged"];
 averageRange=OptionValue["Averaging Range"];
-interpolatedHRIRLeft=resample[inputHRIRLeft,1,resampleFactor];
-interpolatedHRIRRight=resample[inputHRIRRight,1,resampleFactor];
+interpolatedHRIRLeft=resample[inputHRIRLeft,1.,resampleFactor];
+interpolatedHRIRRight=resample[inputHRIRRight,1.,resampleFactor];
 interpolatedHRIRLen=Length[interpolatedHRIRLeft];
 phaseLeftRad=unwrapPhase[Arg[IRtoTF[interpolatedHRIRLeft]]];
 phaseRightRad=unwrapPhase[Arg[IRtoTF[interpolatedHRIRRight]]];
@@ -153,7 +153,7 @@ phaseDelayDifferenceITDSec=Downsample[upsampledPhaseDelayDifferenceITDSec,resamp
 phaseDelayDifferenceITDSec
 ]
 
-Options[groupDelayDifferenceITD]={"Averaged"->True,"Averaging Range"->{0.,0.5},"Resampling"->1,"Sampling Rate"->44100};
+Options[groupDelayDifferenceITD]={"Averaged"->True,"Averaging Range"->{0.,0.5},"Resampling"->1.,"Sampling Rate"->44100.};
 groupDelayDifferenceITD[inputHRIRLeft_,inputHRIRRight_,OptionsPattern[]]:= Module[
 {resampleFactor,sampleRateHz,averageITD,averagingFreqRangekHz,interpolatedHRIRLeft,interpolatedHRIRRight,interpolatedHRIRLen,groupDelayLeftSample, groupDelayRightSample,averagingFreqSampleIndex,lfSampleIndex,hfSampleIndex,groupDelayDifferenceITDSec,upsampledGroupDelayDifferenceITDSec}
 ,
@@ -161,8 +161,8 @@ resampleFactor=OptionValue["Resampling"];
 sampleRateHz=OptionValue["Sampling Rate"];
 averageITD=OptionValue["Averaged"];
 averagingFreqRangekHz=OptionValue["Averaging Range"];
-interpolatedHRIRLeft=resample[inputHRIRLeft,1,resampleFactor];
-interpolatedHRIRRight=resample[inputHRIRRight,1,resampleFactor];
+interpolatedHRIRLeft=resample[inputHRIRLeft,1.,resampleFactor];
+interpolatedHRIRRight=resample[inputHRIRRight,1.,resampleFactor];
 interpolatedHRIRLen=Length[interpolatedHRIRLeft];
 groupDelayLeftSample=groupDelaySpec[interpolatedHRIRLeft];
 groupDelayRightSample=groupDelaySpec[interpolatedHRIRRight];
@@ -178,14 +178,14 @@ groupDelayDifferenceITDSec=Downsample[upsampledGroupDelayDifferenceITDSec,resamp
 groupDelayDifferenceITDSec
 ]
 
-Options[maxXCorrITD]={"Resampling"->1,"Sampling Rate"->44100};
+Options[maxXCorrITD]={"Resampling"->1.,"Sampling Rate"->44100.};
 maxXCorrITD[inputHRIRLeft_,inputHRIRRight_,OptionsPattern[]]:=Module[
 {resampleFactor,sampleRateHz,interpolatedHRIRLeft,interpolatedHRIRRight,leftHRIREnergy,rightHRIREnergy,normalizationFactor,normalizedCrossCorrelationLRList,normalizedCrossCorrelationRLList,maxPosLR,maxPosRL,samplesITD,maxCrossCorrelationITDSec}
 ,
 resampleFactor=OptionValue["Resampling"];
 sampleRateHz=OptionValue["Sampling Rate"];
-interpolatedHRIRLeft=resample[inputHRIRLeft,1,resampleFactor];
-interpolatedHRIRRight=resample[inputHRIRRight,1,resampleFactor];
+interpolatedHRIRLeft=resample[inputHRIRLeft,1.,resampleFactor];
+interpolatedHRIRRight=resample[inputHRIRRight,1.,resampleFactor];
 leftHRIREnergy = ListCorrelate[interpolatedHRIRLeft,interpolatedHRIRLeft,{1,1}][[1]];
 rightHRIREnergy = ListCorrelate[interpolatedHRIRRight,interpolatedHRIRRight,{1,1}][[1]];
 normalizationFactor=Sqrt[leftHRIREnergy rightHRIREnergy];
@@ -201,18 +201,18 @@ maxCrossCorrelationITDSec=-(1./(resampleFactor sampleRateHz))(samplesITD-1.);
 maxCrossCorrelationITDSec
 ]
 
-Options[pinnaSpectralNotches]={"Order"->12,"Sampling Rate"->44100};
+Options[pinnaSpectralNotches]={"Order"->12,"Sampling Rate"->44100.};
 pinnaSpectralNotches[inputHRIR_]:=Module[
 {onsetSamp,inputIRLen,shiftIR,lpResOrder,lpResIR,fS,winLen,halfHannWin,winLPRes,acf,winAutoCorrFunc,grpDelFunc,fVec,nyqSamp,grpDelFuncFlip,specNotchSamps,specNotchFreqs}
 ,
 onsetSamp=signalOnset[inputHRIR];
 inputIRLen=Length[inputHRIR];
-shiftIR=PadRight[inputHRIR[[onsetSamp;;]],inputIRLen];
+shiftIR=PadRight[inputHRIR[[onsetSamp;;]],inputIRLen,0.];
 lpResOrder=OptionValue["Order"];
 fS=OptionValue["Sampling Rate"];
 lpResIR=lpResidual[shiftIR,lpResOrder];
-winLen=Round[fS/1000];
-halfHannWin=PadRight[raisedCosWin[winLen,{0,1}],inputIRLen];
+winLen=Round[fS/1000.];
+halfHannWin=PadRight[raisedCosWin[winLen,{0,1}],inputIRLen,0.];
 winLPRes=lpResIR halfHannWin;
 acf=autoCorrFunc[winLPRes];
 winAutoCorrFunc=acf halfHannWin;
@@ -233,22 +233,22 @@ inputHRTF=IRtoTF[inputHRIR];
 inputHRTFLen=Length[inputHRTF];
 inputHRTFNyqLen = Ceiling[(inputHRTFLen+1)/2];
 logMagHRTF=Log10[Abs[inputHRTF]];
-alpha = Join[{0.5},ConstantArray[1,inputHRTFNyqLen-2],{0.5}];
-fourierSeriesCoeffs=2 alpha (1/Sqrt[2(inputHRTFNyqLen-1)]) FourierDCT[logMagHRTF[[;;inputHRTFNyqLen]],1];
+alpha = Join[{0.5},ConstantArray[1.,inputHRTFNyqLen-2],{0.5}];
+fourierSeriesCoeffs=2 alpha (1./Sqrt[2.(inputHRTFNyqLen-1.)]) FourierDCT[logMagHRTF[[;;inputHRTFNyqLen]],1];
 smoothingFactor=OptionValue["Smoothing Factor"];
 smoothingIndex=IntegerPart[smoothingFactor inputHRTFNyqLen];
 smoothingIndex=Clip[smoothingIndex,{1,inputHRTFNyqLen}];
-smoothedHRTFHalf=Table[Total[fourierSeriesCoeffs[[;;smoothingIndex]] Cos[(2\[Pi] (ii-1))/inputHRTFLen Range[0,smoothingIndex-1]]],{ii,inputHRTFNyqLen}];
-smoothedHRTF=10^(Join[smoothedHRTFHalf,Drop[Reverse[Drop[smoothedHRTFHalf,1]],1]]);
+smoothedHRTFHalf=Table[Total[fourierSeriesCoeffs[[;;smoothingIndex]] Cos[(2.N[\[Pi]] (ii-1.))/inputHRTFLen Range[0.,smoothingIndex-1.]]],{ii,inputHRTFNyqLen}];
+smoothedHRTF=10.^(Join[smoothedHRTFHalf,Drop[Reverse[Drop[smoothedHRTFHalf,1]],1]]);
 zeroPhIR=TFtoIR[smoothedHRTF];
-minPhIR=PadRight[getMinimumPhaseIR[zeroPhIR],Length[inputHRIR]]
+minPhIR=PadRight[getMinimumPhaseIR[zeroPhIR],Length[inputHRIR],0.]
 ]
 
 windowIRPair[IRL_,IRR_,Fs_,windowDuration_:0.01,preOnsetDelay_:0.001,winType_:"Tukey",keepOnsetFlag_: True,keepLenFlag_:True]:=Module[{irL,irR,IRLen,winLen,maxOnset,effWinLen,preOnsetDelaySamp,preOnsetDelaySec,winVec,onsetL,onsetR,onsetMin,tempIRL,tempIRR,startIndx,stopIndx,outIRL,outIRR},
 IRLen = Length[IRL];
 winLen = Round[Fs windowDuration];
-onsetL = signalOnset[IRL,"Threshold"->20];
-onsetR = signalOnset[IRR,"Threshold"->20];
+onsetL = signalOnset[IRL,"Threshold"->20.];
+onsetR = signalOnset[IRR,"Threshold"->20.];
 maxOnset=Max[onsetL,onsetR];
 If[keepLenFlag,
 effWinLen=winLen-maxOnset;
@@ -256,8 +256,8 @@ effWinLen=winLen-maxOnset;
 effWinLen=winLen;
 ];
 If[IRLen<(effWinLen+maxOnset),
-irL=PadRight[IRL,effWinLen+maxOnset];
-irR=PadRight[IRR,effWinLen+maxOnset];
+irL=PadRight[IRL,effWinLen+maxOnset,0.];
+irR=PadRight[IRR,effWinLen+maxOnset,0.];
 IRLen=effWinLen+maxOnset;
 ,
 irL=IRL;
@@ -283,10 +283,10 @@ Abort[];
 ];
 startIndx=onsetL-preOnsetDelaySamp+1;
 stopIndx=startIndx+effWinLen-1;
-tempIRL=PadRight[irL[[startIndx;;stopIndx]]winVec,IRLen];
+tempIRL=PadRight[irL[[startIndx;;stopIndx]]winVec,IRLen,0.];
 startIndx=onsetR-preOnsetDelaySamp+1;
 stopIndx=startIndx+effWinLen-1;
-tempIRR=PadRight[irR[[startIndx;;stopIndx]]winVec,IRLen];
+tempIRR=PadRight[irR[[startIndx;;stopIndx]]winVec,IRLen,0.];
 Switch[keepOnsetFlag
 ,False,
 If[onsetL>=onsetR,

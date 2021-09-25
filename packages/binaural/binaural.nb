@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     58510,       1309]
-NotebookOptionsPosition[     56178,       1257]
-NotebookOutlinePosition[     57087,       1284]
-CellTagsIndexPosition[     57044,       1281]
+NotebookDataLength[     58755,       1311]
+NotebookOptionsPosition[     56423,       1259]
+NotebookOutlinePosition[     57332,       1286]
+CellTagsIndexPosition[     57289,       1283]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -340,9 +340,9 @@ Cell[BoxData[{
    RowBox[{"Options", "[", "onsetITD", "]"}], "=", 
    RowBox[{"{", 
     RowBox[{
-     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}], ",", 
-     RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1."}], ",", 
+     RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20."}], ",", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -395,8 +395,8 @@ Cell[BoxData[{
      RowBox[{"\"\<Averaging Range\>\"", "\[Rule]", 
       RowBox[{"{", 
        RowBox[{"0.", ",", "0.5"}], "}"}]}], ",", 
-     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1."}], ",", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -430,12 +430,12 @@ Cell[BoxData[{
       "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRLeft", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRLeft", ",", "1", ",", "resampleFactor"}], "]"}]}], 
+        RowBox[{"inputHRIRLeft", ",", "1.", ",", "resampleFactor"}], "]"}]}], 
       ";", "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRRight", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRRight", ",", "1", ",", "resampleFactor"}], "]"}]}], 
-      ";", "\[IndentingNewLine]", 
+        RowBox[{"inputHRIRRight", ",", "1.", ",", "resampleFactor"}], "]"}]}],
+       ";", "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRLen", "=", 
        RowBox[{"Length", "[", "interpolatedHRIRLeft", "]"}]}], ";", 
       "\[IndentingNewLine]", 
@@ -530,8 +530,8 @@ Cell[BoxData[{
      RowBox[{"\"\<Averaging Range\>\"", "\[Rule]", 
       RowBox[{"{", 
        RowBox[{"0.", ",", "0.5"}], "}"}]}], ",", 
-     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1."}], ",", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -565,12 +565,12 @@ Cell[BoxData[{
       "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRLeft", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRLeft", ",", "1", ",", "resampleFactor"}], "]"}]}], 
+        RowBox[{"inputHRIRLeft", ",", "1.", ",", "resampleFactor"}], "]"}]}], 
       ";", "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRRight", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRRight", ",", "1", ",", "resampleFactor"}], "]"}]}], 
-      ";", "\[IndentingNewLine]", 
+        RowBox[{"inputHRIRRight", ",", "1.", ",", "resampleFactor"}], "]"}]}],
+       ";", "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRLen", "=", 
        RowBox[{"Length", "[", "interpolatedHRIRLeft", "]"}]}], ";", 
       "\[IndentingNewLine]", 
@@ -648,8 +648,8 @@ Cell[BoxData[{
    RowBox[{"Options", "[", "maxXCorrITD", "]"}], "=", 
    RowBox[{"{", 
     RowBox[{
-     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Resampling\>\"", "\[Rule]", "1."}], ",", 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -676,12 +676,12 @@ Cell[BoxData[{
       "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRLeft", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRLeft", ",", "1", ",", "resampleFactor"}], "]"}]}], 
+        RowBox[{"inputHRIRLeft", ",", "1.", ",", "resampleFactor"}], "]"}]}], 
       ";", "\[IndentingNewLine]", 
       RowBox[{"interpolatedHRIRRight", "=", 
        RowBox[{"resample", "[", 
-        RowBox[{"inputHRIRRight", ",", "1", ",", "resampleFactor"}], "]"}]}], 
-      ";", "\[IndentingNewLine]", 
+        RowBox[{"inputHRIRRight", ",", "1.", ",", "resampleFactor"}], "]"}]}],
+       ";", "\[IndentingNewLine]", 
       RowBox[{"leftHRIREnergy", " ", "=", " ", 
        RowBox[{
         RowBox[{"ListCorrelate", "[", 
@@ -769,7 +769,7 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
      RowBox[{"\"\<Order\>\"", "\[Rule]", "12"}], ",", 
-     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100"}]}], "}"}]}], 
+     RowBox[{"\"\<Sampling Rate\>\"", "\[Rule]", "44100."}]}], "}"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -796,8 +796,8 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"inputHRIR", "[", 
           RowBox[{"[", 
-           RowBox[{"onsetSamp", ";;"}], "]"}], "]"}], ",", "inputIRLen"}], 
-        "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"onsetSamp", ";;"}], "]"}], "]"}], ",", "inputIRLen", ",", 
+         "0."}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"lpResOrder", "=", 
        RowBox[{"OptionValue", "[", "\"\<Order\>\"", "]"}]}], ";", 
       "\[IndentingNewLine]", 
@@ -810,15 +810,15 @@ Cell[BoxData[{
       "\[IndentingNewLine]", 
       RowBox[{"winLen", "=", 
        RowBox[{"Round", "[", 
-        RowBox[{"fS", "/", "1000"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"fS", "/", "1000."}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"halfHannWin", "=", 
        RowBox[{"PadRight", "[", 
         RowBox[{
          RowBox[{"raisedCosWin", "[", 
           RowBox[{"winLen", ",", 
            RowBox[{"{", 
-            RowBox[{"0", ",", "1"}], "}"}]}], "]"}], ",", "inputIRLen"}], 
-        "]"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"0", ",", "1"}], "}"}]}], "]"}], ",", "inputIRLen", ",", 
+         "0."}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"winLPRes", "=", 
        RowBox[{"lpResIR", " ", "halfHannWin"}]}], ";", "\[IndentingNewLine]", 
       
@@ -906,17 +906,17 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"{", "0.5", "}"}], ",", 
          RowBox[{"ConstantArray", "[", 
-          RowBox[{"1", ",", 
+          RowBox[{"1.", ",", 
            RowBox[{"inputHRTFNyqLen", "-", "2"}]}], "]"}], ",", 
          RowBox[{"{", "0.5", "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
       RowBox[{"fourierSeriesCoeffs", "=", 
        RowBox[{"2", " ", "alpha", " ", 
         RowBox[{"(", 
-         RowBox[{"1", "/", 
+         RowBox[{"1.", "/", 
           RowBox[{"Sqrt", "[", 
-           RowBox[{"2", 
+           RowBox[{"2.", 
             RowBox[{"(", 
-             RowBox[{"inputHRTFNyqLen", "-", "1"}], ")"}]}], "]"}]}], ")"}], 
+             RowBox[{"inputHRTFNyqLen", "-", "1."}], ")"}]}], "]"}]}], ")"}], 
         " ", 
         RowBox[{"FourierDCT", "[", 
          RowBox[{
@@ -948,18 +948,19 @@ Cell[BoxData[{
            RowBox[{"Cos", "[", 
             RowBox[{
              FractionBox[
-              RowBox[{"2", "\[Pi]", " ", 
+              RowBox[{"2.", 
+               RowBox[{"N", "[", "\[Pi]", "]"}], " ", 
                RowBox[{"(", 
-                RowBox[{"ii", "-", "1"}], ")"}]}], "inputHRTFLen"], " ", 
+                RowBox[{"ii", "-", "1."}], ")"}]}], "inputHRTFLen"], " ", 
              RowBox[{"Range", "[", 
-              RowBox[{"0", ",", 
-               RowBox[{"smoothingIndex", "-", "1"}]}], "]"}]}], "]"}]}], 
+              RowBox[{"0.", ",", 
+               RowBox[{"smoothingIndex", "-", "1."}]}], "]"}]}], "]"}]}], 
           "]"}], ",", 
          RowBox[{"{", 
           RowBox[{"ii", ",", "inputHRTFNyqLen"}], "}"}]}], "]"}]}], ";", 
       "\[IndentingNewLine]", 
       RowBox[{"smoothedHRTF", "=", 
-       RowBox[{"10", "^", 
+       RowBox[{"10.", "^", 
         RowBox[{"(", 
          RowBox[{"Join", "[", 
           RowBox[{"smoothedHRTFHalf", ",", 
@@ -976,7 +977,7 @@ Cell[BoxData[{
        RowBox[{"PadRight", "[", 
         RowBox[{
          RowBox[{"getMinimumPhaseIR", "[", "zeroPhIR", "]"}], ",", 
-         RowBox[{"Length", "[", "inputHRIR", "]"}]}], "]"}]}]}]}], 
+         RowBox[{"Length", "[", "inputHRIR", "]"}], ",", "0."}], "]"}]}]}]}], 
     "\[IndentingNewLine]", "]"}]}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -1006,12 +1007,12 @@ Cell[BoxData[{
      RowBox[{"onsetL", " ", "=", " ", 
       RowBox[{"signalOnset", "[", 
        RowBox[{"IRL", ",", 
-        RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20"}]}], "]"}]}], ";", 
+        RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20."}]}], "]"}]}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"onsetR", " ", "=", " ", 
       RowBox[{"signalOnset", "[", 
        RowBox[{"IRR", ",", 
-        RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20"}]}], "]"}]}], ";", 
+        RowBox[{"\"\<Threshold\>\"", "\[Rule]", "20."}]}], "]"}]}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"maxOnset", "=", 
       RowBox[{"Max", "[", 
@@ -1035,12 +1036,12 @@ Cell[BoxData[{
         RowBox[{"irL", "=", 
          RowBox[{"PadRight", "[", 
           RowBox[{"IRL", ",", 
-           RowBox[{"effWinLen", "+", "maxOnset"}]}], "]"}]}], ";", 
+           RowBox[{"effWinLen", "+", "maxOnset"}], ",", "0."}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"irR", "=", 
          RowBox[{"PadRight", "[", 
           RowBox[{"IRR", ",", 
-           RowBox[{"effWinLen", "+", "maxOnset"}]}], "]"}]}], ";", 
+           RowBox[{"effWinLen", "+", "maxOnset"}], ",", "0."}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"IRLen", "=", 
          RowBox[{"effWinLen", "+", "maxOnset"}]}], ";"}], 
@@ -1108,7 +1109,7 @@ Cell[BoxData[{
          RowBox[{"irL", "[", 
           RowBox[{"[", 
            RowBox[{"startIndx", ";;", "stopIndx"}], "]"}], "]"}], "winVec"}], 
-        ",", "IRLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        ",", "IRLen", ",", "0."}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"startIndx", "=", 
       RowBox[{"onsetR", "-", "preOnsetDelaySamp", "+", "1"}]}], ";", 
      "\[IndentingNewLine]", 
@@ -1122,7 +1123,7 @@ Cell[BoxData[{
          RowBox[{"irR", "[", 
           RowBox[{"[", 
            RowBox[{"startIndx", ";;", "stopIndx"}], "]"}], "]"}], "winVec"}], 
-        ",", "IRLen"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        ",", "IRLen", ",", "0."}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"Switch", "[", 
       RowBox[{
       "keepOnsetFlag", "\[IndentingNewLine]", ",", "False", ",", 
@@ -1232,8 +1233,9 @@ Cell[BoxData[{
    3.767904626899702*^9}, 3.76790466569541*^9, {3.7679046984193153`*^9, 
    3.767904761136539*^9}, {3.767908465790936*^9, 3.767908465936104*^9}, {
    3.7791808602797327`*^9, 3.7791808726869593`*^9}, {3.779181385289192*^9, 
-   3.779181386625784*^9}, 
-   3.834489856458405*^9},ExpressionUUID->"2407b313-0b30-4b6e-b58a-\
+   3.779181386625784*^9}, 3.834489856458405*^9, {3.83762297708106*^9, 
+   3.837623207994238*^9}, {3.8376232836906023`*^9, 
+   3.837623286392952*^9}},ExpressionUUID->"2407b313-0b30-4b6e-b58a-\
 ebd810a157f5"]
 }, Open  ]]
 }, Open  ]],
@@ -1299,16 +1301,16 @@ Cell[11820, 233, 100, 0, 67, "Section",ExpressionUUID->"70a8cda1-88aa-45f6-8913-
 Cell[11923, 235, 129, 1, 46, "Input",ExpressionUUID->"c2d24128-e3c3-4e1d-8d70-aed82f757708"],
 Cell[CellGroupData[{
 Cell[12077, 240, 97, 0, 54, "Subsection",ExpressionUUID->"33cff6a0-6fe0-4db5-9516-0816a603b5b4"],
-Cell[12177, 242, 43467, 994, 5110, "Input",ExpressionUUID->"2407b313-0b30-4b6e-b58a-ebd810a157f5"]
+Cell[12177, 242, 43712, 996, 5110, "Input",ExpressionUUID->"2407b313-0b30-4b6e-b58a-ebd810a157f5"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[55693, 1242, 98, 0, 67, "Section",ExpressionUUID->"60e802f5-bbfe-4156-a0b1-1ba8a0dac580"],
-Cell[55794, 1244, 106, 1, 46, "Input",ExpressionUUID->"e2de492f-1d15-4925-ada8-2a0ab2d04105"]
+Cell[55938, 1244, 98, 0, 67, "Section",ExpressionUUID->"60e802f5-bbfe-4156-a0b1-1ba8a0dac580"],
+Cell[56039, 1246, 106, 1, 46, "Input",ExpressionUUID->"e2de492f-1d15-4925-ada8-2a0ab2d04105"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[55937, 1250, 97, 0, 67, "Section",ExpressionUUID->"dab44ca7-516f-473b-b024-a7aed70c4b91"],
-Cell[56037, 1252, 113, 1, 46, "Input",ExpressionUUID->"0b4c9e34-6ba4-47c1-a06f-7e397cef1e15"]
+Cell[56182, 1252, 97, 0, 67, "Section",ExpressionUUID->"dab44ca7-516f-473b-b024-a7aed70c4b91"],
+Cell[56282, 1254, 113, 1, 46, "Input",ExpressionUUID->"0b4c9e34-6ba4-47c1-a06f-7e397cef1e15"]
 }, Open  ]]
 }, Open  ]]
 }
