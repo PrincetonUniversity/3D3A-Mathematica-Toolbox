@@ -213,6 +213,7 @@ Abort[];
 ];
 y
 
+(* Old method commented below *)
 (*IRLen = Length[x];
 xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
@@ -244,6 +245,7 @@ Abort[];
 ];
 y
 
+(* Old method commented below *)
 (*IRLen = Length[x];
 xp = PadRight[x,2IRLen];
 W = N[Join[Range[0,IRLen],Reverse[Range[1,IRLen-1]]]/IRLen];
@@ -471,7 +473,7 @@ unwrappedPhase
 ]
 
 Options[inverseFilter]={"Regularization"->"None","Regularization Ranges"->{{0.,1.,0.}},"SampleRate"->96000.,"AvgFreqRange"->{100.,18000.},"InvFreqRange"->{20.,20000.},"MaxDynRange"->24.};
-inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon],Fs,avgFRange,invFRange,fVec,fLIndx,fUIndx,magSpec,HAvg,HNorm,irHalfLen,dynRange,maxDynRange,HNormClip,tempHInv,fullHInv,leftConstVal,rightConstVal,WnHPF,WnLPF,filterOrder,W,HPF,LPF},
+inverseFilter[h_,OptionsPattern[]]:=Module[{IRLen,H,z,\[Epsilon],Fs,maxDynRange,avgFRange,invFRange,fVec,fLIndxAvg,fUIndxAvg,fLIndxInv,fUIndxInv,fLInv,fUInv,nyqIndx,magSpec,HAvg,HNorm,HNormClip,tempHInv,bpfTF,fullHInv,lfConstVal,hfConstVal,hpfTF,lpfTF},
 IRLen = Length[h];
 H = IRtoTF[h];
 Switch[OptionValue["Regularization"]
@@ -482,30 +484,40 @@ z = TFtoIR[1./H];
 z = TFtoIR[Conjugate[H]/(Conjugate[H]H+\[Epsilon])];
 ,"Custom",
 Fs=OptionValue["SampleRate"];
+maxDynRange=OptionValue["MaxDynRange"];
 avgFRange=OptionValue["AvgFreqRange"];
 invFRange=OptionValue["InvFreqRange"];
 fVec=freqList[IRLen,Fs];
-fLIndx=Position[fVec,Nearest[fVec,Min[avgFRange]][[1]]][[1,1]];
-fUIndx=Position[fVec,Nearest[fVec,Max[avgFRange]][[1]]][[1,1]];
-magSpec=Abs[H[[fLIndx;;fUIndx]]];
-HAvg=logMean[fVec[[fLIndx;;fUIndx]],magSpec];
-HNorm=H/HAvg;
-dynRange=magTodB[Max[magSpec]/Min[magSpec]];
-maxDynRange=OptionValue["MaxDynRange"];
-irHalfLen=Ceiling[(IRLen+1)/2];
-dynRange=Min[dynRange,maxDynRange];
-HNormClip=dBToMag[Clip[magTodB[Abs[HNorm]],{-dynRange/2.,dynRange/2.}]]Exp[I Arg[HNorm]];
-tempHInv=1./HNormClip[[1;;irHalfLen]];
-fLIndx=Position[fVec,Nearest[fVec,Min[invFRange]][[1]]][[1,1]];
-fUIndx=Position[fVec,Nearest[fVec,Max[invFRange]][[1]]][[1,1]];
-leftConstVal=Abs[tempHInv[[fLIndx]]] dBToMag[3];
-rightConstVal=Abs[tempHInv[[fUIndx]]] dBToMag[3];
-WnHPF=Min[invFRange/(Fs/2.)];
-WnLPF=Max[invFRange/(Fs/2.)];
-HPF=leftConstVal Abs[IRtoTF[getButterworthFIR[IRLen,4,WnHPF,"Highpass"]]];
-LPF=rightConstVal Abs[IRtoTF[getButterworthFIR[IRLen,4,WnHPF,"Lowpass"]]];
-tempHInv[[1;;fLIndx]]=HPF[[1;;fLIndx]] Exp[I Arg[tempHInv[[1;;fLIndx]]]];
-tempHInv[[fUIndx;;irHalfLen]]=LPF[[fUIndx;;irHalfLen]] Exp[I Arg[tempHInv[[fUIndx;;irHalfLen]]]];
+fLIndxAvg=Position[fVec,Nearest[fVec,Min[avgFRange]][[1]]][[1,1]];
+fUIndxAvg=Position[fVec,Nearest[fVec,Max[avgFRange]][[1]]][[1,1]];
+fLIndxInv=Position[fVec,Nearest[fVec,Min[invFRange]][[1]]][[1,1]];
+fUIndxInv=Position[fVec,Nearest[fVec,Max[invFRange]][[1]]][[1,1]];
+fLInv=fVec[[fLIndxInv]];
+fUInv=fVec[[fUIndxInv]];
+nyqIndx=Position[fVec,Nearest[fVec,Fs/2.][[1]]][[1,1]];
+
+magSpec=Abs[H[[fLIndxAvg;;fUIndxAvg]]];
+HAvg=logMean[fVec[[fLIndxAvg;;fUIndxAvg]],magSpec];
+HNorm=H[[1;;nyqIndx]]/HAvg;
+HNormClip=dBToMag[Clip[magTodB[Abs[HNorm]],{-maxDynRange/2.,maxDynRange/2.}]]Exp[I Arg[HNorm]];
+tempHInv=1./HNormClip;
+
+(* Method 1 *)
+bpfTF=Abs[IRtoTF[getButterworthFIR[IRLen,4,{fLInv,fUInv}/(Fs/2.),"Bandpass"]]];
+lfConstVal=Abs[tempHInv[[fLIndxInv]]];
+hfConstVal=Abs[tempHInv[[fUIndxInv]]];
+tempHInv[[1;;fLIndxInv]]=lfConstVal Exp[I Arg[tempHInv[[1;;fLIndxInv]]]];
+tempHInv[[fUIndxInv;;nyqIndx]]=hfConstVal Exp[I Arg[tempHInv[[fUIndxInv;;nyqIndx]]]];
+tempHInv=tempHInv bpfTF[[1;;nyqIndx]];
+
+(* Method 2 *)
+(*hpfTF=Abs[IRtoTF[getButterworthFIR[IRLen,4,fLInv/(Fs/2.),"Highpass"]]];
+lpfTF=Abs[IRtoTF[getButterworthFIR[IRLen,4,fUInv/(Fs/2.),"Lowpass"]]];
+lfConstVal=Abs[tempHInv[[fLIndxInv]]]/hpfTF[[fLIndxInv]];
+hfConstVal=Abs[tempHInv[[fUIndxInv]]]/lpfTF[[fUIndxInv]];
+tempHInv[[1;;fLIndxInv]]=lfConstVal hpfTF[[1;;fLIndxInv]] Exp[I Arg[tempHInv[[1;;fLIndxInv]]]];
+tempHInv[[fUIndxInv;;nyqIndx]]=hfConstVal lpfTF[[fUIndxInv;;nyqIndx]] Exp[I Arg[tempHInv[[fUIndxInv;;nyqIndx]]]];*)
+
 If[EvenQ[IRLen],
 fullHInv=Join[tempHInv,Drop[Reverse[Drop[Conjugate[tempHInv],1]],1]]/HAvg;
 ,
