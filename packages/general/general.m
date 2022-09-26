@@ -206,7 +206,7 @@ ext=".wav";
 ];
 exportAudio[fileName<>ext,data,samplingRate,commentString]
 ];
-exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
+exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: ""]:=Module[
 {Output,readExt,ext,maxAmp,exportData}
 ,
 readExt=FileExtension[fileName];
@@ -223,7 +223,11 @@ MessageDialog["Maximum amplitude exceeds 1. Data normalized prior to export."];
 exportData=data;
 ];
 Output=Sound[SampledSoundList[exportData,samplingRate]];
+If[commentString=="",
+Export[fileName<>ext,Output,"AudioEncoding"->"Integer24"];
+,
 Export[fileName<>ext,Output,"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];
+]
 ];
 importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
 importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
@@ -243,9 +247,10 @@ numChannels=0;
 ];
 getSamplingRate[fileName_]:=Import[fileName][[1,2]];
 ,
-writeAudioToFile[fileName_,exportData_,samplingRate_,commentString_: " "]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];];
-exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=exportAudio[fileName,data,samplingRate,commentString];
-exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
+writeAudioToFile[fileName_,exportData_,samplingRate_,commentString_: ""]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24",MetaInformation->{"Comment"->commentString}];];
+writeAudioToFileNC[fileName_,exportData_,samplingRate_]:=Block[{Rescale=#1&},Export[fileName,ListPlay[exportData,PlayRange->{-1,1},SampleRate->samplingRate],"AudioEncoding"->"Integer24"];];
+exportAIFF[fileName_,data_,samplingRate_: 44100,commentString_: ""]:=exportAudio[fileName,data,samplingRate,commentString];
+exportWAV[fileName_,data_,samplingRate_: 44100,commentString_: ""]:=Module[
 {readExt,ext}
 ,
 readExt=FileExtension[fileName];
@@ -256,7 +261,7 @@ ext=".wav";
 ];
 exportAudio[fileName<>ext,data,samplingRate,commentString]
 ];
-exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: " "]:=Module[
+exportAudio[fileName_,data_,samplingRate_: 44100,commentString_: ""]:=Module[
 {Rescale=#1&,readExt,ext,maxAmp,exportData}
 ,
 readExt=FileExtension[fileName];
@@ -279,7 +284,11 @@ MessageDialog["Maximum amplitude exceeds 1. Data normalized prior to export."];
 ,
 exportData=data;
 ];
+If[commentString=="",
+writeAudioToFileNC[fileName<>ext,exportData,samplingRate];
+,
 writeAudioToFile[fileName<>ext,exportData,samplingRate,commentString];
+]
 ];
 importAIFF[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
 importWAV[fileName_]:=importAudio[fileName]; (* For backwards compatibility only. *)
