@@ -1,0 +1,4 @@
+
+Compiling realOctaveSmooth (unsuccessful):
+
+/Users/BACCH-SP-1b/Programming/Projects/RealOctaveSmoothFor9/mcc realOctaveSmooth.tm realOctaveSmooth.c -o realOctaveSmooth
