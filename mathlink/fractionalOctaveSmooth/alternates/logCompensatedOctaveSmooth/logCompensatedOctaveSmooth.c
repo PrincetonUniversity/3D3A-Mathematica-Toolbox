@@ -2,6 +2,8 @@
 //  logCompensatedOctaveSmooth.c
 //  Fractional Octave Smoothing routine using Logarithmically-Compensated Weights for real valued, 1-D lists in Mathematica.
 //
+//  Version 1.1: added wTotal variable to normalize each window.
+//
 //  Version 1.0: created from version 2.2 of "RealOctaveSmooth" program.
 //
 //  Created by Joe Tylka on 18 March 2016.
@@ -40,6 +42,7 @@ void logCompensatedOctaveSmooth(double fractionDenominator, int windowType)
     double mH = 0.0;
     double logmL = 0.0;
     double logmH = 0.0;
+    double wTotal = 0.0;
     double nDouble = 1.0;
     double mDouble = 0.0;
     double partsum = 0.0;
@@ -110,9 +113,11 @@ void logCompensatedOctaveSmooth(double fractionDenominator, int windowType)
                         break;
                 }
             }
+            wTotal = wTotal + w;
             partsum = partsum + data[m] * w;
         }
-        outvec[n] = partsum;
+        outvec[n] = partsum / wTotal;
+        wTotal = 0.0;
         partsum = 0.0;
         nDouble = nDouble + 1.0;
     }
